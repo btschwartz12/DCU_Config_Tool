@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created with Liquid Technologies Online Tools 1.0 (https://www.liquid-technologies.com) -->
+<xs:schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="DCU-9985">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="metadata">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="CustomerID" type="xs:string" />
+              <xs:element name="CustomerName" type="xs:string" />
+              <xs:element name="Drawing" />
+              <xs:element name="Product" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="common">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="appSecurityAuthMode" type="xs:string" />
+              <xs:element name="dtlsNetworkHESubject" type="xs:string" />
+              <xs:element name="dtlsNetworkMSSubject" type="xs:string" />
+              <xs:element name="dtlsNetworkRootCA" type="xs:string" />
+              <xs:element name="flashSecurityEnabled" type="xs:string" />
+              <xs:element name="ipHEContext" type="xs:string" />
+              <xs:element name="macChannelSets" />
+              <xs:element name="macChannelSetsSTAR" type="xs:string" />
+              <xs:element name="macNetworkId" type="xs:string" />
+              <xs:element name="phyAvailableFrequencies" type="xs:string" />
+              <xs:element name="realtimeThreshold" type="xs:string" />
+              <xs:element name="shipMode" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element maxOccurs="2" minOccurs="2" name="SRFNI-XCVR">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="comDeviceGatewayConfig" type="xs:string" />
+              <xs:element name="phyRxFrequencies" />
+              <xs:element name="phyTxFrequencies" type="xs:string" />
+              <xs:element name="phyRxDetection" type="xs:string" />
+              <xs:element name="phyRxFraming" type="xs:string" />
+              <xs:element name="phyRxMode" type="xs:string" />
+            </xs:sequence>
+            <xs:attribute name="slot" type="xs:string" use="required" />
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="EXPORT-FORMAT" type="xs:string" />
+        <xs:element name="SRFNI-METER">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="comDeviceGatewayConfig" type="xs:string" />
+              <xs:element name="EPRxFrequencies" type="xs:string" />
+              <xs:element name="EPTxFrequencies" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="SRFNI-DA">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="comDeviceGatewayConfig" type="xs:string" />
+              <xs:element name="EPRxFrequencies" type="xs:string" />
+              <xs:element name="EPTxFrequencies" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="STARI-METER">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="comDeviceGatewayConfig" type="xs:string" />
+              <xs:element name="EPRxFrequenciesSTAR7200" type="xs:string" />
+              <xs:element name="EPTxFrequenciesSTAR7200" type="xs:string" />
+              <xs:element name="EPRxFrequenciesSTAR2400" type="xs:string" />
+              <xs:element name="EPTxFrequenciesSTAR2400" type="xs:string" />
+              <xs:element name="EPRxFrequenciesSTAR2400Legacy" type="xs:string" />
+              <xs:element name="EPTxFrequenciesSTAR2400Legacy" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

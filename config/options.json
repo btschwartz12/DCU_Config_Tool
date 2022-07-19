@@ -1,0 +1,11 @@
+{
+    "version": "1.0",
+    "SOURCE_DIRECTORY": "C:/Users/70060/Documents/DCU_Config_Tool/", 
+    "dimensions": "800x550", 
+    "min_dimensions": "800x550",
+    "max_dimensions": "1000x850",
+    
+    "debug_mode": true,
+    "sample_freqs_json_fn": "WKST_SAMPLES/sample_freqs.json",
+    "sample_entries_json_fn": "WKST_SAMPLES/sample_wkst_entries.json"
+}

@@ -1,0 +1,203 @@
+{
+    "output_schema_rpath": "data/export_data/DCU+2XLS.xsd",
+    "example_output_json_rpath": "data/export_data/example_output_20220718.json",
+
+    
+    
+    "entries": [
+        {
+            "name": "Customer Name",
+            "type": "string",
+            "editable": false,
+            "required": true
+        },
+        {
+            "name": "Contact Name",
+            "type": "string",
+            "editable": true,
+            "required": true
+        },
+        {
+            "name": "Country",
+            "type": "dropdown",
+            "editable": true,
+            "required": true
+        },
+        {
+            "name": "State",
+            "type": "dropdown",
+            "editable": true,
+            "required": true
+        },
+        {
+            "name": "City",
+            "type": "string",
+            "editable": true,
+            "required": true
+        },
+        {
+            "name": "Street Address",
+            "type": "string",
+            "editable": true,
+            "required": true
+        },
+        {
+            "name": "Zip Code",
+            "type": "number",
+            "editable": true,
+            "required": true
+        },
+        {
+            "name": "Telephone Number",
+            "type": "string",
+            "editable": true,
+            "required": true
+        },
+        {
+            "name": "Email",
+            "type": "string",
+            "editable": true,
+            "required": true
+        },
+        {
+            "name": "Account Manager",
+            "type": "string",
+            "editable": true,
+            "required": true
+        },
+        {
+            "name": "Utility Head End Certificate Source",
+            "type": "dropdown",
+            "editable": true,
+            "required": true
+        },
+        {
+            "name": "DTLS Bypass Mode Allowed",
+            "type": "boolean",
+            "editable": true,
+            "required": true
+        },
+        {
+            "name": "Time Zone",
+            "type": "dropdown",
+            "editable": true,
+            "required": true
+        },
+        {
+            "name": "Daily Shift Time (hours after midnight local)",
+            "type": "number",
+            "editable": true,
+            "required": true,
+            "comment": "May be overridden by KV2cFW2.0Cover"
+        },
+        {
+            "name": "Automatic Demand Reset [1 day]",
+            "type": "dropdown",
+            "editable": true,
+            "required": true
+        },
+        {
+            "name": "Outage Last Gasp Delay [30s, Default: 30s]",
+            "type": "number",
+            "editable": true,
+            "required": true,
+            "comment": "May be overridden by KV2cFW2.0Cover"
+        },
+        {
+            "name": "Restoration Delay [15s, Default: 15s]",
+            "type": "number",
+            "editable": true,
+            "required": true
+        },
+        {
+            "name": "System Includes STAR 2400 Legacy devices",
+            "type": "boolean",
+            "editable": true,
+            "required": true
+        },
+        {
+            "name": "System Includes STAR 2400 devices",
+            "type": "boolean",
+            "editable": true,
+            "required": true
+        },
+        {
+            "name": "System Includes STAR7200 devices",
+            "type": "boolean",
+            "editable": true,
+            "required": true
+        },
+        {
+            "name": "System Includes SRFN Devices",
+            "type": "boolean",
+            "editable": true,
+            "required": true
+        },
+        {
+            "name": "System Includes SRFN Dedicated DA Recv Channel",
+            "type": "boolean",
+            "editable": true,
+            "required": true
+        },
+        {
+            "name": "DCU T-Boards [DCU2+]",
+            "type": "dropdown",
+            "editable": true,
+            "required": true
+        },
+        {
+            "name": "DCU Single Transmit T-Board Firmware",
+            "type": "boolean",
+            "editable": true,
+            "required": true
+        },
+        {
+            "name": "DCU Drawing Number (from Fusion)",
+            "type": "number",
+            "editable": true,
+            "required": false
+        },
+        {
+            "name": "DCU Product Number (the Y number)",
+            "type": "number",
+            "editable": true,
+            "required": false
+        },
+        {
+            "name": "Aclara Customer ID",
+            "type": "number",
+            "editable": false,
+            "required": true
+        },
+        {
+            "name": "Tool Version",
+            "type": "string",
+            "editable": false,
+            "required": true
+        },
+        {
+            "name": "Customer Configuration Id",
+            "type": "string",
+            "editable": false,
+            "required": true
+        }
+    ],
+
+    "dropdown_options": {
+        "Utility Head End Certificate Source": [
+            "Manufacturer",
+            "Utility"
+        ],
+        "Automatic Demand Reset [1 day]": [
+            "Default", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28"
+        ],
+        "DCU T-Boards [DCU2+]": [
+            "1",
+            "2"
+        ],
+        "Time Zone": null,
+        "Country": null,
+        "State": null
+    }
+
+}

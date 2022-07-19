@@ -1,0 +1,8 @@
+1. archive
+    - XML
+    - freqs used
+    - user entries
+    - status
+
+2. yes and no check buttons
+

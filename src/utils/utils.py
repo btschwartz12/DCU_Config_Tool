@@ -1,0 +1,68 @@
+
+
+from collections import OrderedDict
+from dataclasses import dataclass, fields
+
+
+from enum import Enum
+
+
+class EntryType(Enum):
+    STRING = "string"
+    BOOLEAN = "boolean"
+    DROPDOWN = "dropdown"
+    NUMBER = "number"
+
+def isInt(s):
+    try: 
+        int(s)
+        return True
+    except ValueError:
+        return False
+
+def toStr(data) -> str:
+    _str = ""
+    if isinstance(data, list):
+        for val in data:
+            _str += str(val) + ','
+        _str = _str[:len(_str)-1]
+    elif isinstance(data, int):
+        _str = str(data)
+    elif isinstance(data, str):
+        _str = data
+    elif data is None:
+        _str = ""
+    else:
+        print("error 429")
+    return _str
+
+
+@dataclass
+class StepData:
+
+    def validate(self):
+        for field in fields(self):
+            val = getattr(self, field.name)
+            if val is None: ############ 
+                raise Exception("error 509: "+field.name+" is not initialized")
+
+    def getOrderedDict(self) -> OrderedDict:
+        data = OrderedDict()
+        for field in fields(self):
+            val = getattr(self, field.name)
+            data[field.name] = val
+        return data
+
+
+
+
+
+
+
+
+
+
+
+
+
+
