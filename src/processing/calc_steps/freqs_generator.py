@@ -1,15 +1,18 @@
+from __future__ import generator_stop
 from dataclasses import dataclass, fields
 import json
+from pprint import pformat
+from re import L
 from tkinter import messagebox
+from typing import OrderedDict
 from openpyxl import load_workbook
 
 
 from src.utils.utils import StepData
 
 
-WB_NAME = 'customer_wkst/ExcelTool/exampleWorksheet.xlsx'
-SHEET_NAME = "CustomerFreqs"
 
+REQUIRED_KEYS = ["Customer ID", "Customer Name", "Frequency", "Frequency Use"]
 
 class UnassignedFrequencyException(Exception):
     def __init__(self, freqs):
@@ -62,19 +65,14 @@ class FrequencyData(StepData):
 class _FrequencyGenerator:
     """This will get the customer frequencies from the Excel sheet,
     so that they can be used for DTLS calculations"""
-    def __init__(self, wb_name, sheet_name):
-        self.wb_name = wb_name
-        self.sheet_name = sheet_name
-        self.frequency_objs = []
+    def __init__(self):
 
+        self.frequency_objs = []
         self.unassigned_freqs = []
 
         
 
-    def getFrequencyData(self, debug=False) -> FrequencyData:
-
-        if not debug:
-            self.__loadFreqs()
+    def getFrequencyData(self) -> FrequencyData:
 
         inbound_freqs = []
         unassigned_freqs = []
@@ -82,28 +80,32 @@ class _FrequencyGenerator:
         has_f2 = False
         has_outbound = False
 
-        frequency_data = FrequencyData()
+        FREQUENCY_DATA = FrequencyData()
         
         for frequency_obj in self.frequency_objs:
             use = frequency_obj["Frequency Use"]
             frequency = float(frequency_obj["Frequency"])
 
             if use == 'F1':
-                if frequency_data.STAR_F1_Uplink_Frequency_r48 is not None:
-                    raise Exception("error 330: multiple F1 frequencies provided ("+str(frequency_data.STAR_F1_Uplink_Frequency_r48)+", "+str(frequency)+")")
+                if FREQUENCY_DATA.STAR_F1_Uplink_Frequency_r48 is not None:
+                    raise Exception("error 330: multiple F1 frequencies provided ("+str(FREQUENCY_DATA.STAR_F1_Uplink_Frequency_r48)+", "+str(frequency)+")")
                 has_f1 = True
-                frequency_data.STAR_F1_Uplink_Frequency_r48 = frequency
+
+                FREQUENCY_DATA.STAR_F1_Uplink_Frequency_r48 = frequency
+
             elif use == 'F2':
-                if frequency_data.STAR_F2_Downlink_Frequency_r46 is not None:
-                    raise Exception("error 331: multiple F2 frequencies provided ("+str(frequency_data.STAR_F2_Downlink_Frequency_r46)+", "+str(frequency)+")")
+                if FREQUENCY_DATA.STAR_F2_Downlink_Frequency_r46 is not None:
+                    raise Exception("error 331: multiple F2 frequencies provided ("+str(FREQUENCY_DATA.STAR_F2_Downlink_Frequency_r46)+", "+str(frequency)+")")
                 has_f2 = True
-                frequency_data.STAR_F2_Downlink_Frequency_r46 = frequency
-            
+
+                FREQUENCY_DATA.STAR_F2_Downlink_Frequency_r46 = frequency
+
             elif use == 'OUTBOUND':
-                if frequency_data.SRFN_Outbound_Downlink_Frequency_r47 is not None:
-                    raise Exception("error 332: multiple outbound frequencies provided ("+str(frequency_data.SRFN_Outbound_Downlink_Frequency_r47)+", "+str(frequency)+")")
+                if FREQUENCY_DATA.SRFN_Outbound_Downlink_Frequency_r47 is not None:
+                    raise Exception("error 332: multiple outbound frequencies provided ("+str(FREQUENCY_DATA.SRFN_Outbound_Downlink_Frequency_r47)+", "+str(frequency)+")")
                 has_outbound = True
-                frequency_data.SRFN_Outbound_Downlink_Frequency_r47 = frequency
+
+                FREQUENCY_DATA.SRFN_Outbound_Downlink_Frequency_r47 = frequency
 
             elif use == 'UNASSIGN':
                 unassigned_freqs.append(frequency)
@@ -121,28 +123,38 @@ class _FrequencyGenerator:
         if unassigned_freqs != []:
             self.unassigned_freqs = unassigned_freqs
 
-        inbound_field_names = frequency_data.getInboundFieldNames()
+        inbound_field_names = FREQUENCY_DATA.getInboundFieldNames()
 
         inbound_freqs.sort()
 
         for i, frequency in enumerate(inbound_freqs):
-            setattr(frequency_data, inbound_field_names[i], frequency)
+            setattr(FREQUENCY_DATA, inbound_field_names[i], frequency)
 
-        frequency_data.num_inbound_frequencies = len(inbound_freqs)
+        FREQUENCY_DATA.num_inbound_frequencies = len(inbound_freqs)
 
-
-        return frequency_data
+        return FREQUENCY_DATA
             
-    def getFrequency_objs(self):
-        return self.frequency_objs
+    def loadFreqsFromJson(self, JSON_FN):
+        data = []
+        with open(JSON_FN, 'r') as f:
+            data = json.load(f)
+            if not isinstance(data, list):
+                raise Exception("Incompatible data format found: "+str(type(data))+"\nShould be: list")
+        for freq_obj in data:
+            if not (set(REQUIRED_KEYS) <= set(list(freq_obj.keys()))):
+                raise Exception("error 660: imported frequency data entry is missing required keys\n\nrequired keys: "+pformat(REQUIRED_KEYS, indent=2))
+        self.frequency_objs = data
 
-    def __loadFreqs(self):
+    def loadFreqsFromExcel(self, WB_FN, SHEET_NAME):
         """This will use an Excel parser to grab the customer frequencies
         and the data associated with them and return a list containing 
         each frequency data entry"""
-        workbook = load_workbook(self.wb_name)
+        workbook = load_workbook(WB_FN)
         
-        sheet = workbook[self.sheet_name]
+        if SHEET_NAME not in workbook.sheetnames:
+            raise Exception("error 491: invalid sheet name: "+SHEET_NAME)
+
+        sheet = workbook[SHEET_NAME]
 
         freq_entries = []
 
@@ -167,7 +179,7 @@ class _FrequencyGenerator:
         self.frequency_objs = freq_entries
             
 
-def getFrequencyData(debug=False, freq_fn=None) -> FrequencyData:
+def getFrequencyData(FREQUENCIES_FN) -> FrequencyData:
         """This will extract relevent data from the frequencies in the excel tool,
         and create a data structure that stores the F1, F2, Outbound, and sorted Inbound 
         frequencies. If there is an unassigned frequency, a message will be shown.
@@ -176,23 +188,26 @@ def getFrequencyData(debug=False, freq_fn=None) -> FrequencyData:
         Corresponding excel rows: 46-63
         Step(s) / Block(s): 3
         """
-        try: # Getting the frequencies from the excel tool and constructing the FrequencyData struct
-            frequency_generator = _FrequencyGenerator(WB_NAME, SHEET_NAME)
-            
-            if debug:
-                with open(freq_fn, 'r') as f:
-                    data = json.load(f)
-                frequency_generator.frequency_objs = data
-                frequency_data: FrequencyData = frequency_generator.getFrequencyData(debug=True)
-            else:
-                frequency_data: FrequencyData = frequency_generator.getFrequencyData()
 
-        except Exception as e:
-            raise e
+        freq_generator = _FrequencyGenerator()
 
-        unassigned_freqs = frequency_generator.unassigned_freqs
+        if FREQUENCIES_FN.endswith('json'):
+            freq_generator.loadFreqsFromJson(FREQUENCIES_FN)
+
+        elif FREQUENCIES_FN.endswith('xlsx'):
+            freq_generator.loadFreqsFromExcel(FREQUENCIES_FN, "CustomerFreqs")
+
+        else:
+            print("error 303")
+
+        if freq_generator.frequency_objs == []:
+            raise Exception("error 391: failed to load frequency objects. Please check import files")
+                
+        FREQUENCY_DATA: FrequencyData = freq_generator.getFrequencyData()
+
+        unassigned_freqs = freq_generator.unassigned_freqs
         if unassigned_freqs != []:
             # messagebox.showinfo("Unassigned frequencies", "There are "+str(len(unassigned_freqs))+" unassigned frequencies: "+str(unassigned_freqs))
             print("Unassigned frequencies", "There are "+str(len(unassigned_freqs))+" unassigned frequencies: "+str(unassigned_freqs))
 
-        return frequency_data
+        return FREQUENCY_DATA

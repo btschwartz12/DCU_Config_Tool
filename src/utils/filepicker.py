@@ -7,21 +7,34 @@ from tkinter.messagebox import showerror
 # Misc
 from functools import partial
 
+from config.config import Config
+
 
 class FilePicker(tk.Frame):
-    def __init__(self, frame, parent, title, extension, command=None):
+    def __init__(self, frame, config: Config, title, extension, command=None, **kwargs):
         
-        tk.Frame.__init__(self, frame)
+        tk.Frame.__init__(self, frame, **kwargs)
         self.command = command # See runCommand()
         self.extension = extension
-        self.buildGUI(title, parent)
+        self.config: Config = config
+        self.buildGUI(title)
 
     
     def getSelectedFilePath(self):
         path = os.path.join(self.folder_entry.get(), self.fn.get())
         return path
 
-    def buildGUI(self, title, parent):
+    def getExtensionStr(self):
+        s = ""
+        if isinstance(self.extension, tuple):
+            for ext in self.extension:
+                s += ext + ' or '
+            s = s[:len(s)-4]
+        else:
+            s = self.extension
+        return s
+
+    def buildGUI(self, title):
         
         # Label setup
         frame = tk.Frame(self)
@@ -40,7 +53,7 @@ class FilePicker(tk.Frame):
         frame = tk.Frame(selection_frame)
         frame.pack(fill=tk.X, expand=tk.TRUE)
         self.fn = tk.StringVar(self)
-        self.fn.set("Select a ."+self.extension+" file")
+        self.fn.set("Select a "+self.getExtensionStr()+" file")
         self.filemenu = ttk.OptionMenu(frame, self.fn)
         self.filemenu.pack(side=tk.LEFT, fill=tk.X, expand=True)
 
@@ -51,10 +64,12 @@ class FilePicker(tk.Frame):
         self.validate_btn.pack(side=tk.BOTTOM, fill=tk.X, expand=tk.TRUE)
 
     def reset(self):
-        self.fn.set("Select a ."+self.extension+" file")
+        self.fn.set("Select a "+self.getExtensionStr()+" file")
 
     def is_selected(self):
-        return self.fn.get() != "Select a ."+self.extension+" file"
+        cur_fn = self.fn.get()
+        blank_fn = "Select a "+self.getExtensionStr()+" file"
+        return cur_fn != blank_fn
 
     def disable(self):
         print("disabled")
@@ -87,14 +102,14 @@ class FilePicker(tk.Frame):
     # select a directory, then will call loadDir() for that directory
     def browse(self, dir=None):
         if dir is None:
-            dir = askdirectory(initialdir=self.src_dir)
+            dir = askdirectory(initialdir=self.config.SRC_DIR)
         if dir: # check for user cancelled
             try:
                 self.loadDir(dir)
             except Exception as e:
                 showerror("error", "%s is not a valid directory.\n%s"%(dir, e))
                 self.folder_entry.delete(0, tk.END)
-                self.folder_entry.insert(0, self.src_dir)
+                self.folder_entry.insert(0, self.config.SRC_DIR)
 
 
 
@@ -113,7 +128,7 @@ class FilePicker(tk.Frame):
         for file in dir:
             self.filemenu['menu'].add_command(label=file, command=partial(self.runCommand, file))
         
-        self.fn.set("Select a file...")
+        self.fn.set("Select a "+self.getExtensionStr()+" file")
 
 
 class AutoSelectEntry(ttk.Entry):

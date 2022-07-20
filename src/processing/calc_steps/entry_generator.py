@@ -60,8 +60,8 @@ def getUserEntries(user_entry_dict: dict) -> UserEntries:
         return entry_data
 
 
-def verifyEntry(user_entry_dict):
-    if all(key in user_entry_dict for key in ('Country', 'State')):
-        print("keys are present")
-    else:
-        print("keys are not present")
+# def verifyEntry(user_entry_dict):
+#     if all(key in user_entry_dict for key in ('Country', 'State')):
+#         print("keys are present")
+#     else:
+#         print("keys are not present")

@@ -1,7 +1,10 @@
 {
     "output_schema_rpath": "data/export_data/DCU+2XLS.xsd",
     "example_output_json_rpath": "data/export_data/example_output_20220718.json",
+    "location_data_json_rpath": "data/location_data.json",
+    "timezone_data_json_rpath": "data/time_zone_data.json",
 
+    
     
     
     "entries": [

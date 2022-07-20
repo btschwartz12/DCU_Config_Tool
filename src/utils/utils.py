@@ -7,11 +7,7 @@ from dataclasses import dataclass, fields
 from enum import Enum
 
 
-class EntryType(Enum):
-    STRING = "string"
-    BOOLEAN = "boolean"
-    DROPDOWN = "dropdown"
-    NUMBER = "number"
+
 
 def isInt(s):
     try: 

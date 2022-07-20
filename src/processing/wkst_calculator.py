@@ -50,10 +50,11 @@ class StatusData:
 # main calculator in main file then all steps can be seperate files
 
 class WorksheetCalculator:
-    def __init__(self, controller, entry_data):
+    def __init__(self, controller, entry_data, frequency_data: FrequencyData):
         self.controller = controller
 
         self.entry_data_dict: dict = entry_data
+        self.FREQUENCY_DATA = frequency_data
 
         self.LOCATION_DATA = {}
         self.TIME_ZONE_DATA = {}
@@ -63,15 +64,11 @@ class WorksheetCalculator:
         with open(TIME_ZONE_DATA_FN, 'r') as f:
             self.TIME_ZONE_DATA.update(json.load(f))
 
-    def calculate(self, debug=False, freq_fn=None) :
-
-        try:
-            FREQUENCY_DATA: FrequencyData = getFrequencyData(debug, freq_fn)
-        except Exception as e:
-            messagebox.showerror("error 492: cannot obtain frequency data", str(e))
-            return
+    def calculate(self) :
 
         USER_ENTRIES: UserEntries = getUserEntries(self.entry_data_dict)
+        FREQUENCY_DATA: FrequencyData = self.FREQUENCY_DATA
+
         DTLS_DATA: DtlsData = getDtlsData(USER_ENTRIES, self.LOCATION_DATA)
         TIME_ZONE_DATA: dict = self.TIME_ZONE_DATA[USER_ENTRIES.Time_Zone_r14]
         STEP_4_DATA: Step4Data = getStep4Data(USER_ENTRIES, FREQUENCY_DATA)

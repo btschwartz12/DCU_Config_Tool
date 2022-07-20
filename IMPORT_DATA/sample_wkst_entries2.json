@@ -1,5 +1,5 @@
 {
-    "Customer Name": "Dothan, City of (AL)",
+    "Customer Name": "Test",
     "Contact Name": "Dan Danford",
     "Country": "United States",
     "State": "Alabama",
@@ -7,7 +7,7 @@
     "Street Address": "200 Kilgore Dr",
     "Zip Code": 36301,
     "Telephone Number": "334-725-3302",
-    "Email": "drdanford@dothan.org",
+    "Emcail": "drdanford@dothan.org",
     "Account Manager": "Frank Sublett",
     "Utility Head End Certificate Source": "Manufacturer",
     "DTLS Bypass Mode Allowed": false,
@@ -25,7 +25,7 @@
     "DCU Single Transmit T-Board Firmware": false,
     "DCU Drawing Number (from Fusion)": 0,
     "DCU Product Number (the Y number)": 0,
-    "Aclara Customer ID": 169811,
-    "Tool Version": "EF00001",
+    "Aclara Customer ID": 199999,
+    "Tool Version": "EF2",
     "Customer Configuration Id": "169811EF00001"
 }

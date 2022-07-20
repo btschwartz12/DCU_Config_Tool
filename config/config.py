@@ -26,6 +26,7 @@ class Config:
         self.VERSION = options.get("version") # Current app version
         self.SRC_DIR = options.get("SOURCE_DIRECTORY") # Directory where all files will be pulled from
         
+        
         self.DEBUG_MODE = options.get("debug_mode")
         self.DEBUG_SAMPLE_FREQS_JSON_RPATH = options.get("sample_freqs_json_fn")
         self.DEBUG_SAMPLE_ENTRIES_JSON_RPATH = options.get("sample_entries_json_fn")
@@ -36,6 +37,12 @@ class Config:
         self.ENTRIES = wkst_config.get("entries")
         self.DROPDOWN_OPTIONS = wkst_config.get("dropdown_options")
 
+        self.LOCATION_DATA_RPATH = wkst_config.get("location_data_json_rpath")
+        self.TIMEZONE_DATA_RPATH = wkst_config.get("timezone_data_json_rpath")
+
         for var, val in vars(self).items():
             if val == None:
                 raise Exception("error 102: cannot find value for config variable '"+var+"'. Please check config files.")
+
+
+        

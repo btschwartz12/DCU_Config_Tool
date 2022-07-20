@@ -3,6 +3,7 @@ import json
 import tkinter as tk
 from tkinter.filedialog import asksaveasfile
 from config.config import Config
+from src.processing.calc_steps.freqs_generator import FrequencyData
 from src.processing.export_xml import ExportData, getXMLstr
 from src.processing.wkst_calculator import StatusData, WorksheetCalculator
 
@@ -19,12 +20,16 @@ with open(CONFIG_FN, 'r') as f:
     WKST_CONFIG.update(json.load(f))
 
 class CalculationWindow(tk.Toplevel):
-    def __init__(self, wkst_page, config: Config, entry_data):
+    """This is the window that is shown every time the user has successfully loaded their
+    entries and frequencies. THis will show the status of the configuration, generate the output XML,
+    and export it accordingly"""
+    def __init__(self, DCU_PAGE, config: Config, entry_data, frequency_data: FrequencyData):
         tk.Toplevel.__init__(self)
-
         self.config = config
-        self.wkst_page = wkst_page
+
+        self.DCU_PAGE = DCU_PAGE
         self.entry_data = entry_data
+        self.FREQUENCY_DATA: FrequencyData = frequency_data
 
 
         self.__buildGUI()
@@ -34,7 +39,7 @@ class CalculationWindow(tk.Toplevel):
         self.grab_set()
 
     def __buildGUI(self):
-
+        """This will setup the view for the window"""
         self.geometry(dimensions)
 
         top_frame = tk.Frame(self)
@@ -42,7 +47,6 @@ class CalculationWindow(tk.Toplevel):
 
         tk.Label(top_frame, text="Calculations", font=('Times', 13), bg='pink').pack(fill=tk.X)
         tk.Button(top_frame, text="Calculate", bg='red', command = self.__calculate).pack(fill=tk.X, expand=True)
-
 
         status_frame = tk.Frame(self)
         status_frame.pack(fill=tk.BOTH, expand=True, anchor=tk.S)
@@ -70,22 +74,13 @@ class CalculationWindow(tk.Toplevel):
         tk.Label(bottom_frame, textvariable=self.status).pack(fill=tk.BOTH, expand=True)
         tk.Button(bottom_frame, text="Export", bg='yellow', command=self.__export).pack(fill=tk.X, expand=True, anchor=tk.S)
 
-
-
     def __calculate(self):
+        """This will take the user entries and frequencies, and create an instance of a WorksheetCalculator. 
+        The calculator will be able to generate all relevent data pertaining to the creation of the xml. 
+        Upon calculations, the calculator will generate the status of the configuration, and present that to the screen."""
 
-        if self.config.DEBUG_MODE == True:
-
-            entry_data_dict = {}
-            with open(self.config.DEBUG_SAMPLE_ENTRIES_JSON_RPATH, 'r') as f:
-                entry_data_dict.update(json.load(f))
-
-            self.calculator = WorksheetCalculator(self.config, entry_data_dict)
-            self.calculator.calculate(debug=True, freq_fn=self.config.DEBUG_SAMPLE_FREQS_JSON_RPATH)
-        
-        else:
-            self.calculator = WorksheetCalculator(self.config, self.entry_data)
-            self.calculator.calculate()
+        self.calculator = WorksheetCalculator(self.config, self.entry_data, self.FREQUENCY_DATA)
+        self.calculator.calculate()
 
         status_data: StatusData = self.calculator.STATUS_DATA
 
@@ -97,6 +92,9 @@ class CalculationWindow(tk.Toplevel):
         self.status.set("Successfully generated XML")
 
     def __export(self):
+        """This will take the previously generated data from the calculator and fetch the 
+        calculator's ExportData. The ExportData will then be converted to a string, and written
+        to a specified file"""
         print("exporting")
         EXPORT_DATA: ExportData = self.calculator.getExportData()
         xml_str = getXMLstr(EXPORT_DATA, self.config)
