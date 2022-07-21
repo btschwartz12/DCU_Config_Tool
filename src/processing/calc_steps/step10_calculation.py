@@ -1,3 +1,13 @@
+# step10_calculation.py
+# 6/20/22
+# Ben Schwartz
+#
+# Defines the data structure associated with the calculations for
+# this step, does all necessary calculations to initialize an instance
+# of the data structure, and returns it for future use
+
+# Corresponding Excel worksheet rows: 149-150
+
 from dataclasses import dataclass, fields
 from src.processing.calc_steps.freqs_generator import FrequencyData
 
@@ -14,11 +24,7 @@ class Step10Data(StepData):
 
 def getStep10Data(FREQ_DATA: FrequencyData) -> Step10Data:
     """This will look at all frequencies, and generate lists of 
-    frequencies
-    
-    Data Used: FrequencyData
-    Corresponding excel rows: 
-    Step(s) / Block(s): 
+    frequencies.
     """   
 
     STEP_10_DATA = Step10Data()  

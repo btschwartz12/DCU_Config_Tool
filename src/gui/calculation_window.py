@@ -1,28 +1,28 @@
+# calculation_window.py
+# 6/20/22
+# Ben Schwartz
+#
+# Holds the CalculationWindow, which is the GUI for the 
+# DCU XML generator.
+
 from datetime import datetime
-import json
 import tkinter as tk
 from tkinter.filedialog import asksaveasfile
 from config.config import Config
 from src.processing.calc_steps.freqs_generator import FrequencyData
-from src.processing.export_xml import ExportData, getXMLstr
+from src.processing.calc_steps.xml_generator import ExportData, getXMLstr
 from src.processing.wkst_calculator import StatusData, WorksheetCalculator
 
 from src.gui.wkst_entry import WorksheetStatusEntry
 
 
-dimensions="700x400"
-CONFIG_FN = "config/wkst_config.json"
+DIMENSIONS = "700x400"
 
-
-
-WKST_CONFIG = {}
-with open(CONFIG_FN, 'r') as f:
-    WKST_CONFIG.update(json.load(f))
 
 class CalculationWindow(tk.Toplevel):
     """This is the window that is shown every time the user has successfully loaded their
     entries and frequencies. THis will show the status of the configuration, generate the output XML,
-    and export it accordingly"""
+    and export it accordingly."""
     def __init__(self, DCU_PAGE, config: Config, entry_data, frequency_data: FrequencyData):
         tk.Toplevel.__init__(self)
         self.config = config
@@ -40,7 +40,7 @@ class CalculationWindow(tk.Toplevel):
 
     def __buildGUI(self):
         """This will setup the view for the window"""
-        self.geometry(dimensions)
+        self.geometry(DIMENSIONS)
 
         top_frame = tk.Frame(self)
         top_frame.pack(fill=tk.X)

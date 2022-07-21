@@ -1,3 +1,13 @@
+# step11_calculation.py
+# 6/20/22
+# Ben Schwartz
+#
+# Defines the data structure associated with the calculations for
+# this step, does all necessary calculations to initialize an instance
+# of the data structure, and returns it for future use
+
+# Corresponding Excel worksheet rows: 152-179
+
 from dataclasses import dataclass, fields
 from src.processing.calc_steps.DTLS_generator import DtlsData
 from src.processing.calc_steps.entry_generator import UserEntries
@@ -42,11 +52,7 @@ class Step11Data(StepData):
 
 def getStep11Data(DTLS_DATA: DtlsData, TIME_ZONE_DATA: dict, USER_ENTRIES: UserEntries, FREQ_DATA: FrequencyData, DATA_10: Step10Data) -> Step11Data:
     """This will look at all previously generated data
-    and fill all the fields that will be used for the xml
-    
-    Data Used: 
-    Corresponding excel rows: 
-    Step(s) / Block(s): 
+    and fill all the fields that will be used for the xml.
     """   
 
     STEP_11_DATA = Step11Data()  

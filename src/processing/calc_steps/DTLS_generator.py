@@ -1,11 +1,11 @@
+# DTLS_generator.py
+# 6/20/22
+# Ben Schwartz & Mark Dubuque
+#
+# Takes user-entered data and generates DTLS info
 
 from dataclasses import dataclass
-
 from src.processing.calc_steps.entry_generator import UserEntries
-
-
-
-
 
 @dataclass
 class DtlsData:

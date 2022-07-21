@@ -1,21 +1,19 @@
+# wkst_calculator.py
+# 6/20/22
+# Ben Schwartz
+#
+# Holds the WorksheetCalculator, which calculates 
+# data for each step and combines them to generate
+# the configuration status and the export XML
 
-
-from abc import abstractclassmethod
-from dataclasses import dataclass, fields
+from dataclasses import dataclass
 from datetime import datetime
 import json
-from pprint import pformat, pprint
-from re import S
-import re
-from tkinter import messagebox
-from typing import OrderedDict
-from unittest.util import strclass
 
-import xmlschema
+from config.config import Config
 from src.processing.calc_steps.DTLS_generator import DtlsData, getDtlsData
 from src.processing.calc_steps.entry_generator import UserEntries, getUserEntries
-
-from src.processing.calc_steps.freqs_generator import FrequencyData, getFrequencyData
+from src.processing.calc_steps.freqs_generator import FrequencyData
 from src.processing.calc_steps.step10_calculation import Step10Data, getStep10Data
 from src.processing.calc_steps.step11_calculation import Step11Data, getStep11Data
 from src.processing.calc_steps.step4_calculation import Step4Data, getStep4Data
@@ -24,14 +22,16 @@ from src.processing.calc_steps.step6_calculation import Step6Data, getStep6Data
 from src.processing.calc_steps.step7_calculation import Step7Data, getStep7Data
 from src.processing.calc_steps.step8_calculation import Step8Data, getStep8Data
 from src.processing.calc_steps.step9_calculation import Step9Data, getStep9Data
-from src.processing.export_xml import ExportData
-from src.utils.utils import toStr
+from src.utils.utils import StatusData, toStr
 
 
-
-LOCATION_DATA_FN = "data/location_data.json"
-TIME_ZONE_DATA_FN = "data/time_zone_data.json"
-
+@dataclass 
+class ExportData:
+    USER_ENTRIES: UserEntries
+    DATA_7: Step7Data
+    DATA_8: Step8Data
+    DATA_9: Step9Data
+    DATA_11: Step11Data
 
 @dataclass
 class StatusData:
@@ -40,18 +40,11 @@ class StatusData:
     DTLS_Bypass_Allowed_DTLS_FIELD_TRIAL_false: str = None
     DCU_Configuration: str = None
 
-    def getValList(self):
-        vals = []
-        for field in fields(self):
-            vals.append(getattr(self, field.name))
-        return vals
-
-# HERE7 make an interface that has all of the steps and functions, then implement 
-# main calculator in main file then all steps can be seperate files
-
 class WorksheetCalculator:
-    def __init__(self, controller, entry_data, frequency_data: FrequencyData):
-        self.controller = controller
+    """This is used by the CalculationWindow, and will take in frequency data and
+    user entries to generate the ExportData, making use of all step calculations."""
+    def __init__(self, config: Config, entry_data, frequency_data: FrequencyData):
+        self.config = config
 
         self.entry_data_dict: dict = entry_data
         self.FREQUENCY_DATA = frequency_data
@@ -59,9 +52,9 @@ class WorksheetCalculator:
         self.LOCATION_DATA = {}
         self.TIME_ZONE_DATA = {}
         
-        with open(LOCATION_DATA_FN, 'r') as f:
+        with open(self.config.LOCATION_DATA_RPATH, 'r') as f:
             self.LOCATION_DATA.update(json.load(f))
-        with open(TIME_ZONE_DATA_FN, 'r') as f:
+        with open(self.config.TIMEZONE_DATA_RPATH, 'r') as f:
             self.TIME_ZONE_DATA.update(json.load(f))
 
     def calculate(self) :
@@ -80,17 +73,18 @@ class WorksheetCalculator:
         STEP_10_DATA: Step10Data = getStep10Data(FREQUENCY_DATA)
         STEP_11_DATA: Step11Data = getStep11Data(DTLS_DATA, TIME_ZONE_DATA, USER_ENTRIES, FREQUENCY_DATA, STEP_10_DATA)
 
-        with open('WKST_SAMPLES/runtime_calcs.txt', 'w+') as f:
-            f.write("\n\n\n               ***USER ENTRIES***\n\n"+json.dumps(USER_ENTRIES.getOrderedDict(), indent=2)); f.flush()
-            f.write("\n\n\n               ***FREQUENCY DATA***\n\n"+json.dumps(FREQUENCY_DATA.getOrderedDict(), indent=2)); f.flush()
-            f.write("\n\n\n               ***STEP 4***\n\n"+json.dumps(STEP_4_DATA.getOrderedDict(), indent=2)); f.flush()
-            f.write("\n\n\n               ***STEP 5***\n\n"+json.dumps(STEP_5_DATA.getOrderedDict(), indent=2)); f.flush()
-            f.write("\n\n\n               ***STEP 6***\n\n"+json.dumps(STEP_6_DATA.getOrderedDict(), indent=2)); f.flush()
-            f.write("\n\n\n               ***STEP 7***\n\n"+json.dumps(STEP_7_DATA.getOrderedDict(), indent=2)); f.flush()
-            f.write("\n\n\n               ***STEP 8***\n\n"+json.dumps(STEP_8_DATA.getOrderedDict(), indent=2)); f.flush()
-            f.write("\n\n\n               ***STEP 9***\n\n"+json.dumps(STEP_9_DATA.getOrderedDict(), indent=2)); f.flush()
-            f.write("\n\n\n               ***STEP 10***\n\n"+json.dumps(STEP_10_DATA.getOrderedDict(), indent=2)); f.flush()
-            f.write("\n\n\n               ***STEP 11***\n\n"+json.dumps(STEP_11_DATA.getOrderedDict(), indent=2)); f.flush()
+        with open(self.config.RUNTIME_LOG_RPATH, 'w+') as f:
+            f.write("CALCULATION LOG FOR RUN: "+datetime.now.strftime('%Y/%m/%d-%H:%M:%S'))
+            f.write("\n\n\n\t\t\t***USER ENTRIES***\n\n"+json.dumps(USER_ENTRIES.getOrderedDict(), indent=2)); f.flush()
+            f.write("\n\n\n\t\t\t***FREQUENCY DATA***\n\n"+json.dumps(FREQUENCY_DATA.getOrderedDict(), indent=2)); f.flush()
+            f.write("\n\n\n\t\t\t***STEP 4***\n\n"+json.dumps(STEP_4_DATA.getOrderedDict(), indent=2)); f.flush()
+            f.write("\n\n\n\t\t\t***STEP 5***\n\n"+json.dumps(STEP_5_DATA.getOrderedDict(), indent=2)); f.flush()
+            f.write("\n\n\n\t\t\t***STEP 6***\n\n"+json.dumps(STEP_6_DATA.getOrderedDict(), indent=2)); f.flush()
+            f.write("\n\n\n\t\t\t***STEP 7***\n\n"+json.dumps(STEP_7_DATA.getOrderedDict(), indent=2)); f.flush()
+            f.write("\n\n\n\t\t\t***STEP 8***\n\n"+json.dumps(STEP_8_DATA.getOrderedDict(), indent=2)); f.flush()
+            f.write("\n\n\n\t\t\t***STEP 9***\n\n"+json.dumps(STEP_9_DATA.getOrderedDict(), indent=2)); f.flush()
+            f.write("\n\n\n\t\t\t***STEP 10***\n\n"+json.dumps(STEP_10_DATA.getOrderedDict(), indent=2)); f.flush()
+            f.write("\n\n\n\t\t\t***STEP 11***\n\n"+json.dumps(STEP_11_DATA.getOrderedDict(), indent=2)); f.flush()
         
         self.EXPORT_DATA: ExportData = ExportData(USER_ENTRIES, STEP_7_DATA, STEP_8_DATA, STEP_9_DATA, STEP_11_DATA)
         self.STATUS_DATA: StatusData = self.__getStatusData(USER_ENTRIES, DTLS_DATA, STEP_4_DATA)

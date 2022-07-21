@@ -1,3 +1,12 @@
+# step4_calculation.py
+# 6/20/22
+# Ben Schwartz
+#
+# Defines the data structure associated with the calculations for
+# this step, does all necessary calculations to initialize an instance
+# of the data structure, and returns it for future use
+
+# Corresponding Excel worksheet rows: 65-86
 
 from dataclasses import dataclass, fields
 from src.processing.calc_steps.entry_generator import UserEntries
@@ -33,11 +42,7 @@ class Step4Data(StepData):
 def getStep4Data(USER_ENTRIES: UserEntries, FREQUENCY_DATA: FrequencyData) -> Step4Data:
         """This will use the generated FrequencyData as well as the user 
         entries to populate the required data. See Step4Data for a description
-        of fields calculated in this step
-        
-        Data Used: FrequencyData, user entries
-        Corresponding excel rows: 65-86
-        Step(s) / Block(s): 3, user entries
+        of fields calculated in this step.
         """
         
         STEP_4_DATA = Step4Data() # Create the data object

@@ -1,3 +1,10 @@
+# xml_generator.py
+# 6/20/22
+# Ben Schwartz
+#
+# Takes export data generated from the calculator and 
+# converts it to an XML string, according to the schema
+# and template xml
 
 from dataclasses import dataclass
 import json
@@ -9,23 +16,17 @@ from src.processing.calc_steps.step11_calculation import Step11Data
 from src.processing.calc_steps.step7_calculation import Step7Data
 from src.processing.calc_steps.step8_calculation import Step8Data
 from src.processing.calc_steps.step9_calculation import Step9Data
+from src.processing.wkst_calculator import ExportData
 from src.utils.utils import toStr
 
 
 EXPORT_FN_FORMAT = "DCU2+XLS_%Y%d%m-%H%M%S.xml"
 
-@dataclass 
-class ExportData:
-    USER_ENTRIES: UserEntries
-    DATA_7: Step7Data
-    DATA_8: Step8Data
-    DATA_9: Step9Data
-    DATA_11: Step11Data
 
 def getXMLstr(data: ExportData, config: Config) -> str:
     """This will take the data generated from all of the calculations, and create 
     an XML for export. It will first take an example output to get the correct keys, 
-    populate with correct values, and convert back into XML ∫using the xmlschema module."""
+    populate with correct values, and convert back into XML using the xmlschema module."""
     XML_DICT = {}
 
     with open(config.EXPORT_TEMPLATE_JSON_RPATH, 'r') as f:

@@ -2,15 +2,12 @@ from __future__ import generator_stop
 from dataclasses import dataclass, fields
 import json
 from pprint import pformat
-from re import L
-from tkinter import messagebox
-from typing import OrderedDict
 from openpyxl import load_workbook
 
 
 from src.utils.utils import StepData
 
-
+SHEET_NAME = "CustomerFreqs"
 
 REQUIRED_KEYS = ["Customer ID", "Customer Name", "Frequency", "Frequency Use"]
 
@@ -195,7 +192,7 @@ def getFrequencyData(FREQUENCIES_FN) -> FrequencyData:
             freq_generator.loadFreqsFromJson(FREQUENCIES_FN)
 
         elif FREQUENCIES_FN.endswith('xlsx'):
-            freq_generator.loadFreqsFromExcel(FREQUENCIES_FN, "CustomerFreqs")
+            freq_generator.loadFreqsFromExcel(FREQUENCIES_FN, SHEET_NAME)
 
         else:
             print("error 303")

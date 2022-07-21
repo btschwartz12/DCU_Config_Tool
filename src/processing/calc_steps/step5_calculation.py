@@ -1,3 +1,12 @@
+# step5_calculation.py
+# 6/20/22
+# Ben Schwartz
+#
+# Defines the data structure associated with the calculations for
+# this step, does all necessary calculations to initialize an instance
+# of the data structure, and returns it for future use
+
+# Corresponding Excel worksheet rows: 88-103
 
 from dataclasses import dataclass, fields
 from math import floor, log10
@@ -61,12 +70,8 @@ def func3(val1:int, min:int, val2:int):
 
 
 def getStep5Data(DATA_4: Step4Data) -> Step5Data:
-    """This will use the previously calculated DATA_4 to 
-    generate the DATA_4 for step5
-    
-    Data Used: DATA_4 (65-86)
-    Corresponding excel rows: 88-103
-    Step(s) / Block(s): 4
+    """This will use the previously calculated Step4Data to 
+    generate the Step4Data for step5.
     """
     STEP_5_DATA = Step5Data()
 

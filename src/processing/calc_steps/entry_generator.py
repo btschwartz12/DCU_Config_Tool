@@ -1,3 +1,10 @@
+# entry_generator.py
+# 6/20/22
+# Ben Schwartz
+#
+# Defines the user entries data structure and offers a
+# constructor with a dict parameter
+
 from dataclasses import dataclass
 
 from src.utils.utils import StepData

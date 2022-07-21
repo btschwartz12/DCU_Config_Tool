@@ -1,3 +1,12 @@
+# step6_calculation.py
+# 6/20/22
+# Ben Schwartz
+#
+# Defines the data structure associated with the calculations for
+# this step, does all necessary calculations to initialize an instance
+# of the data structure, and returns it for future use
+
+# Corresponding Excel worksheet rows: 105-120
 
 from dataclasses import dataclass, fields
 
@@ -58,11 +67,7 @@ def func2(val, addend=None):
 
 def getStep6Data(DATA_FREQ: FrequencyData, DATA_4: Step4Data, DATA_5: Step5Data):
     """This will use the previously calculated Step4Data, Step5Data,
-    and existing FrequencyData to generate a Step6Data object
-    
-    Data Used: Step4Data, Step5Data, FrequencyData
-    Corresponding excel rows: 46-103
-    Step(s) / Block(s): 3, 4, 5
+    and existing FrequencyData to generate a Step6Data object.
     """
     
     STEP_6_DATA = Step6Data()

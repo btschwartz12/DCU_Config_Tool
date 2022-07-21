@@ -4,5 +4,6 @@
     - user entries
     - status
 
-2. yes and no check buttons
+2.verify freq names with entry names and IDs
+
 

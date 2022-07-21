@@ -4,9 +4,11 @@
     "location_data_json_rpath": "data/location_data.json",
     "timezone_data_json_rpath": "data/time_zone_data.json",
 
-    
-    
-    
+    "default_country": "United States",
+    "default_entry_directory": "IMPORT_DATA",
+    "default_freqs_directory": "IMPORT_DATA",
+    "runtime_log_rpath": "DEBUG_DATA/runtime_log.txt",
+
     "entries": [
         {
             "name": "Customer Name",

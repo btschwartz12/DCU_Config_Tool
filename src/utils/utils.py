@@ -7,7 +7,11 @@ from dataclasses import dataclass, fields
 from enum import Enum
 
 
-
+class EntryType(Enum):
+    STRING = "string"
+    BOOLEAN = "boolean"
+    DROPDOWN = "dropdown"
+    NUMBER = "number"
 
 def isInt(s):
     try: 
@@ -48,6 +52,14 @@ class StepData:
             val = getattr(self, field.name)
             data[field.name] = val
         return data
+
+
+
+class EntryException(Exception):
+    def __init__(self, name, msg):
+        self.entry_name = name
+        self.error_msg = msg
+
 
 
 

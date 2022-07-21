@@ -1,23 +1,20 @@
+# screen.py
+# 6/20/22
+# Ben Schwartz
+#
+# Holds the WorksheetEntry, which is a view
+# for each row of the first page.
 
 from enum import Enum
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
+
 from config.config import Config
-
-
-
 from src.utils.filepicker import AutoSelectEntry
-from src.utils.utils import isInt
+from src.utils.utils import EntryType, isInt
 
-class EntryType(Enum):
-    STRING = "string"
-    BOOLEAN = "boolean"
-    DROPDOWN = "dropdown"
-    NUMBER = "number"
 
-# Have 2 mutually exclusive checkboxes
-# make is_editable do something
 
 COLORS = ('#00137C', 'black')
 

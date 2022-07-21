@@ -1,3 +1,13 @@
+# step7_calculation.py
+# 6/20/22
+# Ben Schwartz
+#
+# Defines the data structure associated with the calculations for
+# this step, does all necessary calculations to initialize an instance
+# of the data structure, and returns it for future use
+
+# Corresponding Excel worksheet rows: 122-128
+
 from dataclasses import dataclass, fields
 from src.processing.calc_steps.freqs_generator import FrequencyData
 
@@ -18,11 +28,7 @@ class Step7Data(StepData): # step 7
 
 def getStep7Data(FREQ_DATA: FrequencyData, DATA_5: Step5Data, DATA_6: Step6Data):
     """This will use the previously calculated the slot 3 data,
-    using the frequency data, as well as computations from step 5 and 6
-    
-    Data Used: Step5Data, Step6Data, FrequencyData
-    Corresponding excel rows: 
-    Step(s) / Block(s): 3, 5, 6
+    using the frequency data, as well as computations from step 5 and 6.
     """   
 
     STEP_7_DATA = Step7Data()   

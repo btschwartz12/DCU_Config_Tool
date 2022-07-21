@@ -1,3 +1,13 @@
+# step9_calculation.py
+# 6/20/22
+# Ben Schwartz
+#
+# Defines the data structure associated with the calculations for
+# this step, does all necessary calculations to initialize an instance
+# of the data structure, and returns it for future use
+
+# Corresponding Excel worksheet rows: 138-147
+
 from dataclasses import dataclass, fields
 from src.processing.calc_steps.freqs_generator import FrequencyData
 
@@ -21,11 +31,7 @@ class Step9Data(StepData):
 
 def getStep9Data(FREQ_DATA: FrequencyData, DATA_5: Step5Data, DATA_6: Step6Data) -> Step9Data:
     """This will use look at the frequencies and types for each 
-    channel of each slot, and record a list of frequencies for each type
-    
-    Data Used: Step5Data, Step6Data
-    Corresponding excel rows: 
-    Step(s) / Block(s): 
+    channel of each slot, and record a list of frequencies for each type.
     """   
 
     STEP_9_DATA = Step9Data()  

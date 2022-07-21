@@ -25,7 +25,12 @@ class Config:
 
         self.VERSION = options.get("version") # Current app version
         self.SRC_DIR = options.get("SOURCE_DIRECTORY") # Directory where all files will be pulled from
+
+        self.RUNTIME_LOG_RPATH = wkst_config.get("runtime_log_rpath")
         
+        self.DEFAULT_COUNTRY = wkst_config.get("default_country")
+        self.DEFAULT_ENTRY_DIRECTORY = wkst_config.get("default_entry_directory")
+        self.DEFAULT_FREQS_DIRECTORY = wkst_config.get("default_freqs_directory")
         
         self.DEBUG_MODE = options.get("debug_mode")
         self.DEBUG_SAMPLE_FREQS_JSON_RPATH = options.get("sample_freqs_json_fn")

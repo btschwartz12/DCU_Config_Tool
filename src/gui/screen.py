@@ -1,5 +1,9 @@
-
-# GUI
+# screen.py
+# 6/20/22
+# Ben Schwartz
+#
+# Holds the DcuWorksheetPage, which is the main screen that
+# is shown throughout the usage of the tool
 
 from datetime import datetime
 import json
@@ -18,21 +22,10 @@ from src.gui.wkst_entry import EntryType, WorksheetEntry
 from src.processing.calc_steps.freqs_generator import FrequencyData, getFrequencyData
 from src.utils.filepicker import FilePicker
 from src.utils.scrollframe import VerticalScrolledFrame
-
-
-
-DEFAULT_COUNTRY = "United States"
-DEFAULT_ENTRY_DIRECTORY = 'IMPORT_DATA'
-DEFAULT_FREQS_DIRECTORY = "IMPORT_DATA"
+from src.utils.utils import EntryException
 
 NOT_READY_COLOR = 'red'
 READY_COLOR = 'green'
-
-
-class EntryException(Exception):
-    def __init__(self, name, msg):
-        self.entry_name = name
-        self.error_msg = msg
 
 class DcuWorksheetPage(tk.Frame):
     """This is the first page that is shown in the app, and will allow the user 
@@ -82,11 +75,11 @@ class DcuWorksheetPage(tk.Frame):
 
         self.worksheet_fp = FilePicker(worksheet_frame, self.config, title="Worksheet Import (.json)", extension='.json', command=self.__loadEntries, bg=NOT_READY_COLOR)
         self.worksheet_fp.pack(fill=tk.BOTH, expand=True)
-        self.worksheet_fp.loadDir(os.path.join(self.config.SRC_DIR, DEFAULT_ENTRY_DIRECTORY))
+        self.worksheet_fp.loadDir(os.path.join(self.config.SRC_DIR, self.config.DEFAULT_ENTRY_DIRECTORY))
 
         self.frequency_fp = FilePicker(frequency_frame, self.config, title="Frequency Import (.xlsx or .json)", extension=('.json', '.xlsx'), command=self.__loadFrequencies, bg=NOT_READY_COLOR)
         self.frequency_fp.pack(fill=tk.BOTH, expand=True)
-        self.frequency_fp.loadDir(os.path.join(self.config.SRC_DIR, DEFAULT_FREQS_DIRECTORY))
+        self.frequency_fp.loadDir(os.path.join(self.config.SRC_DIR, self.config.DEFAULT_FREQS_DIRECTORY))
 
         self.worksheet_color_box = tk.Label(worksheet_frame, text="", bg=NOT_READY_COLOR)
         self.worksheet_color_box.pack(fill=tk.X, expand=True, anchor=tk.S)
@@ -278,7 +271,7 @@ class DcuWorksheetPage(tk.Frame):
         elif name == "Country":
             dropdown_options = list(self.LOCATION_DATA.keys())
         elif name == "State":
-            dropdown_options = list(self.LOCATION_DATA[DEFAULT_COUNTRY]["states"].keys())
+            dropdown_options = list(self.LOCATION_DATA[self.config.DEFAULT_COUNTRY]["states"].keys())
         
         return dropdown_options
 
@@ -340,7 +333,3 @@ class DcuWorksheetPage(tk.Frame):
         
 
  
-
-
-    
-
