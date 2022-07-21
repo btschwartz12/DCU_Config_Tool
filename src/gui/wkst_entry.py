@@ -23,7 +23,7 @@ class WorksheetEntry(tk.Frame):
     Each WorksheetEntry will have a name, a type (EntryType), and flags 
     indicating weather or not it is editable or required. For entries that
     have dropdown options, those are passed along in the constructor as well"""
-    def __init__(self, master, DCU_PAGE, config: Config, name: str, entry_type: EntryType, editable:bool, required:bool, dropdown_options, count=None, comment=None):
+    def __init__(self, master, DCU_PAGE, config: Config, name: str, entry_type: EntryType, editable:bool, required:bool, dropdown_options, count=None, comment=None, default_value=None):
         tk.Frame.__init__(self, master)
         self.config: Config = config 
         
@@ -49,6 +49,9 @@ class WorksheetEntry(tk.Frame):
             self.color_str = COLORS[1]
 
         self.__buildGUI()
+
+        if default_value is not None:
+            self.setValue(default_value)
 
     def __buildGUI(self):
         """This will create the view that holds the WorksheetEntry,
@@ -88,30 +91,16 @@ class WorksheetEntry(tk.Frame):
         info_button.config(command=self.__help)
         info_button.pack(expand=False, side=tk.RIGHT)
 
-
-    def __help(self):
-        """This dictates what is shown when the user clicks the info
-        button. If there is a comment provided with the entry,
-        that is shown. If not, a unhelpful message is shwon"""
-        help_str = ""
-
-        if self.comment is None:
-            help_str = "No addidional information exists for "+self.name
-            if not self.is_required:
-                help_str = self.name+" is OK to leave empty"
-        else:
-            help_str = self.comment
-
-        messagebox.showinfo("Entry Information", help_str)
-
-
     def __buildEntryFrame(self):
         """This is called during __buildGUI(), and will look at the EntryType of the entry and
         build the corresponding view. All EntryType's will still have a self.entry variable that 
         is used for further calculations"""
         if self.type == EntryType.STRING:
-            self.entry = AutoSelectEntry(self.entry_frame, foreground=self.color_str, command=self.DCU_PAGE.updateEntryColorBox, justify='center')
+            self.entry = AutoSelectEntry(self.entry_frame, foreground=self.color_str, command=self.updateValue, justify='center')
             self.entry.pack(fill=tk.BOTH, expand=True)
+            if not self.is_editable:
+                self.entry.config(state=tk.DISABLED)
+                self.entry.bind('<Double-Button-1>', self.__showEditWarningMessage)
         
         elif self.type == EntryType.BOOLEAN:
             self.entry = tk.IntVar()
@@ -130,8 +119,11 @@ class WorksheetEntry(tk.Frame):
             self.combobox.current(0)
 
         elif self.type == EntryType.NUMBER:
-            self.entry = AutoSelectEntry(self.entry_frame, foreground=self.color_str, command=self.DCU_PAGE.updateEntryColorBox, justify='center')
+            self.entry = AutoSelectEntry(self.entry_frame, foreground=self.color_str, command=self.updateValue, justify='center')
             self.entry.pack(fill=tk.BOTH, expand=True)
+            if not self.is_editable:
+                self.entry.config(state=tk.DISABLED)
+                self.entry.bind('<Double-Button-1>', self.__showEditWarningMessage)
             
     def __checkEntryIsInt(self, event=None):
         """This is called every time the user puts a value in an entry that has
@@ -158,6 +150,8 @@ class WorksheetEntry(tk.Frame):
             return self.entry.get()
         elif self.type == EntryType.NUMBER:
             self.__checkEntryIsInt()
+            if self.entry.get() == '':
+                return ''
             return int(self.entry.get())
 
     def isSelected(self):
@@ -171,6 +165,27 @@ class WorksheetEntry(tk.Frame):
             return True
         elif self.type == EntryType.NUMBER:
             return self.entry.get() != ""
+
+    def updateValue(self, value):
+        """This is called every time a entry containing a string or number
+        is changed. This allows non-editable fields to be correctly updated"""
+        if self.type == EntryType.STRING:
+            if not self.is_editable:
+                self.entry.config(state=tk.NORMAL)
+            self.entry.set(value)
+            if not self.is_editable:
+                self.entry.config(state=tk.DISABLED)
+
+        elif self.type == EntryType.NUMBER:
+            self.__checkEntryIsInt()
+            if not self.is_editable:
+                self.entry.config(state=tk.NORMAL)
+            if self.entry.get() != "":
+                self.entry.set(int(value))
+            if not self.is_editable:
+                self.entry.config(state=tk.DISABLED) 
+
+        self.DCU_PAGE.updateEntryColorBox()  
 
     def setValue(self, value):
         """This is called every time the user imports a previous
@@ -200,6 +215,27 @@ class WorksheetEntry(tk.Frame):
             self.entry.set(int(value))
             if not self.is_editable:
                 self.entry.config(state=tk.DISABLED)
+
+    def __help(self):
+        """This dictates what is shown when the user clicks the info
+        button. If there is a comment provided with the entry,
+        that is shown. If not, a unhelpful message is shwon"""
+        help_str = ""
+
+        if self.comment is None:
+            help_str = "No addidional information exists for "+self.name
+            if not self.is_required:
+                help_str = self.name+" is OK to leave empty"
+        else:
+            help_str = self.comment
+
+        messagebox.showinfo("Entry Information", help_str)
+
+    def __showEditWarningMessage(self, event=None):
+        messagebox.showwarning("Warning", "You may now edit this field.\n\nPlease ensure this directly corresponds to the frequency file.")
+        self.entry.config(state=tk.NORMAL)
+
+        
             
             
 

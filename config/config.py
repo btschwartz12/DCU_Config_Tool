@@ -45,6 +45,8 @@ class Config:
         self.LOCATION_DATA_RPATH = wkst_config.get("location_data_json_rpath")
         self.TIMEZONE_DATA_RPATH = wkst_config.get("timezone_data_json_rpath")
 
+        self.FREQUENCY_KEYS = wkst_config.get("frequency_keys")
+
         for var, val in vars(self).items():
             if val == None:
                 raise Exception("error 102: cannot find value for config variable '"+var+"'. Please check config files.")

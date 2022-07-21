@@ -9,6 +9,13 @@
     "default_freqs_directory": "IMPORT_DATA",
     "runtime_log_rpath": "DEBUG_DATA/runtime_log.txt",
 
+    "frequency_keys": {
+        "name": "Customer Name",
+        "id": "Customer ID",
+        "frequency": "Frequency",
+        "type": "Frequency Use"
+    },
+
     "entries": [
         {
             "name": "Customer Name",
@@ -92,6 +99,7 @@
         {
             "name": "Daily Shift Time (hours after midnight local)",
             "type": "number",
+            "default_value": 0,
             "editable": true,
             "required": true,
             "comment": "May be overridden by KV2cFW2.0Cover"
@@ -105,6 +113,7 @@
         {
             "name": "Outage Last Gasp Delay [30s, Default: 30s]",
             "type": "number",
+            "default_value": 30,
             "editable": true,
             "required": true,
             "comment": "May be overridden by KV2cFW2.0Cover"
@@ -112,6 +121,7 @@
         {
             "name": "Restoration Delay [15s, Default: 15s]",
             "type": "number",
+            "default_value": 15,
             "editable": true,
             "required": true
         },
@@ -148,6 +158,7 @@
         {
             "name": "DCU T-Boards [DCU2+]",
             "type": "dropdown",
+            "default_value": "2",
             "editable": true,
             "required": true
         },

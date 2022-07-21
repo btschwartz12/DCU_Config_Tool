@@ -1,4 +1,4 @@
-# screen.py
+# main_screen.py
 # 6/20/22
 # Ben Schwartz
 #
@@ -114,127 +114,84 @@ class DcuWorksheetPage(tk.Frame):
         tk.Button(btn_frame, text="Calculate & Export", command=self.__calculateAndExport, bg='yellow').grid(row=0, column=1, sticky=tk.NSEW)
 
         self.__loadEntryViews()
+    
+    def __loadEntryViews(self):
+            """This will look at the entries defined in the config file, and build WorksheetEntry objects for each 
+            entry object. The created entry will then be added to a map (self.entries) that is used for lookup later"""
+            entries = self.config.ENTRIES
+            dropdowns = self.config.DROPDOWN_OPTIONS
+            self.states_by_country = dropdowns["State"]
 
-    def __calculateAndExport(self):
-        """This is called every time the user clicks the calculate and export button.
-        It will first try to fetch the user entries, and show an error message if not
-        all required fields are selected. If the entry data looks good, it will then show
-        the CalculationWindow"""
+            for i, entry in enumerate(entries):
+                
+                name = entry["name"]
+                entry_type = EntryType(entry["type"])
+                is_editable = bool(entry["editable"])
+                is_required = bool(entry["required"])
+                comment = entry.get("comment")
+                default_value = entry.get("default_value")
+                dropdown_options = None
 
-        if not hasattr(self, 'FREQUENCY_DATA'):
-            self.status.set("Please load frequencies")
-            return
+                if entry_type == EntryType.DROPDOWN:
+                    try:
+                        dropdown_options = dropdowns[name]
+                    except Exception as e:
+                        raise Exception("error 892: cannot find dropdown options for "+name)
 
-        try:
-            entry_data = self.__getEntryData()
-            freq_data = self.FREQUENCY_DATA
-            window = CalculationWindow(self, self.config, entry_data, freq_data)
-            window.mainloop()
-        except EntryException as e:
-            messagebox.showerror("Failed to fetch entry data", "'"+e.entry_name+"'\n\n"+e.error_msg)
-        
+                    if dropdown_options is None: # This means the options are defined in a config file
+                        dropdown_options = self.__getDropdownOptions(name)
+                        
+                entry_frame = WorksheetEntry(self.main_display, self, self.config, name, entry_type, is_editable, is_required, dropdown_options, count=(i+1), comment=comment, default_value=default_value)
 
-    def __loadFrequencies(self, fn=None):
-        """This is called every time the user clicks on the load freqcencies button.
-        This will look at the import file, and will call upon the getFrequencyData() function
-        to generate the frequencies"""
-        
-        if fn is None:
-            if not self.frequency_fp.is_selected():
-                return
-            fn = self.frequency_fp.getSelectedFilePath()
+                self.entries[name] = entry_frame
 
-        try:
-            FREQUENCY_DATA: FrequencyData = getFrequencyData(fn)
-        except Exception as e:
-            messagebox.showerror("Error parsing frequency data", "Cannot procss frequency data from "+str(fn)+"\n\n"+str(e))
-            self.update()
-            return
+                entry_frame.pack(fill=tk.X, padx=(5, 20))
 
-        self.FREQUENCIES_FN = fn
+            self.entries["Country"].combobox.bind("<<ComboboxSelected>>", self.__setStates)
+
+            if self.config.DEBUG_MODE == True:
+                self.loadFile(self.config.DEBUG_SAMPLE_ENTRIES_JSON_RPATH)
+    
+    def __getDropdownOptions(self, name) -> list:
+            """This is called whenever the dropdown options are defined in the config file.
+            This will look at the relevent data, and return a list of all possible options
+            for the corresponding WorksheetEntry"""
+            dropdown_options = []
+
+            if name == "Time Zone":
+                dropdown_options = list(self.TIME_ZONE_DATA.keys())
+            elif name == "Country":
+                dropdown_options = list(self.LOCATION_DATA.keys())
+            elif name == "State":
+                dropdown_options = list(self.LOCATION_DATA[self.config.DEFAULT_COUNTRY]["states"].keys())
             
-        self.__initFrequencies(FREQUENCY_DATA)
+            return dropdown_options
 
-    def __displayFrequencies(self):
-        if not hasattr(self, "FREQUENCY_DATA") or self.FREQUENCIES_FN == '':
-            messagebox.showerror("Failed to fetch frequencies", "Please load a valid frequency file")
-            return
-
-        msg_str = "Frequencies from "+self.FREQUENCIES_FN+":\n\n"+json.dumps(self.FREQUENCY_DATA.getOrderedDict(), indent=2)
-        if self.FREQUENCY_DATA.unassigned_frequencies != []:
-            freqs = self.FREQUENCY_DATA.unassigned_frequencies
-            msg_str += "\n\nWARNING: There are "+str(len(freqs))+" unassigned frequencies:\n"
-            msg_str += "\n"+str(self.FREQUENCY_DATA.unassigned_frequencies)+"\n\n"
-            msg_str += "Please consider assigning them and re-load the import file."
-        
-        messagebox.showinfo("Successfully Imported Frequencies", msg_str)
-
-
-    def __initFrequencies(self, frequnecy_data: FrequencyData):
-        """This will capture the generated frequency data, and will 
-        feed into the calculator when necessary"""
-
-        self.FREQUENCY_DATA = frequnecy_data
-
-        
-
-        self.status.set("")
-
-        self.frequency_color_box.config(bg=READY_COLOR)
-        self.frequency_color_box.update_idletasks()
-
-        self.__displayFrequencies()
-
-    def __getEntryData(self):
-        """This is called every time the tool needs a dict of all the entries,
-        weather it be for saving or calculating. This will loop through all entries,
-        make sure they are well-formed, and return a dict with the corresponding data"""
-        data = {}
-        for name, entry in self.entries.items():
-            if entry.is_required and not entry.isSelected():
-                raise EntryException(name, "Required field has not been specified")
-            try:
-                val = entry.getValue()
-                data[name] = val
-            except Exception as e:
-                raise EntryException(name, str(e))
-
-        return data
-
-    def updateEntryColorBox(self, event=None):
-
-        try:
-            self.__getEntryData()
-            self.worksheet_color_box.config(bg=READY_COLOR)
-        except Exception:
-            self.worksheet_color_box.config(bg=NOT_READY_COLOR)
-
+    def __setStates(self, eventObj):
+        """This is called every time the user selects a different country.
+        Because each country has different states, the dropdown options for the state
+        WorksheetEntry must be updated"""
+        country = self.entries["Country"].getValue()
+        dropdown_options = []
+        dropdown_options = list(self.LOCATION_DATA[country]["states"].keys())
+        self.entries["State"].combobox.config(values=dropdown_options)
+        self.entries["State"].combobox.current(0)    
+    
     def __loadEntries(self, fn=None):
-        """This is called every time the user clicks on the load worksheet button. 
-        This will take the .json that is attempting to be imported, 
-        make sure it is well formatted, and then populate all of the WorksheetEntries
-        with its values"""
-        if fn is None:
-            if not self.worksheet_fp.is_selected():
-                return
-            fn = self.worksheet_fp.getSelectedFilePath()
+            """This is called every time the user clicks on the load worksheet button. 
+            This will take the .json that is attempting to be imported, 
+            make sure it is well formatted, and then populate all of the WorksheetEntries
+            with its values"""
+            if fn is None:
+                if not self.worksheet_fp.is_selected():
+                    return
+                fn = self.worksheet_fp.getSelectedFilePath()
 
-        data = {}
-        with open(fn, 'r') as f:
-            data = json.load(f)
-            
-        self.__initEntries(data, fn)
-
-    def update(self) -> None:
-        super().update()
-        if self.WKST_ENTRIES_FN != '':
-            self.worksheet_fp.fn.set(os.path.basename(self.WKST_ENTRIES_FN))
-        else:
-            self.worksheet_fp.reset()
-        if self.FREQUENCIES_FN != '':
-            self.frequency_fp.fn.set(os.path.basename(self.FREQUENCIES_FN))
-        else:
-            self.frequency_fp.reset()
+            data = {}
+            with open(fn, 'r') as f:
+                data = json.load(f)
+                
+            self.__initEntries(data, fn)
 
     def __initEntries(self, data, fn):
         """This will capture the imported entry data, validate it, and then update all of the
@@ -264,68 +221,140 @@ class DcuWorksheetPage(tk.Frame):
         self.worksheet_color_box.config(bg=READY_COLOR)
             
         self.update()
+    
+    def __getEntryData(self):
+        """This is called every time the tool needs a dict of all the entries,
+        weather it be for saving or calculating. This will loop through all entries,
+        make sure they are well-formed, and return a dict with the corresponding data"""
+        data = {}
+        for name, entry in self.entries.items():
+            if entry.is_required and not entry.isSelected():
+                raise EntryException(name, "Required field has not been specified")
+            try:
+                val = entry.getValue()
+                data[name] = val
+            except Exception as e:
+                raise EntryException(name, str(e))
 
-    def __loadEntryViews(self):
-        """This will look at the entries defined in the config file, and build WorksheetEntry objects for each 
-        entry object. The created entry will then be added to a map (self.entries) that is used for lookup later"""
-        entries = self.config.ENTRIES
-        dropdowns = self.config.DROPDOWN_OPTIONS
-        self.states_by_country = dropdowns["State"]
-
-        for i, entry in enumerate(entries):
-            
-            name = entry["name"]
-            entry_type = EntryType(entry["type"])
-            is_editable = bool(entry["editable"])
-            is_required = bool(entry["required"])
-            comment = entry.get("comment")
-            dropdown_options = None
-
-            if entry_type == EntryType.DROPDOWN:
-                try:
-                    dropdown_options = dropdowns[name]
-                except Exception as e:
-                    raise Exception("error 892: cannot find dropdown options for "+name)
-
-                if dropdown_options is None: # This means the options are defined in a config file
-                    dropdown_options = self.__getDropdownOptions(name)
-                    
-            entry_frame = WorksheetEntry(self.main_display, self, self.config, name, entry_type, is_editable, is_required, dropdown_options, count=(i+1), comment=comment)
-
-            self.entries[name] = entry_frame
-
-            entry_frame.pack(fill=tk.X, padx=(5, 20))
-
-        self.entries["Country"].combobox.bind("<<ComboboxSelected>>", self.__setStates)
-
-        if self.config.DEBUG_MODE == True:
-            self.loadFile(self.config.DEBUG_SAMPLE_ENTRIES_JSON_RPATH)
-
-    def __getDropdownOptions(self, name) -> list:
-        """This is called whenever the dropdown options are defined in the config file.
-        This will look at the relevent data, and return a list of all possible options
-        for the corresponding WorksheetEntry"""
-        dropdown_options = []
-
-        if name == "Time Zone":
-            dropdown_options = list(self.TIME_ZONE_DATA.keys())
-        elif name == "Country":
-            dropdown_options = list(self.LOCATION_DATA.keys())
-        elif name == "State":
-            dropdown_options = list(self.LOCATION_DATA[self.config.DEFAULT_COUNTRY]["states"].keys())
+        return data
+    
+    def __loadFrequencies(self, fn=None):
+        """This is called every time the user clicks on the load freqcencies button.
+        This will look at the import file, and will call upon the getFrequencyData() function
+        to generate the frequencies"""
         
-        return dropdown_options
+        if fn is None:
+            if not self.frequency_fp.is_selected():
+                return
+            fn = self.frequency_fp.getSelectedFilePath()
 
-    def __setStates(self, eventObj):
-        """This is called every time the user selects a different country.
-        Because each country has different states, the dropdown options for the state
-        WorksheetEntry must be updated"""
-        country = self.entries["Country"].getValue()
-        dropdown_options = []
-        dropdown_options = list(self.LOCATION_DATA[country]["states"].keys())
-        self.entries["State"].combobox.config(values=dropdown_options)
-        self.entries["State"].combobox.current(0)
+        try:
+            FREQUENCY_DATA: FrequencyData = getFrequencyData(self.config, fn)
+        except Exception as e:
+            messagebox.showerror("Error parsing frequency data", "Cannot procss frequency data from "+str(fn)+"\n\n"+str(e))
+            self.update()
+            return
 
+        self.FREQUENCIES_FN = fn
+            
+        self.__initFrequencies(FREQUENCY_DATA)
+    
+    def __checkFrequencyDataMatch(self):
+        print("HERE: why is this happening twice after loading and changing ID to incompatible")
+        if not hasattr(self, "FREQUENCY_DATA"):
+            return
+       
+        name_entry: WorksheetEntry = self.entries["Customer Name"]
+        id_entry: WorksheetEntry = self.entries["Aclara Customer ID"]
+
+        entered_name = name_entry.getValue()
+        entered_id = id_entry.getValue()
+
+        if entered_name == "":
+            name_entry.setValue(self.FREQUENCY_DATA.CUSTOMER_NAME)
+        elif entered_name != self.FREQUENCY_DATA.CUSTOMER_NAME:
+            messagebox.showwarning("Warning", "Mismatching Customer Names\n\nEntered name: "+entered_name+"\nName found in frequency file: "+self.FREQUENCY_DATA.CUSTOMER_NAME+"\n\nFrequency file name will overwrite.")
+            name_entry.setValue(self.FREQUENCY_DATA.CUSTOMER_NAME)
+
+        
+        if entered_id == '':
+            id_entry.setValue(self.FREQUENCY_DATA.CUSTOMER_ID)
+        elif entered_id != self.FREQUENCY_DATA.CUSTOMER_ID:
+            messagebox.showwarning("Warning", "Mismatching Customer IDs\n\nEntered id: "+str(entered_id)+"\nID found in frequency file: "+str(self.FREQUENCY_DATA.CUSTOMER_ID)+"\n\nFrequency file id will overwrite.")
+            id_entry.setValue(self.FREQUENCY_DATA.CUSTOMER_ID)
+
+    def __initFrequencies(self, frequnecy_data: FrequencyData):
+            """This will capture the generated frequency data, and will 
+            feed into the calculator when necessary"""
+
+            self.FREQUENCY_DATA = frequnecy_data
+
+            self.__checkFrequencyDataMatch()
+        
+            self.status.set("")
+
+            self.frequency_color_box.config(bg=READY_COLOR)
+            self.frequency_color_box.update_idletasks()
+
+            self.__displayFrequencies()
+    
+    def __displayFrequencies(self):
+        if not hasattr(self, "FREQUENCY_DATA") or self.FREQUENCIES_FN == '':
+            messagebox.showerror("Failed to fetch frequencies", "Please load a valid frequency file")
+            return
+
+        msg_str = "Frequencies from "+self.FREQUENCIES_FN+":\n\n"+json.dumps(self.FREQUENCY_DATA.getOrderedDict(), indent=2)
+        if self.FREQUENCY_DATA.unassigned_frequencies != []:
+            freqs = self.FREQUENCY_DATA.unassigned_frequencies
+            msg_str += "\n\nWARNING: There are "+str(len(freqs))+" unassigned frequencies:\n"
+            msg_str += "\n"+str(self.FREQUENCY_DATA.unassigned_frequencies)+"\n\n"
+            msg_str += "Please consider assigning them and re-load the import file."
+        
+        messagebox.showinfo("Successfully Imported Frequencies", msg_str)
+
+    def updateEntryColorBox(self, event=None):
+        """This is called by the individual WorksheetEntry's, as this will
+        try to get all the entry data. If the data is well formed, the 
+        box will turn green, if not, it will turn red"""
+        try:
+            self.__checkFrequencyDataMatch()
+            self.__getEntryData()
+            self.worksheet_color_box.config(bg=READY_COLOR)
+        except Exception as e:
+            self.worksheet_color_box.config(bg=NOT_READY_COLOR)
+
+    def update(self) -> None:
+        """This is called whenever the user attempts to load a import file.
+        This will ensure that an invalid file is not shown on the screen
+        after attempting to be loaded"""
+        super().update()
+        if self.WKST_ENTRIES_FN != '':
+            self.worksheet_fp.fn.set(os.path.basename(self.WKST_ENTRIES_FN))
+        else:
+            self.worksheet_fp.reset()
+        if self.FREQUENCIES_FN != '':
+            self.frequency_fp.fn.set(os.path.basename(self.FREQUENCIES_FN))
+        else:
+            self.frequency_fp.reset()
+
+    def __calculateAndExport(self):
+            """This is called every time the user clicks the calculate and export button.
+            It will first try to fetch the user entries, and show an error message if not
+            all required fields are selected. If the entry data looks good, it will then show
+            the CalculationWindow"""
+
+            if not hasattr(self, 'FREQUENCY_DATA'):
+                self.status.set("Please load frequencies")
+                return
+
+            try:
+                entry_data = self.__getEntryData()
+                freq_data = self.FREQUENCY_DATA
+                window = CalculationWindow(self, self.config, entry_data, freq_data)
+                window.mainloop()
+            except EntryException as e:
+                messagebox.showerror("Failed to fetch entry data", "'"+e.entry_name+"'\n\n"+e.error_msg)
+                
     def saveCurrent(self):
         data = self.getEntryData()
         

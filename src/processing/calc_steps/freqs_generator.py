@@ -3,6 +3,7 @@ from dataclasses import dataclass, fields
 import json
 from pprint import pformat
 from openpyxl import load_workbook
+from config.config import Config
 
 
 from src.utils.utils import StepData
@@ -22,6 +23,8 @@ class FrequencyData(StepData):
     not included in the export, depending on if the user indicated weather or not the system 
     included STAR/SRFN devices"""
     # Unassign - warn and don't use
+    CUSTOMER_NAME: str = None
+    CUSTOMER_ID: int = None
     STAR_F2_Downlink_Frequency_r46: float = None
     SRFN_Outbound_Downlink_Frequency_r47: float = None
     STAR_F1_Uplink_Frequency_r48: float = None
@@ -63,8 +66,8 @@ class FrequencyData(StepData):
 class _FrequencyGenerator:
     """This will get the customer frequencies from the Excel sheet,
     so that they can be used for DTLS calculations"""
-    def __init__(self):
-
+    def __init__(self, config: Config):
+        self.config = config
         self.frequency_objs = []
         self.unassigned_freqs = []
 
@@ -123,10 +126,20 @@ class _FrequencyGenerator:
         has_outbound = False
 
         FREQUENCY_DATA = FrequencyData()
+
+        CUSTOMER_NAME = self.frequency_objs[0][self.config.FREQUENCY_KEYS["name"]]
+        CUSTOMER_ID = self.frequency_objs[0][self.config.FREQUENCY_KEYS["id"]]
         
         for frequency_obj in self.frequency_objs:
-            use = frequency_obj["Frequency Use"]
-            frequency = float(frequency_obj["Frequency"])
+            use = frequency_obj[self.config.FREQUENCY_KEYS["type"]]
+            frequency = float(frequency_obj[self.config.FREQUENCY_KEYS["frequency"]])
+            name = frequency_obj[self.config.FREQUENCY_KEYS["name"]]
+            cust_id = frequency_obj[self.config.FREQUENCY_KEYS["id"]]
+
+            if name != CUSTOMER_NAME:
+                raise Exception("error 328: non-matching customer names found in frequency file\n\n"+CUSTOMER_NAME+", "+name)
+            if cust_id != CUSTOMER_ID:
+                raise Exception("error 328: non-matching customer id's found in frequency file\n\n"+str(CUSTOMER_ID)+", "+str(cust_id))
 
             if use == 'F1':
                 if FREQUENCY_DATA.STAR_F1_Uplink_Frequency_r48 is not None:
@@ -170,6 +183,9 @@ class _FrequencyGenerator:
         for i, frequency in enumerate(inbound_freqs):
             setattr(FREQUENCY_DATA, inbound_field_names[i], frequency)
 
+
+        FREQUENCY_DATA.CUSTOMER_NAME = CUSTOMER_NAME
+        FREQUENCY_DATA.CUSTOMER_ID = int(CUSTOMER_ID)
         FREQUENCY_DATA.num_inbound_frequencies = len(inbound_freqs)
         FREQUENCY_DATA.unassigned_frequencies = unassigned_freqs
 
@@ -178,13 +194,13 @@ class _FrequencyGenerator:
     
             
 
-def getFrequencyData(FREQUENCIES_FN) -> FrequencyData:
+def getFrequencyData(config: Config, FREQUENCIES_FN) -> FrequencyData:
         """This will extract relevent data from the frequencies in the excel tool,
         and create a data structure that stores the F1, F2, Outbound, and sorted Inbound 
         frequencies.
         """
 
-        freq_generator = _FrequencyGenerator()
+        freq_generator = _FrequencyGenerator(config)
 
         if FREQUENCIES_FN.endswith('json'):
             freq_generator.loadFreqsFromJson(FREQUENCIES_FN)

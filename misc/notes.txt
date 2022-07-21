@@ -9,3 +9,19 @@
     - make sure customer configuration changes too with ID
 
 
+
+    set 14 = 30
+
+
+16 30
+17 15
+dcu 2
+
+all no
+
+review and export, show status no calculate button
+
+
+check tool version is the same
+
+store tool verison in json

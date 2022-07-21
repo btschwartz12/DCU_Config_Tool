@@ -3,7 +3,7 @@ from tkinter import ttk
 import tkinter as tk
 from tkinter.messagebox import showerror
 from config.config import Config
-from src.gui.screen import DcuWorksheetPage
+from src.gui.main_screen import DcuWorksheetPage
 
 
 class App(tk.Tk):
