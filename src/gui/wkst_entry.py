@@ -104,32 +104,21 @@ class WorksheetEntry(tk.Frame):
 
         messagebox.showinfo("Entry Information", help_str)
 
-    def __updateCheckbox(self, event=None):
-        """This is called every time the checkbox is clicked, and will
-        update the checkbox"""
-        if self.type == EntryType.BOOLEAN:
-            pass
-            # self.checkbox_str.set("Yes" if self.entry.get() else "No")
-        else:
-            print("error 770")
-    
-    def updateColorBox(self):
-        self.DCU_PAGE.updateEntryColorBox()
 
     def __buildEntryFrame(self):
         """This is called during __buildGUI(), and will look at the EntryType of the entry and
         build the corresponding view. All EntryType's will still have a self.entry variable that 
         is used for further calculations"""
         if self.type == EntryType.STRING:
-            self.entry = AutoSelectEntry(self.entry_frame, foreground=self.color_str, command=self.updateColorBox, justify='center')
+            self.entry = AutoSelectEntry(self.entry_frame, foreground=self.color_str, command=self.DCU_PAGE.updateEntryColorBox, justify='center')
             self.entry.pack(fill=tk.BOTH, expand=True)
         
         elif self.type == EntryType.BOOLEAN:
             self.entry = tk.IntVar()
             btn_frame = tk.Frame(self.entry_frame)
             btn_frame.pack()
-            tk.Radiobutton(btn_frame, text="Yes", variable=self.entry, value=1, command=self.__updateCheckbox, fg=self.color_str).pack(side=tk.LEFT)
-            tk.Radiobutton(btn_frame, text="No", variable=self.entry, value=0, command=self.__updateCheckbox, fg=self.color_str).pack(side=tk.LEFT)
+            tk.Radiobutton(btn_frame, text="Yes", variable=self.entry, value=1, fg=self.color_str).pack(side=tk.LEFT)
+            tk.Radiobutton(btn_frame, text="No", variable=self.entry, value=0, fg=self.color_str).pack(side=tk.LEFT)
         
         elif self.type == EntryType.DROPDOWN:
             self.entry = tk.StringVar()
@@ -141,7 +130,7 @@ class WorksheetEntry(tk.Frame):
             self.combobox.current(0)
 
         elif self.type == EntryType.NUMBER:
-            self.entry = AutoSelectEntry(self.entry_frame, foreground=self.color_str, command=self.__checkEntryIsInt, justify='center')
+            self.entry = AutoSelectEntry(self.entry_frame, foreground=self.color_str, command=self.DCU_PAGE.updateEntryColorBox, justify='center')
             self.entry.pack(fill=tk.BOTH, expand=True)
             
     def __checkEntryIsInt(self, event=None):
@@ -156,7 +145,6 @@ class WorksheetEntry(tk.Frame):
             self.entry.set("")
         else:
             self.status.set("")
-        self.updateColorBox()
         
     def getValue(self):
         """This is called every time the user finishes putting in their entries,
@@ -167,10 +155,7 @@ class WorksheetEntry(tk.Frame):
         elif self.type == EntryType.BOOLEAN:
             return bool(self.entry.get())
         elif self.type == EntryType.DROPDOWN:
-            if self.entry.get() == 1: # Yes
-                return True
-            else: # No
-                return False
+            return self.entry.get()
         elif self.type == EntryType.NUMBER:
             self.__checkEntryIsInt()
             return int(self.entry.get())

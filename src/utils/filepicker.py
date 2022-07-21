@@ -52,8 +52,8 @@ class FilePicker(tk.Frame):
 
         frame = tk.Frame(selection_frame)
         frame.pack(fill=tk.X, expand=tk.TRUE)
-        self.fn = tk.StringVar(self)
-        self.fn.set("Select a "+self.getExtensionStr()+" file")
+        self.fn = tk.StringVar()
+        self.reset()
         self.filemenu = ttk.OptionMenu(frame, self.fn)
         self.filemenu.pack(side=tk.LEFT, fill=tk.X, expand=True)
 
@@ -112,7 +112,6 @@ class FilePicker(tk.Frame):
                 self.folder_entry.insert(0, self.config.SRC_DIR)
 
 
-
     # This function will load the user-specified directory, update the view,
     # then find all xsd/xml files in that directory and add them to the
     # drop down menu
@@ -120,7 +119,7 @@ class FilePicker(tk.Frame):
         fns = os.listdir(dir)
 
 
-            # Update directory selection view and get all XSD files
+        # Update directory selection view and get all XSD files
         self.folder_entry.set(dir)
         dir = [fn for fn in fns if fn.endswith(self.extension)]
         # Add files to the dropdown
@@ -128,7 +127,7 @@ class FilePicker(tk.Frame):
         for file in dir:
             self.filemenu['menu'].add_command(label=file, command=partial(self.runCommand, file))
         
-        self.fn.set("Select a "+self.getExtensionStr()+" file")
+        self.reset()
 
 
 class AutoSelectEntry(ttk.Entry):

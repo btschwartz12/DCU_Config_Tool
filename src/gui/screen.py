@@ -37,6 +37,7 @@ class DcuWorksheetPage(tk.Frame):
         self.config = config
 
         self.WKST_ENTRIES_FN = "" # Filename if the user imported previous entries
+        self.FREQUENCIES_FN = ""
 
         self.LOCATION_DATA = {}
         self.TIME_ZONE_DATA = {}
@@ -81,12 +82,10 @@ class DcuWorksheetPage(tk.Frame):
         self.frequency_fp.pack(fill=tk.BOTH, expand=True)
         self.frequency_fp.loadDir(os.path.join(self.config.SRC_DIR, self.config.DEFAULT_FREQS_DIRECTORY))
 
-        self.worksheet_color_box = tk.Label(worksheet_frame, text="", bg=NOT_READY_COLOR)
+        self.worksheet_color_box = tk.Label(worksheet_frame, text="", fg='white', bg=NOT_READY_COLOR)
         self.worksheet_color_box.pack(fill=tk.X, expand=True, anchor=tk.S)
-        self.frequency_color_box = tk.Label(frequency_frame, text="", bg=NOT_READY_COLOR)
+        self.frequency_color_box = tk.Label(frequency_frame, text="", fg='white', bg=NOT_READY_COLOR)
         self.frequency_color_box.pack(fill=tk.X, expand=True, anchor=tk.S)
-
-
 
         top_frame.pack(fill=tk.X)
         
@@ -105,7 +104,14 @@ class DcuWorksheetPage(tk.Frame):
         bottom_frame.pack(fill=tk.X, anchor=tk.S)
         tk.Label(bottom_frame, textvariable=self.status, fg='red').pack(fill=tk.X, anchor=tk.N)
         # Option to revert changes, has not been implemented
-        tk.Button(bottom_frame, text="Calculate & Export", command=self.__calculateAndExport, bg='yellow').pack(fill=tk.X, expand=True, anchor=tk.S)
+        btn_frame = tk.Frame(bottom_frame)
+        btn_frame.pack(fill=tk.X, expand=True, anchor=tk.S)
+        btn_frame.grid_rowconfigure(0, weight=1)
+        btn_frame.grid_columnconfigure(0, weight=1, uniform='group1')
+        btn_frame.grid_columnconfigure(1, weight=1, uniform='group1')
+
+        tk.Button(btn_frame, text="Examine Frequencies", command=self.__displayFrequencies, bg='#00137C', fg='white').grid(row=0, column=0, sticky=tk.NSEW)
+        tk.Button(btn_frame, text="Calculate & Export", command=self.__calculateAndExport, bg='yellow').grid(row=0, column=1, sticky=tk.NSEW)
 
         self.__loadEntryViews()
 
@@ -142,22 +148,42 @@ class DcuWorksheetPage(tk.Frame):
             FREQUENCY_DATA: FrequencyData = getFrequencyData(fn)
         except Exception as e:
             messagebox.showerror("Error parsing frequency data", "Cannot procss frequency data from "+str(fn)+"\n\n"+str(e))
+            self.update()
             return
 
         self.FREQUENCIES_FN = fn
             
         self.__initFrequencies(FREQUENCY_DATA)
 
+    def __displayFrequencies(self):
+        if not hasattr(self, "FREQUENCY_DATA") or self.FREQUENCIES_FN == '':
+            messagebox.showerror("Failed to fetch frequencies", "Please load a valid frequency file")
+            return
+
+        msg_str = "Frequencies from "+self.FREQUENCIES_FN+":\n\n"+json.dumps(self.FREQUENCY_DATA.getOrderedDict(), indent=2)
+        if self.FREQUENCY_DATA.unassigned_frequencies != []:
+            freqs = self.FREQUENCY_DATA.unassigned_frequencies
+            msg_str += "\n\nWARNING: There are "+str(len(freqs))+" unassigned frequencies:\n"
+            msg_str += "\n"+str(self.FREQUENCY_DATA.unassigned_frequencies)+"\n\n"
+            msg_str += "Please consider assigning them and re-load the import file."
+        
+        messagebox.showinfo("Successfully Imported Frequencies", msg_str)
+
 
     def __initFrequencies(self, frequnecy_data: FrequencyData):
         """This will capture the generated frequency data, and will 
         feed into the calculator when necessary"""
 
-        messagebox.showinfo("Imported Frequencies", "Frequencies from imported file: "+json.dumps(frequnecy_data.getOrderedDict(), indent=2))
-
         self.FREQUENCY_DATA = frequnecy_data
 
+        
+
+        self.status.set("")
+
         self.frequency_color_box.config(bg=READY_COLOR)
+        self.frequency_color_box.update_idletasks()
+
+        self.__displayFrequencies()
 
     def __getEntryData(self):
         """This is called every time the tool needs a dict of all the entries,
@@ -175,11 +201,11 @@ class DcuWorksheetPage(tk.Frame):
 
         return data
 
-    def updateEntryColorBox(self):
+    def updateEntryColorBox(self, event=None):
 
         try:
             self.__getEntryData()
-            self.worksheet_color_box(bg=READY_COLOR)
+            self.worksheet_color_box.config(bg=READY_COLOR)
         except Exception:
             self.worksheet_color_box.config(bg=NOT_READY_COLOR)
 
@@ -199,17 +225,30 @@ class DcuWorksheetPage(tk.Frame):
             
         self.__initEntries(data, fn)
 
+    def update(self) -> None:
+        super().update()
+        if self.WKST_ENTRIES_FN != '':
+            self.worksheet_fp.fn.set(os.path.basename(self.WKST_ENTRIES_FN))
+        else:
+            self.worksheet_fp.reset()
+        if self.FREQUENCIES_FN != '':
+            self.frequency_fp.fn.set(os.path.basename(self.FREQUENCIES_FN))
+        else:
+            self.frequency_fp.reset()
+
     def __initEntries(self, data, fn):
         """This will capture the imported entry data, validate it, and then update all of the
         WorksheetEntry's with the correct values"""
         
         if not isinstance(data, dict):
             messagebox.showerror("Invalid data format", "Incompatible data format found in "+fn+": \n\nFound: "+str(type(data))+"\nShould be: dict")
+            self.update()
             return
         
         for key in data.keys():
             if key not in self.entries.keys():
                 messagebox.showerror("Invalid key name", "Unknown key name found in "+fn+": \n       "+key+"\n\nCorrect keys: "+pformat(list(self.entries.keys()), indent=2))
+                self.update()
                 return
 
         for name, value in data.items():  
@@ -217,6 +256,8 @@ class DcuWorksheetPage(tk.Frame):
                 self.entries[name].setValue(value)
             except Exception as e:
                 messagebox.showerror("Incompatiable data", "Poor data found for key: "+name+"\n\n"+str(e))
+                self.update()
+                return
 
         self.WKST_ENTRIES_FN = fn
 

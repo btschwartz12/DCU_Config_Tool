@@ -22,7 +22,7 @@ from src.processing.calc_steps.step6_calculation import Step6Data, getStep6Data
 from src.processing.calc_steps.step7_calculation import Step7Data, getStep7Data
 from src.processing.calc_steps.step8_calculation import Step8Data, getStep8Data
 from src.processing.calc_steps.step9_calculation import Step9Data, getStep9Data
-from src.utils.utils import StatusData, toStr
+from src.utils.utils import toStr
 
 
 @dataclass 

@@ -41,6 +41,7 @@ class FrequencyData(StepData):
     SRFN_Inbound_Uplink_Frequency_13_r62: float = None
     SRFN_Inbound_Uplink_Frequency_14_r63: float = None
     num_inbound_frequencies: int = None
+    unassigned_frequencies: list[float] = None
 
     def getInboundFieldNames(self):
         names = []
@@ -67,10 +68,54 @@ class _FrequencyGenerator:
         self.frequency_objs = []
         self.unassigned_freqs = []
 
+    def loadFreqsFromJson(self, JSON_FN):
+        data = []
+        with open(JSON_FN, 'r') as f:
+            data = json.load(f)
+            if not isinstance(data, list):
+                raise Exception("Incompatible data format found: "+str(type(data))+"\nShould be: list")
+        for freq_obj in data:
+            if not (set(REQUIRED_KEYS) <= set(list(freq_obj.keys()))):
+                raise Exception("error 660: imported frequency data entry is missing required keys\n\nrequired keys: "+pformat(REQUIRED_KEYS, indent=2))
+        self.frequency_objs = data
+
+    def loadFreqsFromExcel(self, WB_FN, SHEET_NAME):
+        """This will use an Excel parser to grab the customer frequencies
+        and the data associated with them and return a list containing 
+        each frequency data entry"""
+        workbook = load_workbook(WB_FN)
         
+        if SHEET_NAME not in workbook.sheetnames:
+            raise Exception("error 491: invalid sheet name: "+SHEET_NAME)
 
-    def getFrequencyData(self) -> FrequencyData:
+        sheet = workbook[SHEET_NAME]
 
+        freq_entries = []
+
+        for row in range(2, 18):
+            freq_entry = {}
+
+            if sheet['A'+str(row)].value == ' ' or sheet['A'+str(row)].value is None:
+                break
+
+            for col in range(0, 12):
+                col_letter = chr(col + 65) # converts col number to letter
+                key_cell = col_letter+'1'
+                key = sheet[key_cell].value
+
+                val_cell = col_letter+str(row)
+                val = sheet[val_cell].value
+
+                freq_entry[key] = val
+            
+            freq_entries.append(freq_entry)
+
+        self.frequency_objs = freq_entries    
+
+    def constructFrequencyData(self) -> FrequencyData:
+        """This is called after the import file has been validated and the json data
+        has been fetched. This will take the json data and construct a FrequencyData object,
+        checking for erros such as multiple outbound frequencies and unassigned frequencies."""
         inbound_freqs = []
         unassigned_freqs = []
         has_f1 = False
@@ -117,8 +162,6 @@ class _FrequencyGenerator:
         if not has_outbound:
             raise Exception("error 340: outbound frequency not provided")
 
-        if unassigned_freqs != []:
-            self.unassigned_freqs = unassigned_freqs
 
         inbound_field_names = FREQUENCY_DATA.getInboundFieldNames()
 
@@ -128,62 +171,17 @@ class _FrequencyGenerator:
             setattr(FREQUENCY_DATA, inbound_field_names[i], frequency)
 
         FREQUENCY_DATA.num_inbound_frequencies = len(inbound_freqs)
+        FREQUENCY_DATA.unassigned_frequencies = unassigned_freqs
 
         return FREQUENCY_DATA
             
-    def loadFreqsFromJson(self, JSON_FN):
-        data = []
-        with open(JSON_FN, 'r') as f:
-            data = json.load(f)
-            if not isinstance(data, list):
-                raise Exception("Incompatible data format found: "+str(type(data))+"\nShould be: list")
-        for freq_obj in data:
-            if not (set(REQUIRED_KEYS) <= set(list(freq_obj.keys()))):
-                raise Exception("error 660: imported frequency data entry is missing required keys\n\nrequired keys: "+pformat(REQUIRED_KEYS, indent=2))
-        self.frequency_objs = data
-
-    def loadFreqsFromExcel(self, WB_FN, SHEET_NAME):
-        """This will use an Excel parser to grab the customer frequencies
-        and the data associated with them and return a list containing 
-        each frequency data entry"""
-        workbook = load_workbook(WB_FN)
-        
-        if SHEET_NAME not in workbook.sheetnames:
-            raise Exception("error 491: invalid sheet name: "+SHEET_NAME)
-
-        sheet = workbook[SHEET_NAME]
-
-        freq_entries = []
-
-        for row in range(2, 18):
-            freq_entry = {}
-
-            if sheet['A'+str(row)].value == ' ' or sheet['A'+str(row)].value is None:
-                break
-
-            for col in range(0, 12):
-                col_letter = chr(col + 65) # converts col number to letter
-                key_cell = col_letter+'1'
-                key = sheet[key_cell].value
-
-                val_cell = col_letter+str(row)
-                val = sheet[val_cell].value
-
-                freq_entry[key] = val
-            
-            freq_entries.append(freq_entry)
-
-        self.frequency_objs = freq_entries
+    
             
 
 def getFrequencyData(FREQUENCIES_FN) -> FrequencyData:
         """This will extract relevent data from the frequencies in the excel tool,
         and create a data structure that stores the F1, F2, Outbound, and sorted Inbound 
-        frequencies. If there is an unassigned frequency, a message will be shown.
-        
-        Data Used: Frequency data from Excel page
-        Corresponding excel rows: 46-63
-        Step(s) / Block(s): 3
+        frequencies.
         """
 
         freq_generator = _FrequencyGenerator()
@@ -200,11 +198,6 @@ def getFrequencyData(FREQUENCIES_FN) -> FrequencyData:
         if freq_generator.frequency_objs == []:
             raise Exception("error 391: failed to load frequency objects. Please check import files")
                 
-        FREQUENCY_DATA: FrequencyData = freq_generator.getFrequencyData()
-
-        unassigned_freqs = freq_generator.unassigned_freqs
-        if unassigned_freqs != []:
-            # messagebox.showinfo("Unassigned frequencies", "There are "+str(len(unassigned_freqs))+" unassigned frequencies: "+str(unassigned_freqs))
-            print("Unassigned frequencies", "There are "+str(len(unassigned_freqs))+" unassigned frequencies: "+str(unassigned_freqs))
+        FREQUENCY_DATA: FrequencyData = freq_generator.constructFrequencyData()
 
         return FREQUENCY_DATA

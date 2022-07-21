@@ -5,5 +5,7 @@
     - status
 
 2.verify freq names with entry names and IDs
+3. double click disabled entry to make changes
+    - make sure customer configuration changes too with ID
 
 

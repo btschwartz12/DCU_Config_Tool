@@ -14,7 +14,8 @@
             "name": "Customer Name",
             "type": "string",
             "editable": false,
-            "required": true
+            "required": true,
+            "comment": "The Customer Name MUST match the name associated with the frequencies. Double-click to edit, but be careful."
         },
         {
             "name": "Contact Name",
@@ -172,7 +173,8 @@
             "name": "Aclara Customer ID",
             "type": "number",
             "editable": false,
-            "required": true
+            "required": true,
+            "comment": "The Customer ID MUST match the ID associated with the frequencies. Double-click to edit, but be careful."
         },
         {
             "name": "Tool Version",
