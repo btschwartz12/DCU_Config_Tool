@@ -1,7 +1,7 @@
+CALCULATION LOG FOR RUN: 2022/07/22-07:43:45
 
 
-
-               ***USER ENTRIES***
+			***USER ENTRIES***
 
 {
   "Customer_Name_r2": "Dothan, City of (AL)",
@@ -36,9 +36,11 @@
 }
 
 
-               ***FREQUENCY DATA***
+			***FREQUENCY DATA***
 
 {
+  "CUSTOMER_NAME": "Dothan, City of (AL)",
+  "CUSTOMER_ID": 169811,
   "STAR_F2_Downlink_Frequency_r46": 467.5125,
   "SRFN_Outbound_Downlink_Frequency_r47": 462.4125,
   "STAR_F1_Uplink_Frequency_r48": 457.6625,
@@ -57,11 +59,14 @@
   "SRFN_Inbound_Uplink_Frequency_12_r61": null,
   "SRFN_Inbound_Uplink_Frequency_13_r62": null,
   "SRFN_Inbound_Uplink_Frequency_14_r63": null,
-  "num_inbound_frequencies": 7
+  "num_inbound_frequencies": 7,
+  "unassigned_frequencies": [
+    457.1875
+  ]
 }
 
 
-               ***STEP 4***
+			***STEP 4***
 
 {
   "DCU_Receive_Channels_Available_r65": 16,
@@ -95,7 +100,7 @@
 }
 
 
-               ***STEP 5***
+			***STEP 5***
 
 {
   "Slot_3_Channel_1_r88": "SRFN*",
@@ -117,7 +122,7 @@
 }
 
 
-               ***STEP 6***
+			***STEP 6***
 
 {
   "Slot_3_Channel_1_r105": 462412500,
@@ -139,7 +144,7 @@
 }
 
 
-               ***STEP 7***
+			***STEP 7***
 
 {
   "comDeviceGatewayConfig_r122": "SRFN",
@@ -205,7 +210,7 @@
 }
 
 
-               ***STEP 8***
+			***STEP 8***
 
 {
   "comDeviceGatewayConfig_r130": "STAR",
@@ -271,7 +276,7 @@
 }
 
 
-               ***STEP 9***
+			***STEP 9***
 
 {
   "EP_Tx_SRFN_Except_DA_r138": [
@@ -308,7 +313,7 @@
 }
 
 
-               ***STEP 10***
+			***STEP 10***
 
 {
   "All_STAR_and_SRFN_Frequencies_r149": [
@@ -336,7 +341,7 @@
 }
 
 
-               ***STEP 11***
+			***STEP 11***
 
 {
   "phyAvailableFrequencies_r152": [

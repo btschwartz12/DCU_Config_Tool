@@ -1,4 +1,4 @@
-# screen.py
+# wkst_entry.py
 # 6/20/22
 # Ben Schwartz
 #
@@ -106,9 +106,11 @@ class WorksheetEntry(tk.Frame):
             self.entry = tk.IntVar()
             btn_frame = tk.Frame(self.entry_frame)
             btn_frame.pack()
-            tk.Radiobutton(btn_frame, text="Yes", variable=self.entry, value=1, fg=self.color_str).pack(side=tk.LEFT)
-            tk.Radiobutton(btn_frame, text="No", variable=self.entry, value=0, fg=self.color_str).pack(side=tk.LEFT)
-        
+            self.yes_btn = tk.Radiobutton(btn_frame, text="Yes", variable=self.entry, value=1, fg=self.color_str)
+            self.yes_btn.pack(side=tk.LEFT)
+            self.no_btn = tk.Radiobutton(btn_frame, text="No", variable=self.entry, value=0, fg=self.color_str)
+            self.no_btn.pack(side=tk.LEFT)
+
         elif self.type == EntryType.DROPDOWN:
             self.entry = tk.StringVar()
             
@@ -185,7 +187,8 @@ class WorksheetEntry(tk.Frame):
             if not self.is_editable:
                 self.entry.config(state=tk.DISABLED) 
 
-        self.DCU_PAGE.updateEntryColorBox()  
+        if self.is_required:
+            self.DCU_PAGE.updateEntryColorBox()  
 
     def setValue(self, value):
         """This is called every time the user imports a previous
@@ -198,7 +201,7 @@ class WorksheetEntry(tk.Frame):
                 self.entry.config(state=tk.DISABLED)
         elif self.type == EntryType.BOOLEAN:
             try:
-                self.entry.set(not bool(value))
+                self.entry.set(bool(value))
             except ValueError:
                 raise Exception("error 321: "+str(value)+" is not a boolean value")
         elif self.type == EntryType.DROPDOWN:
@@ -240,55 +243,3 @@ class WorksheetEntry(tk.Frame):
             
 
 
-class WorksheetStatusEntry(tk.Frame):
-    """This is the view that is shown in the calculation window, 
-    which dictates a certain status for the configuration.
-    
-    WORK IN PROGRESS"""
-
-
-    def __init__(self, master_frame, controller, name: str):
-        tk.Frame.__init__(self, master_frame)
-        self.controller = controller
-        self.name = name
-        
-
-        # style = ttk.Style()
-        # self.option_add('*TCombobox*Listbox.foreground', self.color_str)
-        # style.configure("Colored.TCombobox", foreground=self.color_str)
-
-
-        self.__buildGUI()
-
-    def __buildGUI(self):
-
-        main_frame = tk.Frame(self)
-        main_frame.pack(fill=tk.X)
-
-        main_frame.columnconfigure(0, weight=1, uniform='group1')
-        main_frame.columnconfigure(1, weight=1, uniform='group1')
-        main_frame.rowconfigure(0, weight=1)
-
-        
-        # Name
-        name_frame = tk.Frame(main_frame)
-        name_frame.grid(row=0, column=0, sticky=tk.EW, padx=(0,5))
-        
-        
-        tk.Label(name_frame, text=self.name, font=('Times',9)).pack(side=tk.LEFT)
-
-        # Entry frame
-        entry_frame = tk.Frame(main_frame, bg='green')
-        entry_frame.grid(row=0, column=1, sticky=tk.EW, padx=5)
-
-        self.entry_box = tk.Text(entry_frame, background='green', foreground='white', height=3)
-        self.entry_box.config(state=tk.DISABLED)
-        self.entry_box.pack(fill=tk.X, side=tk.LEFT)
-
-
-    def setValue(self, value):
-        self.entry_box.config(state=tk.NORMAL)
-        self.entry_box.delete('1.0', tk.END)
-        self.entry_box.insert('1.0', value)
-        self.entry_box.config(state=tk.DISABLED)
-        

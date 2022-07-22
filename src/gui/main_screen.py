@@ -260,7 +260,6 @@ class DcuWorksheetPage(tk.Frame):
         self.__initFrequencies(FREQUENCY_DATA)
     
     def __checkFrequencyDataMatch(self):
-        print("HERE: why is this happening twice after loading and changing ID to incompatible")
         if not hasattr(self, "FREQUENCY_DATA"):
             return
        

@@ -6,17 +6,24 @@
 # DCU XML generator.
 
 from datetime import datetime
+from enum import Enum
 import tkinter as tk
 from tkinter.filedialog import asksaveasfile
 from config.config import Config
+from src.gui.wkst_status_entry import WorksheetStatusEntry
 from src.processing.calc_steps.freqs_generator import FrequencyData
 from src.processing.calc_steps.xml_generator import ExportData, getXMLstr
 from src.processing.wkst_calculator import StatusData, WorksheetCalculator
 
-from src.gui.wkst_entry import WorksheetStatusEntry
 
 
 DIMENSIONS = "700x400"
+
+class StatusEntryName(Enum):
+    HE_CERT_UTILITY = "Headend Certificate Information Supplied by Utility"
+    DTLS_CERT = "DTLS Certificate Information"
+    DTLS_BYPASS = "DTLS Bypass Allowed [DTLS_FIELD_TRIAL=False]"
+    DCU_CONFIG = "DCU Configuration"
 
 
 class CalculationWindow(tk.Toplevel):
@@ -51,21 +58,16 @@ class CalculationWindow(tk.Toplevel):
         status_frame = tk.Frame(self)
         status_frame.pack(fill=tk.BOTH, expand=True, anchor=tk.S)
 
-        self.HEADEND_status_entry = WorksheetStatusEntry(status_frame, self.config, "Headend Certificate Information Supplied by Utility")
-        self.HEADEND_status_entry.setValue("Waiting...")
-        self.HEADEND_status_entry.pack(fill=tk.X, padx=5)
+        self.status_entries = {
+            StatusEntryName.HE_CERT_UTILITY: WorksheetStatusEntry(status_frame, self.config, StatusEntryName.HE_CERT_UTILITY.value),
+            StatusEntryName.DTLS_CERT: WorksheetStatusEntry(status_frame, self.config, StatusEntryName.DTLS_CERT.value),
+            StatusEntryName.DTLS_BYPASS: WorksheetStatusEntry(status_frame, self.config, StatusEntryName.DTLS_BYPASS.value),
+            StatusEntryName.DCU_CONFIG: WorksheetStatusEntry(status_frame, self.config, StatusEntryName.DCU_CONFIG.value)
+        }
 
-        self.DTLS_status_entry = WorksheetStatusEntry(status_frame, self.config, "DTLS Certificate Information")
-        self.DTLS_status_entry.setValue("Waiting...")
-        self.DTLS_status_entry.pack(fill=tk.X, padx=5)
-
-        self.BYPASS_status_entry = WorksheetStatusEntry(status_frame, self.config, "DTLS Bypass Allowed [DTLS_FIELD_TRIAL=False]")
-        self.BYPASS_status_entry.setValue("Waiting...")
-        self.BYPASS_status_entry.pack(fill=tk.X, padx=5)
-
-        self.DCU_status_entry = WorksheetStatusEntry(status_frame, self.config, "DCU Configuration")
-        self.DCU_status_entry.setValue("Waiting...")
-        self.DCU_status_entry.pack(fill=tk.X, padx=5)
+        for entry in self.status_entries.values():
+            entry.setValue("waiting...")
+            entry.pack(fill=tk.X, padx=5)
 
         bottom_frame = tk.Frame(self)
         bottom_frame.pack(fill=tk.X)
@@ -84,10 +86,10 @@ class CalculationWindow(tk.Toplevel):
 
         status_data: StatusData = self.calculator.STATUS_DATA
 
-        self.HEADEND_status_entry.setValue(status_data.Headend_Certificate_Information_Supplied_by_Utility)
-        self.DTLS_status_entry.setValue(status_data.DTLS_Certificate_Information)
-        self.BYPASS_status_entry.setValue(status_data.DTLS_Bypass_Allowed_DTLS_FIELD_TRIAL_false)
-        self.DCU_status_entry.setValue(status_data.DCU_Configuration)
+        self.status_entries[StatusEntryName.HE_CERT_UTILITY].setValue(status_data.Headend_Certificate_Information_Supplied_by_Utility)
+        self.status_entries[StatusEntryName.DTLS_CERT].setValue(status_data.DTLS_Certificate_Information)
+        self.status_entries[StatusEntryName.DTLS_BYPASS].setValue(status_data.DTLS_Bypass_Allowed_DTLS_FIELD_TRIAL_false)
+        self.status_entries[StatusEntryName.DCU_CONFIG].setValue(status_data.DCU_Configuration)
 
         self.status.set("Successfully generated XML")
 

@@ -11,6 +11,7 @@ from datetime import datetime
 import json
 
 from config.config import Config
+from src.gui.wkst_status_entry import Status
 from src.processing.calc_steps.DTLS_generator import DtlsData, getDtlsData
 from src.processing.calc_steps.entry_generator import UserEntries, getUserEntries
 from src.processing.calc_steps.freqs_generator import FrequencyData
@@ -74,7 +75,7 @@ class WorksheetCalculator:
         STEP_11_DATA: Step11Data = getStep11Data(DTLS_DATA, TIME_ZONE_DATA, USER_ENTRIES, FREQUENCY_DATA, STEP_10_DATA)
 
         with open(self.config.RUNTIME_LOG_RPATH, 'w+') as f:
-            f.write("CALCULATION LOG FOR RUN: "+datetime.now.strftime('%Y/%m/%d-%H:%M:%S'))
+            f.write("CALCULATION LOG FOR RUN: "+datetime.now().strftime('%Y/%m/%d-%H:%M:%S'))
             f.write("\n\n\n\t\t\t***USER ENTRIES***\n\n"+json.dumps(USER_ENTRIES.getOrderedDict(), indent=2)); f.flush()
             f.write("\n\n\n\t\t\t***FREQUENCY DATA***\n\n"+json.dumps(FREQUENCY_DATA.getOrderedDict(), indent=2)); f.flush()
             f.write("\n\n\n\t\t\t***STEP 4***\n\n"+json.dumps(STEP_4_DATA.getOrderedDict(), indent=2)); f.flush()
@@ -96,7 +97,7 @@ class WorksheetCalculator:
     def __getStatusData(self, USER_ENTRIES: UserEntries, DTLS_DATA: DtlsData, DATA_4: Step4Data) -> StatusData:
         
         STATUS_DATA = StatusData()
-
+        # HERE4 find way to get Status colors from here into the thing
         # Row 32
         result = None
 
