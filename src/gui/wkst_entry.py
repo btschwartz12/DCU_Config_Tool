@@ -190,6 +190,8 @@ class WorksheetEntry(tk.Frame):
         if self.is_required:
             self.DCU_PAGE.updateEntryColorBox()  
 
+            self.DCU_PAGE.updateConfigurationID()
+
         self.DCU_PAGE.update()
 
     def setValue(self, value):
@@ -221,7 +223,9 @@ class WorksheetEntry(tk.Frame):
             if not self.is_editable:
                 self.entry.config(state=tk.DISABLED)
 
-        self.DCU_PAGE.update()
+        if self.name == "Customer Configuration ID":
+            self.DCU_PAGE.updateConfigurationID()
+
 
     def __help(self):
         """This dictates what is shown when the user clicks the info

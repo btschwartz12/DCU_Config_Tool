@@ -220,7 +220,7 @@ class DcuWorksheetPage(tk.Frame):
         self.WKST_ENTRIES_FN = fn
 
         self.worksheet_color_box.config(bg=READY_COLOR)
-            
+        self.updateConfigurationID()
         self.update()
     
     def __getEntryData(self):
@@ -308,7 +308,7 @@ class DcuWorksheetPage(tk.Frame):
 
             self.frequency_color_box.config(bg=READY_COLOR)
             self.frequency_color_box.update_idletasks()
-
+            self.updateConfigurationID()
             self.__displayFrequencies()
     
     def __displayFrequencies(self):
@@ -342,10 +342,6 @@ class DcuWorksheetPage(tk.Frame):
         after attempting to be loaded"""
         super().update()
 
-        cust_id = self.entries["Customer ID"].getValue()
-        if cust_id != '':
-            self.entries["Customer Configuration Id"].setValue(str(cust_id)+self.config.VERSION)
-
         if self.WKST_ENTRIES_FN != '':
             self.worksheet_fp.fn.set(os.path.basename(self.WKST_ENTRIES_FN))
         else:
@@ -354,6 +350,11 @@ class DcuWorksheetPage(tk.Frame):
             self.frequency_fp.fn.set(os.path.basename(self.FREQUENCIES_FN))
         else:
             self.frequency_fp.reset()
+
+    def updateConfigurationID(self):
+        cust_id = self.entries["Aclara Customer ID"].getValue()
+        if cust_id != '':
+            self.entries["Customer Configuration Id"].setValue(str(cust_id)+self.config.VERSION)
 
     def __calculateAndExport(self):
             """This is called every time the user clicks the calculate and export button.

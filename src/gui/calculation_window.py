@@ -18,7 +18,7 @@ from typing import OrderedDict
 from config.config import Config
 from src.gui.wkst_status_entry import WorksheetStatusEntry
 from src.processing.calc_steps.freqs_generator import FrequencyData
-from src.processing.calc_steps.status_generator import Status
+from src.processing.calc_steps.status_generator import Status, StatusEntryName
 from src.processing.calc_steps.xml_generator import ExportData, getXMLstr
 from src.processing.wkst_calculator import StatusData, WorksheetCalculator
 
@@ -26,11 +26,7 @@ from src.processing.wkst_calculator import StatusData, WorksheetCalculator
 
 DIMENSIONS = "700x400"
 
-class StatusEntryName(Enum):
-    HE_CERT_UTILITY = "Headend Certificate Information Supplied by Utility"
-    DTLS_CERT = "DTLS Certificate Information"
-    DTLS_BYPASS = "DTLS Bypass Allowed [DTLS_FIELD_TRIAL=False]"
-    DCU_CONFIG = "DCU Configuration"
+
 
 
 class CalculationWindow(tk.Toplevel):

@@ -8,7 +8,6 @@
 
 from dataclasses import dataclass
 from enum import Enum
-from src.gui.calculation_window import StatusEntryName
 from src.processing.calc_steps.DTLS_generator import DtlsData
 
 from src.processing.calc_steps.entry_generator import UserEntries
@@ -20,6 +19,12 @@ class Status(Enum):
     PASS = 'green'
     WARNING = 'yellow'
     FAIL = 'red'
+
+class StatusEntryName(Enum):
+    HE_CERT_UTILITY = "Headend Certificate Information Supplied by Utility"
+    DTLS_CERT = "DTLS Certificate Information"
+    DTLS_BYPASS = "DTLS Bypass Allowed [DTLS_FIELD_TRIAL=False]"
+    DCU_CONFIG = "DCU Configuration"
 
 @dataclass
 class StatusData:
