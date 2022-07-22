@@ -190,6 +190,8 @@ class WorksheetEntry(tk.Frame):
         if self.is_required:
             self.DCU_PAGE.updateEntryColorBox()  
 
+        self.DCU_PAGE.update()
+
     def setValue(self, value):
         """This is called every time the user imports a previous
         configuration, and will fill in the entry appropriately"""
@@ -219,6 +221,8 @@ class WorksheetEntry(tk.Frame):
             if not self.is_editable:
                 self.entry.config(state=tk.DISABLED)
 
+        self.DCU_PAGE.update()
+
     def __help(self):
         """This dictates what is shown when the user clicks the info
         button. If there is a comment provided with the entry,
@@ -235,6 +239,11 @@ class WorksheetEntry(tk.Frame):
         messagebox.showinfo("Entry Information", help_str)
 
     def __showEditWarningMessage(self, event=None):
+        """This will allows the user to edit non-editable fields, but shows a warning message before
+        enabling. The tool version or customer configuration ID still cannot be edited."""
+        
+        if self.name == "Tool Version" or self.name == "Customer Configuration Id":
+            return
         messagebox.showwarning("Warning", "You may now edit this field.\n\nPlease ensure this directly corresponds to the frequency file.")
         self.entry.config(state=tk.NORMAL)
 

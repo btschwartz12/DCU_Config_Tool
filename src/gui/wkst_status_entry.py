@@ -8,12 +8,7 @@
 from enum import Enum
 import tkinter as tk
 
-class Status(Enum):
-    PASS = 'green'
-    WARNING = 'yellow'
-    FAIL = 'red'
-
-
+from src.processing.calc_steps.status_generator import Status
 
 
 class WorksheetStatusEntry(tk.Frame):
@@ -29,9 +24,7 @@ class WorksheetStatusEntry(tk.Frame):
         self.name = name
         
 
-        # style = ttk.Style()
-        # self.option_add('*TCombobox*Listbox.foreground', self.color_str)
-        # style.configure("Colored.TCombobox", foreground=self.color_str)
+        self.status: Status
 
 
         self.__buildGUI()
@@ -62,6 +55,7 @@ class WorksheetStatusEntry(tk.Frame):
         self.entry_box.config(state=tk.DISABLED)
 
     def setStatus(self, status: Status):
+        self.status = status
         self.entry_box.config(state=tk.NORMAL)
         self.entry_box.config(background=status.value)
         self.entry_box.config(state=tk.DISABLED)

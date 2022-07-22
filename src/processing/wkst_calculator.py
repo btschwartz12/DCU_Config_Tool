@@ -15,6 +15,7 @@ from src.gui.wkst_status_entry import Status
 from src.processing.calc_steps.DTLS_generator import DtlsData, getDtlsData
 from src.processing.calc_steps.entry_generator import UserEntries, getUserEntries
 from src.processing.calc_steps.freqs_generator import FrequencyData
+from src.processing.calc_steps.status_generator import StatusData, getStatusData
 from src.processing.calc_steps.step10_calculation import Step10Data, getStep10Data
 from src.processing.calc_steps.step11_calculation import Step11Data, getStep11Data
 from src.processing.calc_steps.step4_calculation import Step4Data, getStep4Data
@@ -23,7 +24,6 @@ from src.processing.calc_steps.step6_calculation import Step6Data, getStep6Data
 from src.processing.calc_steps.step7_calculation import Step7Data, getStep7Data
 from src.processing.calc_steps.step8_calculation import Step8Data, getStep8Data
 from src.processing.calc_steps.step9_calculation import Step9Data, getStep9Data
-from src.utils.utils import toStr
 
 
 @dataclass 
@@ -33,13 +33,6 @@ class ExportData:
     DATA_8: Step8Data
     DATA_9: Step9Data
     DATA_11: Step11Data
-
-@dataclass
-class StatusData:
-    Headend_Certificate_Information_Supplied_by_Utility: str = None
-    DTLS_Certificate_Information: str = None
-    DTLS_Bypass_Allowed_DTLS_FIELD_TRIAL_false: str = None
-    DCU_Configuration: str = None
 
 class WorksheetCalculator:
     """This is used by the CalculationWindow, and will take in frequency data and
@@ -52,7 +45,7 @@ class WorksheetCalculator:
 
         self.LOCATION_DATA = {}
         self.TIME_ZONE_DATA = {}
-        
+
         with open(self.config.LOCATION_DATA_RPATH, 'r') as f:
             self.LOCATION_DATA.update(json.load(f))
         with open(self.config.TIMEZONE_DATA_RPATH, 'r') as f:
@@ -87,52 +80,17 @@ class WorksheetCalculator:
             f.write("\n\n\n\t\t\t***STEP 10***\n\n"+json.dumps(STEP_10_DATA.getOrderedDict(), indent=2)); f.flush()
             f.write("\n\n\n\t\t\t***STEP 11***\n\n"+json.dumps(STEP_11_DATA.getOrderedDict(), indent=2)); f.flush()
         
-        self.EXPORT_DATA: ExportData = ExportData(USER_ENTRIES, STEP_7_DATA, STEP_8_DATA, STEP_9_DATA, STEP_11_DATA)
-        self.STATUS_DATA: StatusData = self.__getStatusData(USER_ENTRIES, DTLS_DATA, STEP_4_DATA)
+        self.__EXPORT_DATA: ExportData = ExportData(USER_ENTRIES, STEP_7_DATA, STEP_8_DATA, STEP_9_DATA, STEP_11_DATA)
+        self.__STATUS_DATA: StatusData = getStatusData(USER_ENTRIES, DTLS_DATA, STEP_4_DATA)
 
     def getExportData(self):
-        return self.EXPORT_DATA
-        
+        return self.__EXPORT_DATA
 
-    def __getStatusData(self, USER_ENTRIES: UserEntries, DTLS_DATA: DtlsData, DATA_4: Step4Data) -> StatusData:
-        
-        STATUS_DATA = StatusData()
-        # HERE4 find way to get Status colors from here into the thing
-        # Row 32
-        result = None
+    def getStatusData(self):
+        return self.__STATUS_DATA
 
-        if USER_ENTRIES.Utility_Head_End_Certificate_Source_r12 == "Manufacturer":
-            result = "None"
-        else:
-            result = "DER X.509v3 security certificate chain (SHA-256 ECC P-256).  Security certificate chain must include a common root certificate authority and can optionally include one subordinate certificate authority. Each certificate must be 450 bytes or less in size"
-
-        STATUS_DATA.Headend_Certificate_Information_Supplied_by_Utility = result
-        # Row 33
-        result = None
-
-        result = DTLS_DATA.status
-
-        STATUS_DATA.DTLS_Certificate_Information = result
-        # Row 34
-        result = None
-
-        if USER_ENTRIES.DTLS_Bypass_Mode_Allowed_r13:
-            result = "Firmware Build Switch Allowed"
-        else:
-            result = "Firmware Build Switch Not Allowed"
-
-        STATUS_DATA.DTLS_Bypass_Allowed_DTLS_FIELD_TRIAL_false = result
-        # Row 35
-        result = None
-
-        if (DATA_4.SRFN_Receiver_Channels_r68 + DATA_4.STAR_Receiver_Channels_Minimum_r67 + DATA_4.DCU_Transmitter_Count_r66) > DATA_4.DCU_Receive_Channels_Available_r65:
-            result = "Error: More Radio Assets Needed"
-        else:
-            result = toStr(DATA_4.DCU_Configuration_Description_r81)
-
-        STATUS_DATA.DCU_Configuration = result
-
-        return STATUS_DATA
 
 
         
+
+    

@@ -32,12 +32,11 @@ class Config:
         self.DEFAULT_ENTRY_DIRECTORY = wkst_config.get("default_entry_directory")
         self.DEFAULT_FREQS_DIRECTORY = wkst_config.get("default_freqs_directory")
         
-        self.DEBUG_MODE = options.get("debug_mode")
         self.DEBUG_SAMPLE_FREQS_JSON_RPATH = options.get("sample_freqs_json_fn")
         self.DEBUG_SAMPLE_ENTRIES_JSON_RPATH = options.get("sample_entries_json_fn")
 
-        self.EXPORT_SCHEMA_RPATH = wkst_config.get("output_schema_rpath")
-        self.EXPORT_TEMPLATE_JSON_RPATH = wkst_config.get("example_output_json_rpath")
+        self.EXPORT_SCHEMA_RPATH = wkst_config.get("export_schema_rpath")
+        self.EXPORT_TEMPLATE_JSON_RPATH = wkst_config.get("export_template_json_rpath")
 
         self.ENTRIES = wkst_config.get("entries")
         self.DROPDOWN_OPTIONS = wkst_config.get("dropdown_options")
@@ -46,6 +45,9 @@ class Config:
         self.TIMEZONE_DATA_RPATH = wkst_config.get("timezone_data_json_rpath")
 
         self.FREQUENCY_KEYS = wkst_config.get("frequency_keys")
+
+
+        self.FREQUENCY_RUNTIME_JSON_STR = ""
 
         for var, val in vars(self).items():
             if val == None:

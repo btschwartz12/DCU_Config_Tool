@@ -1,6 +1,6 @@
 {
-    "output_schema_rpath": "data/export_data/DCU+2XLS.xsd",
-    "example_output_json_rpath": "data/export_data/example_output_20220718.json",
+    "export_schema_rpath": "data/export_data/DCU+2XLS.xsd",
+    "export_template_json_rpath": "data/export_data/DCU2+XLS_TEMPLATE.json",
     "location_data_json_rpath": "data/location_data.json",
     "timezone_data_json_rpath": "data/time_zone_data.json",
 
@@ -191,13 +191,15 @@
             "name": "Tool Version",
             "type": "string",
             "editable": false,
-            "required": true
+            "required": true,
+            "comment": "This is derived from the tool version, found in the options.json file. DO NOT MODIFY"
         },
         {
             "name": "Customer Configuration Id",
             "type": "string",
             "editable": false,
-            "required": true
+            "required": true,
+            "comment": "This is derived from the tool version and the Customer ID. DO NOT MODIFY"
         }
     ],
 

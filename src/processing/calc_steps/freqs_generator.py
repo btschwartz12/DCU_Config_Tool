@@ -189,6 +189,8 @@ class _FrequencyGenerator:
         FREQUENCY_DATA.num_inbound_frequencies = len(inbound_freqs)
         FREQUENCY_DATA.unassigned_frequencies = unassigned_freqs
 
+        self.config.FREQUENCY_RUNTIME_JSON_STR = json.dumps(self.frequency_objs, indent=2)
+
         return FREQUENCY_DATA
             
     

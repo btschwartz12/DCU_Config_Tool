@@ -12,6 +12,7 @@ from pprint import pformat
 import tkinter as tk
 from tkinter import messagebox
 from tkinter.filedialog import asksaveasfile
+from typing import OrderedDict
 
 from click import edit
 from config.config import Config
@@ -51,9 +52,7 @@ class DcuWorksheetPage(tk.Frame):
 
         self.__buildGUI()
 
-        if self.config.DEBUG_MODE == True:
-            self.__loadEntries(fn=self.config.DEBUG_SAMPLE_ENTRIES_JSON_RPATH)
-            self.__loadFrequencies(fn=self.config.DEBUG_SAMPLE_FREQS_JSON_RPATH)
+        self.entries["Tool Version"].setValue(config.VERSION)
 
     def __buildGUI(self):
         """This will create the view of the entire page"""
@@ -148,9 +147,6 @@ class DcuWorksheetPage(tk.Frame):
                 entry_frame.pack(fill=tk.X, padx=(5, 20))
 
             self.entries["Country"].combobox.bind("<<ComboboxSelected>>", self.__setStates)
-
-            if self.config.DEBUG_MODE == True:
-                self.loadFile(self.config.DEBUG_SAMPLE_ENTRIES_JSON_RPATH)
     
     def __getDropdownOptions(self, name) -> list:
             """This is called whenever the dropdown options are defined in the config file.
@@ -216,6 +212,11 @@ class DcuWorksheetPage(tk.Frame):
                 self.update()
                 return
 
+        if data["Tool Version"] != self.config.VERSION:
+            messagebox.showerror("Incompatible tool version", "Tool version found in import file: "+data["Tool Version"]+"\n\nCurrent tool version: "+self.config.VERSION)
+            self.update()
+            return
+
         self.WKST_ENTRIES_FN = fn
 
         self.worksheet_color_box.config(bg=READY_COLOR)
@@ -227,6 +228,19 @@ class DcuWorksheetPage(tk.Frame):
         weather it be for saving or calculating. This will loop through all entries,
         make sure they are well-formed, and return a dict with the corresponding data"""
         data = {}
+        for name, entry in self.entries.items():
+            if entry.is_required and not entry.isSelected():
+                raise EntryException(name, "Required field has not been specified")
+            try:
+                val = entry.getValue()
+                data[name] = val
+            except Exception as e:
+                raise EntryException(name, str(e))
+
+        return data
+
+    def getEntryDataOrdered(self) -> OrderedDict:
+        data = OrderedDict()
         for name, entry in self.entries.items():
             if entry.is_required and not entry.isSelected():
                 raise EntryException(name, "Required field has not been specified")
@@ -327,6 +341,11 @@ class DcuWorksheetPage(tk.Frame):
         This will ensure that an invalid file is not shown on the screen
         after attempting to be loaded"""
         super().update()
+
+        cust_id = self.entries["Customer ID"].getValue()
+        if cust_id != '':
+            self.entries["Customer Configuration Id"].setValue(str(cust_id)+self.config.VERSION)
+
         if self.WKST_ENTRIES_FN != '':
             self.worksheet_fp.fn.set(os.path.basename(self.WKST_ENTRIES_FN))
         else:

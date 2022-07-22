@@ -4,18 +4,11 @@
     - user entries
     - status
 
-2.verify freq names with entry names and IDs
-3. double click disabled entry to make changes
-    - make sure customer configuration changes too with ID
 
 
 
-    set 14 = 30
 
 
-16 30
-17 15
-dcu 2
 
 all no
 
@@ -25,3 +18,5 @@ review and export, show status no calculate button
 check tool version is the same
 
 store tool verison in json
+
+make private vars and funcs

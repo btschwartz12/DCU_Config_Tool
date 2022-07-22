@@ -1,0 +1,59 @@
+<DCU-9985 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="DCU-9985.xsd">
+    <metadata>
+        <CustomerID />
+        <CustomerName />
+        <Drawing />
+        <Product />
+    </metadata>
+    <common>
+        <appSecurityAuthMode />
+        <dtlsNetworkHESubject />
+        <dtlsNetworkMSSubject />
+        <dtlsNetworkRootCA />
+        <flashSecurityEnabled />
+        <ipHEContext />
+        <macChannelSets />
+        <macChannelSetsSTAR />
+        <macNetworkId />
+        <phyAvailableFrequencies />
+        <realtimeThreshold />
+        <shipMode />
+    </common>
+    <SRFNI-XCVR slot="2">
+        <comDeviceGatewayConfig />
+        <phyRxFrequencies />
+        <phyTxFrequencies />
+        <phyRxDetection />
+        <phyRxFraming />
+        <phyRxMode />
+    </SRFNI-XCVR>
+    <SRFNI-XCVR slot="3">
+        <comDeviceGatewayConfig />
+        <phyRxFrequencies />
+        <phyTxFrequencies />
+        <phyRxDetection />
+        <phyRxFraming />
+        <phyRxMode />
+    </SRFNI-XCVR>
+    <EXPORT-FORMAT />
+    <SRFNI-METER>
+        <comDeviceGatewayConfig />
+        <EPRxFrequencies />
+        <EPTxFrequencies />
+    </SRFNI-METER>
+    <SRFNI-DA>
+        <comDeviceGatewayConfig />
+        <EPRxFrequencies />
+        <EPTxFrequencies>
+            </EPTxFrequencies>
+    </SRFNI-DA>
+    <STARI-METER>
+        <comDeviceGatewayConfig />
+        <EPRxFrequenciesSTAR7200 />
+        <EPTxFrequenciesSTAR7200 />
+        <EPRxFrequenciesSTAR2400 />
+        <EPTxFrequenciesSTAR2400 />
+        <EPRxFrequenciesSTAR2400Legacy />
+        <EPTxFrequenciesSTAR2400Legacy />
+    </STARI-METER>
+</DCU-9985>
