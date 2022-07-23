@@ -22,12 +22,7 @@ from src.processing.calc_steps.status_generator import Status, StatusEntryName
 from src.processing.calc_steps.xml_generator import ExportData, getXMLstr
 from src.processing.wkst_calculator import StatusData, WorksheetCalculator
 
-
-
 DIMENSIONS = "700x400"
-
-
-
 
 class CalculationWindow(tk.Toplevel):
     """This is the window that is shown every time the user has successfully loaded their
@@ -145,7 +140,7 @@ class CalculationWindow(tk.Toplevel):
         """
         entry_fn = os.path.join(dir, 'USER_ENTRIES.json')
         with open(entry_fn, 'w+') as f:
-            data: OrderedDict = self.DCU_PAGE.getEntryDataOrdered()
+            data: OrderedDict = self.DCU_PAGE.getEntryData(ordered=True)
             data["@generated"] = time_str
             json.dump(data, f, indent=2)
 

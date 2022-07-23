@@ -56,20 +56,15 @@ class WorksheetEntry(tk.Frame):
     def __buildGUI(self):
         """This will create the view that holds the WorksheetEntry,
         including the name, entry spot, and info button"""
-
         main_frame = tk.Frame(self)
         main_frame.pack(fill=tk.X, expand=True, side=tk.LEFT)
-
         # So there can be two equally sized halves
         main_frame.columnconfigure(0, weight=1, uniform='group1')
         main_frame.columnconfigure(1, weight=1, uniform='group1')
         main_frame.rowconfigure(0, weight=1)
-
-        
         # Name
         name_frame = tk.Frame(main_frame)
         name_frame.grid(row=0, column=0, sticky=tk.NSEW, padx=(0,5))
-        
         # Getting name formatted prettily
         count_str = ""
         if self.count is not None:
@@ -80,12 +75,10 @@ class WorksheetEntry(tk.Frame):
         if not self.is_required:
             name_str += " (optional)"
         tk.Label(name_frame, text=name_str, font=('Times', 11), fg=self.color_str).pack(side=tk.LEFT)
-
         # Entry frame
         self.entry_frame = tk.Frame(main_frame)
         self.entry_frame.grid(row=0, column=1, sticky=tk.NSEW, padx=5)
         self.__buildEntryFrame() # Since different EntryTypes' are structured differently
-
         # Help button
         info_button = tk.Button(self, text='i', fg='blue', command=self.__help)
         info_button.config(command=self.__help)
@@ -187,11 +180,6 @@ class WorksheetEntry(tk.Frame):
             if not self.is_editable:
                 self.entry.config(state=tk.DISABLED) 
 
-        if self.is_required:
-            self.DCU_PAGE.updateEntryColorBox()  
-
-            self.DCU_PAGE.updateConfigurationID()
-
         self.DCU_PAGE.update()
 
     def setValue(self, value):
@@ -223,10 +211,8 @@ class WorksheetEntry(tk.Frame):
             if not self.is_editable:
                 self.entry.config(state=tk.DISABLED)
 
-        if self.name == "Customer Configuration ID":
-            self.DCU_PAGE.updateConfigurationID()
-
-
+        self.DCU_PAGE.update()
+        
     def __help(self):
         """This dictates what is shown when the user clicks the info
         button. If there is a comment provided with the entry,

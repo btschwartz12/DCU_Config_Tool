@@ -80,7 +80,6 @@ def getStep4Data(USER_ENTRIES: UserEntries, FREQUENCY_DATA: FrequencyData) -> St
         STEP_4_DATA.SRFN_Receiver_Channels_r68 = result
         # Row 69
         result = None
-        #HERE4 put breakpoint below
         result = STEP_4_DATA.DCU_Receive_Channels_Available_r65 - STEP_4_DATA.STAR_Receiver_Channels_Minimum_r67 - STEP_4_DATA.SRFN_Receiver_Channels_r68 - STEP_4_DATA.DCU_Transmitter_Count_r66
         if result < 0: result = 0
         STEP_4_DATA.Channels_Available_for_Diversity_r69 = result #

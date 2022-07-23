@@ -51,7 +51,6 @@ class StatusData:
 def getStatusData(USER_ENTRIES: UserEntries, DTLS_DATA: DtlsData, DATA_4: Step4Data) -> StatusData:
         
         STATUS_DATA = StatusData()
-        # HERE4 find way to get Status colors from here into the thing
         # Row 32
         result = None
         status = None

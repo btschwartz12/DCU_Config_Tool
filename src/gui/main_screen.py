@@ -28,6 +28,10 @@ from src.utils.utils import EntryException
 NOT_READY_COLOR = 'red'
 READY_COLOR = 'green'
 
+CUST_NAME = "Customer Name"
+CUST_ID = "Aclara Customer ID"
+CONFIG_ID = "Customer Configuration Id"
+
 class DcuWorksheetPage(tk.Frame):
     """This is the first page that is shown in the app, and will allow the user 
     to input certain data that will be used in further calculations. 
@@ -55,7 +59,7 @@ class DcuWorksheetPage(tk.Frame):
         self.entries["Tool Version"].setValue(config.VERSION)
 
     def __buildGUI(self):
-        """This will create the view of the entire page"""
+        """This will create the view of the entire page."""
 
         """Top view holds the name of the reading"""
         top_frame = tk.Frame(self)
@@ -149,19 +153,19 @@ class DcuWorksheetPage(tk.Frame):
             self.entries["Country"].combobox.bind("<<ComboboxSelected>>", self.__setStates)
     
     def __getDropdownOptions(self, name) -> list:
-            """This is called whenever the dropdown options are defined in the config file.
-            This will look at the relevent data, and return a list of all possible options
-            for the corresponding WorksheetEntry"""
-            dropdown_options = []
+        """This is called whenever the dropdown options are defined in the config file.
+        This will look at the relevent data, and return a list of all possible options
+        for the corresponding WorksheetEntry"""
+        dropdown_options = []
 
-            if name == "Time Zone":
-                dropdown_options = list(self.TIME_ZONE_DATA.keys())
-            elif name == "Country":
-                dropdown_options = list(self.LOCATION_DATA.keys())
-            elif name == "State":
-                dropdown_options = list(self.LOCATION_DATA[self.config.DEFAULT_COUNTRY]["states"].keys())
-            
-            return dropdown_options
+        if name == "Time Zone":
+            dropdown_options = list(self.TIME_ZONE_DATA.keys())
+        elif name == "Country":
+            dropdown_options = list(self.LOCATION_DATA.keys())
+        elif name == "State":
+            dropdown_options = list(self.LOCATION_DATA[self.config.DEFAULT_COUNTRY]["states"].keys())
+        
+        return dropdown_options
 
     def __setStates(self, eventObj):
         """This is called every time the user selects a different country.
@@ -174,77 +178,46 @@ class DcuWorksheetPage(tk.Frame):
         self.entries["State"].combobox.current(0)    
     
     def __loadEntries(self, fn=None):
-            """This is called every time the user clicks on the load worksheet button. 
-            This will take the .json that is attempting to be imported, 
-            make sure it is well formatted, and then populate all of the WorksheetEntries
-            with its values"""
-            if fn is None:
-                if not self.worksheet_fp.is_selected():
-                    return
-                fn = self.worksheet_fp.getSelectedFilePath()
-
-            data = {}
-            with open(fn, 'r') as f:
-                data = json.load(f)
-
-            if not isinstance(data, dict):
-                messagebox.showerror("Invalid data format", "Incompatible data format found in "+fn+": \n\nFound: "+str(type(data))+"\nShould be: dict")
-                self.update()
+        """This is called every time the user clicks on the load worksheet button. 
+        This will take the .json that is attempting to be imported, 
+        make sure it is well formatted, and then populate all of the WorksheetEntries
+        with its values"""
+        if fn is None:
+            if not self.worksheet_fp.is_selected():
                 return
-            
-            for key in data.keys():
-                if key not in self.entries.keys():
-                    messagebox.showerror("Invalid key name", "Unknown key name found in "+fn+": \n       "+key+"\n\nCorrect keys: "+pformat(list(self.entries.keys()), indent=2))
-                    self.update()
-                    return
+            fn = self.worksheet_fp.getSelectedFilePath()
 
-            for name, value in data.items():  
-                try:
-                    self.entries[name].setValue(value)
-                except Exception as e:
-                    messagebox.showerror("Incompatiable data", "Poor data found for key: "+name+"\n\n"+str(e))
-                    self.update()
-                    return
-
-            if data["Tool Version"] != self.config.VERSION:
-                messagebox.showerror("Incompatible tool version", "Tool version found in import file: "+data["Tool Version"]+"\n\nCurrent tool version: "+self.config.VERSION)
-                self.update()
-                return
-
-            self.WKST_ENTRIES_FN = fn
-
-            self.worksheet_color_box.config(bg=READY_COLOR)
-            self.updateConfigurationID()
-            self.update()
-    
-    def __getEntryData(self):
-        """This is called every time the tool needs a dict of all the entries,
-        weather it be for saving or calculating. This will loop through all entries,
-        make sure they are well-formed, and return a dict with the corresponding data"""
         data = {}
-        for name, entry in self.entries.items():
-            if entry.is_required and not entry.isSelected():
-                raise EntryException(name, "Required field has not been specified")
+        with open(fn, 'r') as f:
+            data = json.load(f)
+
+        if not isinstance(data, dict):
+            messagebox.showerror("Invalid data format", "Incompatible data format found in "+fn+": \n\nFound: "+str(type(data))+"\nShould be: dict")
+            self.update()
+            return
+        
+        for key in data.keys():
+            if key not in self.entries.keys():
+                messagebox.showerror("Invalid key name", "Unknown key name found in "+fn+": \n       "+key+"\n\nCorrect keys: "+pformat(list(self.entries.keys()), indent=2))
+                self.update()
+                return
+
+        for name, value in data.items():  
             try:
-                val = entry.getValue()
-                data[name] = val
+                self.entries[name].setValue(value)
             except Exception as e:
-                raise EntryException(name, str(e))
+                messagebox.showerror("Incompatiable data", "Poor data found for key: "+name+"\n\n"+str(e))
+                self.update()
+                return
 
-        return data
+        if data["Tool Version"] != self.config.VERSION:
+            messagebox.showerror("Incompatible tool version", "Tool version found in import file: "+data["Tool Version"]+"\n\nCurrent tool version: "+self.config.VERSION)
+            self.update()
+            return
 
-    def getEntryDataOrdered(self) -> OrderedDict:
-        data = OrderedDict()
-        for name, entry in self.entries.items():
-            if entry.is_required and not entry.isSelected():
-                raise EntryException(name, "Required field has not been specified")
-            try:
-                val = entry.getValue()
-                data[name] = val
-            except Exception as e:
-                raise EntryException(name, str(e))
+        self.WKST_ENTRIES_FN = fn
 
-        return data
+        self.update()
     
     def __loadFrequencies(self, fn=None):
         """This is called every time the user clicks on the load freqcencies button.
@@ -264,71 +237,59 @@ class DcuWorksheetPage(tk.Frame):
             return
 
         self.FREQUENCIES_FN = fn
+        self.__FREQUENCY_DATA = FREQUENCY_DATA
             
         self.__initFrequencies(FREQUENCY_DATA)
     
-    def __checkFrequencyDataMatch(self):
-        if not hasattr(self, "FREQUENCY_DATA"):
-            return
-       
-        name_entry: WorksheetEntry = self.entries["Customer Name"]
-        id_entry: WorksheetEntry = self.entries["Aclara Customer ID"]
+    def __initFrequencies(self):
+            """This will capture the generated frequency data, and inspect to make sure
+            that the user-entered ID and name match the frequencies. If not, a message is
+            shown. this will also make other update to the view, and display the frequencies once
+            finished."""
 
-        entered_name = name_entry.getValue()
-        entered_id = id_entry.getValue()
+            name_entry: WorksheetEntry = self.entries[CUST_NAME]
+            id_entry: WorksheetEntry = self.entries[CUST_ID]
 
-        if entered_name == "":
-            name_entry.setValue(self.FREQUENCY_DATA.CUSTOMER_NAME)
-        elif entered_name != self.FREQUENCY_DATA.CUSTOMER_NAME:
-            messagebox.showwarning("Warning", "Mismatching Customer Names\n\nEntered name: "+entered_name+"\nName found in frequency file: "+self.FREQUENCY_DATA.CUSTOMER_NAME+"\n\nFrequency file name will overwrite.")
-            name_entry.setValue(self.FREQUENCY_DATA.CUSTOMER_NAME)
+            entered_name = name_entry.getValue()
+            entered_id = id_entry.getValue()
 
-        
-        if entered_id == '':
-            id_entry.setValue(self.FREQUENCY_DATA.CUSTOMER_ID)
-        elif entered_id != self.FREQUENCY_DATA.CUSTOMER_ID:
-            messagebox.showwarning("Warning", "Mismatching Customer IDs\n\nEntered id: "+str(entered_id)+"\nID found in frequency file: "+str(self.FREQUENCY_DATA.CUSTOMER_ID)+"\n\nFrequency file id will overwrite.")
-            id_entry.setValue(self.FREQUENCY_DATA.CUSTOMER_ID)
-
-    def __initFrequencies(self, frequnecy_data: FrequencyData):
-            """This will capture the generated frequency data, and will 
-            feed into the calculator when necessary"""
-
-            self.FREQUENCY_DATA = frequnecy_data
-
-            self.__checkFrequencyDataMatch()
-        
-            self.status.set("")
-
+            # Checking match for name, overwriting if necessary
+            if entered_name == "":
+                name_entry.setValue(self.__FREQUENCY_DATA.CUSTOMER_NAME)
+            elif entered_name != self.__FREQUENCY_DATA.CUSTOMER_NAME:
+                messagebox.showwarning("Warning", "Mismatching Customer Names\n\nEntered name: "+entered_name+"\nName found in frequency file: "+self.__FREQUENCY_DATA.CUSTOMER_NAME+"\n\nFrequency file name will overwrite.")
+                name_entry.setValue(self.__FREQUENCY_DATA.CUSTOMER_NAME)
+            
+            # Checking match for ID, overwriting if necessary
+            if entered_id == '':
+                id_entry.setValue(self.__FREQUENCY_DATA.CUSTOMER_ID)
+            elif entered_id != self.__FREQUENCY_DATA.CUSTOMER_ID:
+                messagebox.showwarning("Warning", "Mismatching Customer IDs\n\nEntered id: "+str(entered_id)+"\nID found in frequency file: "+str(self.__FREQUENCY_DATA.CUSTOMER_ID)+"\n\nFrequency file id will overwrite.")
+                id_entry.setValue(self.__FREQUENCY_DATA.CUSTOMER_ID)
+            
+            # Set frequency status to OK
             self.frequency_color_box.config(bg=READY_COLOR)
-            self.frequency_color_box.update_idletasks()
-            self.updateConfigurationID()
+            self.status.set("")
+            # Make updates to the view
+            self.update()
+            # Initially show the frequencies
             self.__displayFrequencies()
-    
+       
     def __displayFrequencies(self):
+        """This will show a popup window detailing the imported frequencies that are going 
+        to be used for calculation"""
         if not hasattr(self, "FREQUENCY_DATA") or self.FREQUENCIES_FN == '':
             messagebox.showerror("Failed to fetch frequencies", "Please load a valid frequency file")
             return
 
-        msg_str = "Frequencies from "+self.FREQUENCIES_FN+":\n\n"+json.dumps(self.FREQUENCY_DATA.getOrderedDict(), indent=2)
-        if self.FREQUENCY_DATA.unassigned_frequencies != []:
-            freqs = self.FREQUENCY_DATA.unassigned_frequencies
+        msg_str = "Frequencies from "+self.FREQUENCIES_FN+":\n\n"+json.dumps(self.__FREQUENCY_DATA.getOrderedDict(), indent=2)
+        if self.__FREQUENCY_DATA.unassigned_frequencies != []:
+            freqs = self.__FREQUENCY_DATA.unassigned_frequencies
             msg_str += "\n\nWARNING: There are "+str(len(freqs))+" unassigned frequencies:\n"
-            msg_str += "\n"+str(self.FREQUENCY_DATA.unassigned_frequencies)+"\n\n"
+            msg_str += "\n"+str(self.__FREQUENCY_DATA.unassigned_frequencies)+"\n\n"
             msg_str += "Please consider assigning them and re-load the import file."
         
         messagebox.showinfo("Successfully Imported Frequencies", msg_str)
-
-    def updateEntryColorBox(self, event=None):
-        """This is called by the individual WorksheetEntry's, as this will
-        try to get all the entry data. If the data is well formed, the 
-        box will turn green, if not, it will turn red"""
-        try:
-            self.__checkFrequencyDataMatch()
-            self.__getEntryData()
-            self.worksheet_color_box.config(bg=READY_COLOR)
-        except Exception as e:
-            self.worksheet_color_box.config(bg=NOT_READY_COLOR)
 
     def update(self) -> None:
         """This is called whenever the user attempts to load a import file.
@@ -336,6 +297,7 @@ class DcuWorksheetPage(tk.Frame):
         after attempting to be loaded"""
         super().update()
 
+        # Making sure an incrorrect filename is not displayed
         if self.WKST_ENTRIES_FN != '':
             self.worksheet_fp.fn.set(os.path.basename(self.WKST_ENTRIES_FN))
         else:
@@ -345,11 +307,54 @@ class DcuWorksheetPage(tk.Frame):
         else:
             self.frequency_fp.reset()
 
-    def updateConfigurationID(self):
-        cust_id = self.entries["Aclara Customer ID"].getValue()
-        if cust_id != '':
-            self.entries["Customer Configuration Id"].setValue(str(cust_id)+self.config.VERSION)
+        # Making sure the color box for the worksheet file picker is correct
+        try:
+            self.getEntryData()
+            self.worksheet_color_box.config(bg=READY_COLOR)
+        except EntryException as e:
+            self.worksheet_color_box.config(bg=NOT_READY_COLOR)
+        except Exception as e:
+            raise e
+        
+        # Making sure that if the ID is set than the config ID is updated
+        cust_id_entry = self.entries.get(CUST_ID)
+        if cust_id_entry is not None:
+            cust_id = cust_id_entry.getValue()
+            if cust_id != '':
+                self.entries[CONFIG_ID].setValue(str(cust_id)+self.config.VERSION)
+            else:
+                print("error 023203")
+        else:
+            print("error 0232e03")
 
+        # Making sure that if the frequency data is loaded, then only 
+        # the name and ID from that file are shown
+        if hasattr(self, "FREQUENCY_DATA"):
+
+            name_entry = self.entries.get(CUST_NAME)
+            if cust_id_entry is not None and name_entry is not None:
+                cust_id_entry.setValue(self.__FREQUENCY_DATA.CUSTOMER_ID)
+                name_entry.setValue(self.__FREQUENCY_DATA.CUSTOMER_NAME)
+
+    def getEntryData(self, ordered=False):
+        """This is called every time the tool needs a dict of all the entries,
+        weather it be for saving or calculating. This will loop through all entries,
+        make sure they are well-formed, and return a dict with the corresponding data"""
+        if ordered:
+            data = OrderedDict()
+        else:
+            data = {}
+        for name, entry in self.entries.items():
+            if entry.is_required and not entry.isSelected():
+                raise EntryException(name, "Required field has not been specified")
+            try:
+                val = entry.getValue()
+                data[name] = val
+            except Exception as e:
+                raise EntryException(name, str(e))
+
+        return data
+    
     def __calculateAndExport(self):
             """This is called every time the user clicks the calculate and export button.
             It will first try to fetch the user entries, and show an error message if not
@@ -361,33 +366,13 @@ class DcuWorksheetPage(tk.Frame):
                 return
 
             try:
-                entry_data = self.__getEntryData()
-                freq_data = self.FREQUENCY_DATA
+                entry_data = self.getEntryData()
+                freq_data = self.__FREQUENCY_DATA
                 window = CalculationWindow(self, self.config, entry_data, freq_data)
                 window.mainloop()
             except EntryException as e:
                 messagebox.showerror("Failed to fetch entry data", "'"+e.entry_name+"'\n\n"+e.error_msg)
                 
-    def saveCurrent(self):
-        data = self.getEntryData()
-        
-        with open(self.WKST_ENTRIES_FN, 'w') as f:
-            json.dump(data, f, indent=4)
-            print("successfully written to "+self.WKST_ENTRIES_FN)
-
-    def saveAs(self):
-        data = self.getEntryData()
-        
-        now = datetime.now()
-        fn = "CustomerWorksheet_"+str(now.strftime('%Y%m%d-%H%M%S'))
-
-        name = asksaveasfile(mode='w', defaultextension='.json', initialfile=fn, initialdir='C:/Users/70060/Documents/SRFN_Config_Tool/').name
-
-        if name is not None:
-            with open(name, 'w') as f:
-                json.dump(data, f, indent=4)
-                print("successfully written to "+name)
-
     # Menubar that will be modified
     def create_menubar(self, parent):
         menubar = tk.Menu(parent, bd=3, relief=tk.RAISED, activebackground="#80B9DC")
@@ -399,11 +384,7 @@ class DcuWorksheetPage(tk.Frame):
 
         ## proccessing menu
         save_menu = tk.Menu(menubar, tearoff=0)
-        menubar.add_cascade(label="Save", menu=save_menu)
-        save_menu.add_command(label="Save Current", command=self.saveCurrent)
-        save_menu.add_separator()
-        save_menu.add_command(label="Save As", command=self.saveAs)
-        
+        menubar.add_cascade(label="TBD", menu=save_menu)
 
         ## help menu
         help_menu = tk.Menu(menubar, tearoff=0)
