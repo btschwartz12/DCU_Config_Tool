@@ -186,42 +186,36 @@ class DcuWorksheetPage(tk.Frame):
             data = {}
             with open(fn, 'r') as f:
                 data = json.load(f)
-                
-            self.__initEntries(data, fn)
 
-    def __initEntries(self, data, fn):
-        """This will capture the imported entry data, validate it, and then update all of the
-        WorksheetEntry's with the correct values"""
-        
-        if not isinstance(data, dict):
-            messagebox.showerror("Invalid data format", "Incompatible data format found in "+fn+": \n\nFound: "+str(type(data))+"\nShould be: dict")
-            self.update()
-            return
-        
-        for key in data.keys():
-            if key not in self.entries.keys():
-                messagebox.showerror("Invalid key name", "Unknown key name found in "+fn+": \n       "+key+"\n\nCorrect keys: "+pformat(list(self.entries.keys()), indent=2))
+            if not isinstance(data, dict):
+                messagebox.showerror("Invalid data format", "Incompatible data format found in "+fn+": \n\nFound: "+str(type(data))+"\nShould be: dict")
+                self.update()
+                return
+            
+            for key in data.keys():
+                if key not in self.entries.keys():
+                    messagebox.showerror("Invalid key name", "Unknown key name found in "+fn+": \n       "+key+"\n\nCorrect keys: "+pformat(list(self.entries.keys()), indent=2))
+                    self.update()
+                    return
+
+            for name, value in data.items():  
+                try:
+                    self.entries[name].setValue(value)
+                except Exception as e:
+                    messagebox.showerror("Incompatiable data", "Poor data found for key: "+name+"\n\n"+str(e))
+                    self.update()
+                    return
+
+            if data["Tool Version"] != self.config.VERSION:
+                messagebox.showerror("Incompatible tool version", "Tool version found in import file: "+data["Tool Version"]+"\n\nCurrent tool version: "+self.config.VERSION)
                 self.update()
                 return
 
-        for name, value in data.items():  
-            try:
-                self.entries[name].setValue(value)
-            except Exception as e:
-                messagebox.showerror("Incompatiable data", "Poor data found for key: "+name+"\n\n"+str(e))
-                self.update()
-                return
+            self.WKST_ENTRIES_FN = fn
 
-        if data["Tool Version"] != self.config.VERSION:
-            messagebox.showerror("Incompatible tool version", "Tool version found in import file: "+data["Tool Version"]+"\n\nCurrent tool version: "+self.config.VERSION)
+            self.worksheet_color_box.config(bg=READY_COLOR)
+            self.updateConfigurationID()
             self.update()
-            return
-
-        self.WKST_ENTRIES_FN = fn
-
-        self.worksheet_color_box.config(bg=READY_COLOR)
-        self.updateConfigurationID()
-        self.update()
     
     def __getEntryData(self):
         """This is called every time the tool needs a dict of all the entries,
