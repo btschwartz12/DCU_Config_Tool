@@ -15,6 +15,7 @@ from tkinter.filedialog import asksaveasfile
 from typing import OrderedDict
 
 from click import edit
+from gevent import config
 from config.config import Config
 
 from src.gui.calculation_window import CalculationWindow
@@ -57,6 +58,8 @@ class DcuWorksheetPage(tk.Frame):
         self.__buildGUI()
 
         self.entries["Tool Version"].setValue(config.VERSION)
+
+        self.updateView()
 
     def __buildGUI(self):
         """This will create the view of the entire page."""
@@ -193,13 +196,13 @@ class DcuWorksheetPage(tk.Frame):
 
         if not isinstance(data, dict):
             messagebox.showerror("Invalid data format", "Incompatible data format found in "+fn+": \n\nFound: "+str(type(data))+"\nShould be: dict")
-            self.update()
+            self.updateView()
             return
         
         for key in data.keys():
             if key not in self.entries.keys():
                 messagebox.showerror("Invalid key name", "Unknown key name found in "+fn+": \n       "+key+"\n\nCorrect keys: "+pformat(list(self.entries.keys()), indent=2))
-                self.update()
+                self.updateView()
                 return
 
         for name, value in data.items():  
@@ -207,17 +210,17 @@ class DcuWorksheetPage(tk.Frame):
                 self.entries[name].setValue(value)
             except Exception as e:
                 messagebox.showerror("Incompatiable data", "Poor data found for key: "+name+"\n\n"+str(e))
-                self.update()
+                self.updateView()
                 return
 
         if data["Tool Version"] != self.config.VERSION:
             messagebox.showerror("Incompatible tool version", "Tool version found in import file: "+data["Tool Version"]+"\n\nCurrent tool version: "+self.config.VERSION)
-            self.update()
+            self.updateView()
             return
 
         self.WKST_ENTRIES_FN = fn
 
-        self.update()
+        self.updateView()
     
     def __loadFrequencies(self, fn=None):
         """This is called every time the user clicks on the load freqcencies button.
@@ -233,13 +236,13 @@ class DcuWorksheetPage(tk.Frame):
             FREQUENCY_DATA: FrequencyData = getFrequencyData(self.config, fn)
         except Exception as e:
             messagebox.showerror("Error parsing frequency data", "Cannot procss frequency data from "+str(fn)+"\n\n"+str(e))
-            self.update()
+            self.updateView()
             return
 
         self.FREQUENCIES_FN = fn
         self.__FREQUENCY_DATA = FREQUENCY_DATA
             
-        self.__initFrequencies(FREQUENCY_DATA)
+        self.__initFrequencies()
     
     def __initFrequencies(self):
             """This will capture the generated frequency data, and inspect to make sure
@@ -271,14 +274,15 @@ class DcuWorksheetPage(tk.Frame):
             self.frequency_color_box.config(bg=READY_COLOR)
             self.status.set("")
             # Make updates to the view
-            self.update()
+            self.updateView()
             # Initially show the frequencies
             self.__displayFrequencies()
        
     def __displayFrequencies(self):
         """This will show a popup window detailing the imported frequencies that are going 
         to be used for calculation"""
-        if not hasattr(self, "FREQUENCY_DATA") or self.FREQUENCIES_FN == '':
+        # HERE5 try importing entry then changing id and name then loading freqs it should not go in this if
+        if not hasattr(self, "__FREQUENCY_DATA") or self.FREQUENCIES_FN == '':
             messagebox.showerror("Failed to fetch frequencies", "Please load a valid frequency file")
             return
 
@@ -291,21 +295,21 @@ class DcuWorksheetPage(tk.Frame):
         
         messagebox.showinfo("Successfully Imported Frequencies", msg_str)
 
-    def update(self) -> None:
+    def updateView(self, update_fps=True) -> None:
         """This is called whenever the user attempts to load a import file.
         This will ensure that an invalid file is not shown on the screen
         after attempting to be loaded"""
-        super().update()
 
         # Making sure an incrorrect filename is not displayed
-        if self.WKST_ENTRIES_FN != '':
-            self.worksheet_fp.fn.set(os.path.basename(self.WKST_ENTRIES_FN))
-        else:
-            self.worksheet_fp.reset()
-        if self.FREQUENCIES_FN != '':
-            self.frequency_fp.fn.set(os.path.basename(self.FREQUENCIES_FN))
-        else:
-            self.frequency_fp.reset()
+        if update_fps:
+            if self.WKST_ENTRIES_FN != '':
+                self.worksheet_fp.fn.set(os.path.basename(self.WKST_ENTRIES_FN))
+            else:
+                self.worksheet_fp.reset()
+            if self.FREQUENCIES_FN != '':
+                self.frequency_fp.fn.set(os.path.basename(self.FREQUENCIES_FN))
+            else:
+                self.frequency_fp.reset()
 
         # Making sure the color box for the worksheet file picker is correct
         try:
@@ -321,15 +325,15 @@ class DcuWorksheetPage(tk.Frame):
         if cust_id_entry is not None:
             cust_id = cust_id_entry.getValue()
             if cust_id != '':
-                self.entries[CONFIG_ID].setValue(str(cust_id)+self.config.VERSION)
-            else:
-                print("error 023203")
-        else:
-            print("error 0232e03")
+                config_id_entry = self.entries[CONFIG_ID]
+                config_id_entry.entry.config(state=tk.NORMAL)
+                config_id_entry.entry.set(str(cust_id)+self.config.VERSION)
+                config_id_entry.entry.config(state=tk.DISABLED)
+
 
         # Making sure that if the frequency data is loaded, then only 
         # the name and ID from that file are shown
-        if hasattr(self, "FREQUENCY_DATA"):
+        if hasattr(self, "__FREQUENCY_DATA"):
 
             name_entry = self.entries.get(CUST_NAME)
             if cust_id_entry is not None and name_entry is not None:
@@ -361,7 +365,7 @@ class DcuWorksheetPage(tk.Frame):
             all required fields are selected. If the entry data looks good, it will then show
             the CalculationWindow"""
 
-            if not hasattr(self, 'FREQUENCY_DATA'):
+            if not hasattr(self, '__FREQUENCY_DATA'):
                 self.status.set("Please load frequencies")
                 return
 

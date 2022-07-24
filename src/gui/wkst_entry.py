@@ -180,7 +180,7 @@ class WorksheetEntry(tk.Frame):
             if not self.is_editable:
                 self.entry.config(state=tk.DISABLED) 
 
-        self.DCU_PAGE.update()
+        self.DCU_PAGE.updateView(update_fps=False)
 
     def setValue(self, value):
         """This is called every time the user imports a previous
@@ -211,7 +211,6 @@ class WorksheetEntry(tk.Frame):
             if not self.is_editable:
                 self.entry.config(state=tk.DISABLED)
 
-        self.DCU_PAGE.update()
         
     def __help(self):
         """This dictates what is shown when the user clicks the info
