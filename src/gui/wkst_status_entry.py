@@ -57,7 +57,7 @@ class WorksheetStatusEntry(tk.Frame):
     def setStatus(self, status: Status):
         self.status = status
         self.entry_box.config(state=tk.NORMAL)
-        self.entry_box.config(background=status.value)
+        self.entry_box.config(background=status.value[0], foreground=status.value[1])
         self.entry_box.config(state=tk.DISABLED)
 
     

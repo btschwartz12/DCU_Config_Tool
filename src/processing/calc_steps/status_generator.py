@@ -16,9 +16,9 @@ from src.utils.utils import toStr
 
 
 class Status(Enum):
-    PASS = 'green'
-    WARNING = 'yellow'
-    FAIL = 'red'
+    PASS = ('green', 'white')
+    WARNING = ('yellow', 'black')
+    FAIL = ('red', 'white')
 
 class StatusEntryName(Enum):
     HE_CERT_UTILITY = "Headend Certificate Information Supplied by Utility"
@@ -40,10 +40,10 @@ class StatusData:
 
     def getData(self) -> dict:
         return {
-            StatusEntryName.HE_CERT_UTILITY.value, self.Headend_Certificate_Information_Supplied_by_Utility,
-            StatusEntryName.DTLS_CERT.value, self.DTLS_Certificate_Information,
-            StatusEntryName.DTLS_BYPASS, self.DTLS_Bypass_Allowed,
-            StatusEntryName.DCU_CONFIG.value, self.DCU_Configuration
+            str(StatusEntryName.HE_CERT_UTILITY.value): self.Headend_Certificate_Information_Supplied_by_Utility,
+            str(StatusEntryName.DTLS_CERT.value): self.DTLS_Certificate_Information,
+            str(StatusEntryName.DTLS_BYPASS): self.DTLS_Bypass_Allowed,
+            str(StatusEntryName.DCU_CONFIG.value): self.DCU_Configuration
         }
     
 

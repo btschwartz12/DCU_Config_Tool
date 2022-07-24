@@ -48,6 +48,7 @@ class Config:
 
 
         self.FREQUENCY_RUNTIME_JSON_STR = ""
+        self.ENTRIES_RUNTIME_JSON_STR = ""
 
         for var, val in vars(self).items():
             if val == None:

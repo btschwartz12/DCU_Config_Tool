@@ -34,8 +34,6 @@ class WorksheetEntry(tk.Frame):
 
         self.DCU_PAGE = DCU_PAGE
 
-        self.status: tk.StringVar = DCU_PAGE.status # Gives access to the DCU pages' status variable
-        
         # Optional parameters
         self.comment=comment # Comment from the worksheet, will be shown with info button
         self.dropdown_options = dropdown_options # If possible dropdown options can be provided
@@ -128,10 +126,8 @@ class WorksheetEntry(tk.Frame):
         if val == "":
             return
         if not isInt(val):
-            self.status.set(self.name+" must have an integer input")
+            messagebox.showerror("Invalid entry", self.name+" must have an integer input")
             self.entry.set("")
-        else:
-            self.status.set("")
         
     def getValue(self):
         """This is called every time the user finishes putting in their entries,

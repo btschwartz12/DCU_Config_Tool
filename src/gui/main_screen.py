@@ -56,8 +56,6 @@ class DcuWorksheetPage(tk.Frame):
 
         self.entries["Tool Version"].setValue(config.VERSION)
 
-        self.updateView()
-
     def __buildGUI(self):
         """This will create the view of the entire page."""
 
@@ -255,7 +253,7 @@ class DcuWorksheetPage(tk.Frame):
         to be used for calculation"""
         # HERE5 try importing entry then changing id and name then loading freqs it should not go in this if
         if self.FREQUENCIES_FN == '':
-            messagebox.showerror("Failed to fetch frequencies", "Please load a valid frequency file")
+            self.status.set("Please load frequencies")
             return
 
         msg_str = "Frequencies from "+self.FREQUENCIES_FN+":\n\n"+json.dumps(self.__FREQUENCY_DATA.getOrderedDict(), indent=2)
@@ -291,9 +289,24 @@ class DcuWorksheetPage(tk.Frame):
             self.worksheet_color_box.config(bg=NOT_READY_COLOR)
         except Exception as e:
             raise e
-        
-        # Making sure that if the ID is set than the config ID is updated
+
+        status_str = ""
+
+        # Making sure that if the frequency data is loaded, then only 
+        # the name and ID from that file are shown
         cust_id_entry = self.entries.get(CUST_ID)
+        name_entry = self.entries.get(CUST_NAME)
+
+        if self.FREQUENCIES_FN != "":
+
+            if cust_id_entry is not None and name_entry is not None:
+                if cust_id_entry.getValue() != self.__FREQUENCY_DATA.CUSTOMER_ID or name_entry.getValue() != self.__FREQUENCY_DATA.CUSTOMER_NAME:
+                    cust_id_entry.setValue(self.__FREQUENCY_DATA.CUSTOMER_ID)
+                    name_entry.setValue(self.__FREQUENCY_DATA.CUSTOMER_NAME)
+                    status_str = "Frequency Name/ID has overwritten entered data"
+
+        # Making sure that if the ID is set than the config ID is updated
+        
         if cust_id_entry is not None:
             cust_id = cust_id_entry.getValue()
             if cust_id != '':
@@ -302,15 +315,8 @@ class DcuWorksheetPage(tk.Frame):
                 config_id_entry.entry.set(str(cust_id)+self.config.VERSION)
                 config_id_entry.entry.config(state=tk.DISABLED)
 
+        self.status.set(status_str)
 
-        # Making sure that if the frequency data is loaded, then only 
-        # the name and ID from that file are shown
-        if self.FREQUENCIES_FN != "":
-
-            name_entry = self.entries.get(CUST_NAME)
-            if cust_id_entry is not None and name_entry is not None:
-                cust_id_entry.setValue(self.__FREQUENCY_DATA.CUSTOMER_ID)
-                name_entry.setValue(self.__FREQUENCY_DATA.CUSTOMER_NAME)
 
     def getEntryData(self, ordered=False):
         """This is called every time the tool needs a dict of all the entries,
@@ -343,8 +349,9 @@ class DcuWorksheetPage(tk.Frame):
 
             try:
                 entry_data = self.getEntryData()
+                self.config.ENTRIES_RUNTIME_JSON_STR = json.dumps(self.getEntryData(ordered=True), indent=2)
                 freq_data = self.__FREQUENCY_DATA
-                window = CalculationWindow(self, self.config, entry_data, freq_data)
+                window = CalculationWindow(self.config, entry_data, freq_data)
                 window.mainloop()
             except EntryException as e:
                 messagebox.showerror("Failed to fetch entry data", "'"+e.entry_name+"'\n\n"+e.error_msg)

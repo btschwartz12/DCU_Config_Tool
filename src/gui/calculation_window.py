@@ -28,11 +28,10 @@ class CalculationWindow(tk.Toplevel):
     """This is the window that is shown every time the user has successfully loaded their
     entries and frequencies. THis will show the status of the configuration, generate the output XML,
     and export it accordingly."""
-    def __init__(self, DCU_PAGE, config: Config, entry_data, frequency_data: FrequencyData):
+    def __init__(self, config: Config, entry_data, frequency_data: FrequencyData):
         tk.Toplevel.__init__(self)
         self.config = config
 
-        self.DCU_PAGE = DCU_PAGE
         self.entry_data = entry_data
         self.FREQUENCY_DATA: FrequencyData = frequency_data
 
@@ -75,13 +74,14 @@ class CalculationWindow(tk.Toplevel):
 
         btn_frame = tk.Frame(bottom_frame)
         btn_frame.pack(fill=tk.X, expand=True, anchor=tk.S)
-        btn_frame.grid_rowconfigure(0, weight=1)
-        btn_frame.grid_columnconfigure(0, weight=1, uniform='group1')
-        btn_frame.grid_columnconfigure(1, weight=1, uniform='group1')
+        # btn_frame.grid_rowconfigure(0, weight=1)
+        # btn_frame.grid_columnconfigure(0, weight=1, uniform='group1')
+        # btn_frame.grid_columnconfigure(1, weight=1, uniform='group1')
 
-        tk.Button(btn_frame, text="Archive", bg='gray', command=self.__archive).grid(row=0, column=0, sticky=tk.NSEW)
+        # tk.Button(btn_frame, text="Archive", bg='gray', command=self.__archive).grid(row=0, column=0, sticky=tk.NSEW)
         self.export_btn = tk.Button(btn_frame, text="Export", bg='yellow', command=self.__export)
-        self.export_btn.grid(row=0, column=1, sticky=tk.NSEW)
+        self.export_btn.pack(fill=tk.BOTH, expand=True)
+        # self.export_btn.grid(row=0, column=1, sticky=tk.NSEW)
 
     def __calculate(self):
         """This will take the user entries and frequencies, and create an instance of a WorksheetCalculator. 
@@ -111,7 +111,7 @@ class CalculationWindow(tk.Toplevel):
 
         export_status: Status = Status.PASS
 
-        for entry in self.status_entries.values:
+        for entry in self.status_entries.values():
             if entry.status == Status.FAIL:
                 export_status = Status.FAIL
                 break
@@ -129,7 +129,7 @@ class CalculationWindow(tk.Toplevel):
             self.status.set("Illegal status detected, cannot generate XML")
             self.export_btn.config(state=tk.DISABLED)
 
-    def __archive(self, dir, time_str, xml_str):
+    def __archive(self, dir, time_str, time_fn_str, xml_str):
         """This will take all of the input / export data from the current tool instance
         and store in a folder, for future access
 
@@ -140,7 +140,7 @@ class CalculationWindow(tk.Toplevel):
         """
         entry_fn = os.path.join(dir, 'USER_ENTRIES.json')
         with open(entry_fn, 'w+') as f:
-            data: OrderedDict = self.DCU_PAGE.getEntryData(ordered=True)
+            data = json.loads(self.config.ENTRIES_RUNTIME_JSON_STR)
             data["@generated"] = time_str
             json.dump(data, f, indent=2)
 
@@ -149,7 +149,7 @@ class CalculationWindow(tk.Toplevel):
             if self.config.FREQUENCY_RUNTIME_JSON_STR == "":
                 raise Exception("error 336: cannot find frequency data")
             data = json.loads(self.config.FREQUENCY_RUNTIME_JSON_STR)
-            data["@generated"] = time_str
+            data.append({"@generated": time_str})
             json.dump(data, f, indent=2)
 
         status_fn = os.path.join(dir, "STATUS.json")
@@ -158,7 +158,7 @@ class CalculationWindow(tk.Toplevel):
             data["@generated"] = time_str
             json.dump(data, f, indent=2)
 
-        xml_fn = os.path.join(dir, "DCU2+XLS_"+time_str)
+        xml_fn = os.path.join(dir, "DCU2+XLS_"+time_fn_str)
         with open(xml_fn, 'w+') as f:
             f.write(xml_str)
 
@@ -182,17 +182,18 @@ class CalculationWindow(tk.Toplevel):
         user_wants_archive = messagebox.askyesno("Archive?", question_str)
 
         now = datetime.now()
-        datetime_str = now.strftime('%Y%m%d-%H%M%S')
+        datetime_fn_str = now.strftime('%Y%m%d-%H%M%S')
+        datetime_str = now.strftime('%Y/%m/%d-%H:%M:%S')
 
         if user_wants_archive:
-            archive_dir = filedialog.askdirectory(title='Select archive folder destination', initialdir="DCU2+XLS_Archive_"+datetime_str, mustexist=False)
-            if dir is not None:
-                os.makedirs(archive_dir)
-                self.__archive(archive_dir, datetime_str, xml_str)
-                messagebox.showinfo("Successfully archived and exported", "Successfully written archive and export files to:\n\n"+dir)
+            archive_dir = filedialog.askdirectory(title='Select archive folder destination', initialdir="DCU2+XLS_Archive_"+datetime_fn_str, mustexist=False)
+            if archive_dir is not None:
+                # os.makedirs(archive_dir)
+                self.__archive(archive_dir, datetime_str, datetime_fn_str, xml_str)
+                messagebox.showinfo("Successfully archived and exported", "Successfully written archive and export files to:\n\n"+archive_dir)
                 self.destroy()
         else:
-            fn = "DCU2+XLS_"+datetime_str
+            fn = "DCU2+XLS_"+datetime_fn_str
             name = asksaveasfile(mode='w', defaultextension='.xml', initialfile=fn, initialdir=self.config.SRC_DIR).name
             if name is not None:
                 with open (name, 'w+') as f:
