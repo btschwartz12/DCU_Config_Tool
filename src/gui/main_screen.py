@@ -11,11 +11,8 @@ import os
 from pprint import pformat
 import tkinter as tk
 from tkinter import messagebox
-from tkinter.filedialog import asksaveasfile
 from typing import OrderedDict
 
-from click import edit
-from gevent import config
 from config.config import Config
 
 from src.gui.calculation_window import CalculationWindow
@@ -155,31 +152,6 @@ class DcuWorksheetPage(tk.Frame):
 
             self.entries["Country"].combobox.bind("<<ComboboxSelected>>", self.__setStates)
     
-    def __getDropdownOptions(self, name) -> list:
-        """This is called whenever the dropdown options are defined in the config file.
-        This will look at the relevent data, and return a list of all possible options
-        for the corresponding WorksheetEntry"""
-        dropdown_options = []
-
-        if name == "Time Zone":
-            dropdown_options = list(self.TIME_ZONE_DATA.keys())
-        elif name == "Country":
-            dropdown_options = list(self.LOCATION_DATA.keys())
-        elif name == "State":
-            dropdown_options = list(self.LOCATION_DATA[self.config.DEFAULT_COUNTRY]["states"].keys())
-        
-        return dropdown_options
-
-    def __setStates(self, eventObj):
-        """This is called every time the user selects a different country.
-        Because each country has different states, the dropdown options for the state
-        WorksheetEntry must be updated"""
-        country = self.entries["Country"].getValue()
-        dropdown_options = []
-        dropdown_options = list(self.LOCATION_DATA[country]["states"].keys())
-        self.entries["State"].combobox.config(values=dropdown_options)
-        self.entries["State"].combobox.current(0)    
-    
     def __loadEntries(self, fn=None):
         """This is called every time the user clicks on the load worksheet button. 
         This will take the .json that is attempting to be imported, 
@@ -282,7 +254,7 @@ class DcuWorksheetPage(tk.Frame):
         """This will show a popup window detailing the imported frequencies that are going 
         to be used for calculation"""
         # HERE5 try importing entry then changing id and name then loading freqs it should not go in this if
-        if not hasattr(self, "__FREQUENCY_DATA") or self.FREQUENCIES_FN == '':
+        if self.FREQUENCIES_FN == '':
             messagebox.showerror("Failed to fetch frequencies", "Please load a valid frequency file")
             return
 
@@ -333,7 +305,7 @@ class DcuWorksheetPage(tk.Frame):
 
         # Making sure that if the frequency data is loaded, then only 
         # the name and ID from that file are shown
-        if hasattr(self, "__FREQUENCY_DATA"):
+        if self.FREQUENCIES_FN != "":
 
             name_entry = self.entries.get(CUST_NAME)
             if cust_id_entry is not None and name_entry is not None:
@@ -365,7 +337,7 @@ class DcuWorksheetPage(tk.Frame):
             all required fields are selected. If the entry data looks good, it will then show
             the CalculationWindow"""
 
-            if not hasattr(self, '__FREQUENCY_DATA'):
+            if self.FREQUENCIES_FN == "":
                 self.status.set("Please load frequencies")
                 return
 
@@ -376,7 +348,32 @@ class DcuWorksheetPage(tk.Frame):
                 window.mainloop()
             except EntryException as e:
                 messagebox.showerror("Failed to fetch entry data", "'"+e.entry_name+"'\n\n"+e.error_msg)
-                
+    
+    def __getDropdownOptions(self, name) -> list:
+        """This is called whenever the dropdown options are defined in the config file.
+        This will look at the relevent data, and return a list of all possible options
+        for the corresponding WorksheetEntry"""
+        dropdown_options = []
+
+        if name == "Time Zone":
+            dropdown_options = list(self.TIME_ZONE_DATA.keys())
+        elif name == "Country":
+            dropdown_options = list(self.LOCATION_DATA.keys())
+        elif name == "State":
+            dropdown_options = list(self.LOCATION_DATA[self.config.DEFAULT_COUNTRY]["states"].keys())
+        
+        return dropdown_options
+
+    def __setStates(self, eventObj):
+        """This is called every time the user selects a different country.
+        Because each country has different states, the dropdown options for the state
+        WorksheetEntry must be updated"""
+        country = self.entries["Country"].getValue()
+        dropdown_options = []
+        dropdown_options = list(self.LOCATION_DATA[country]["states"].keys())
+        self.entries["State"].combobox.config(values=dropdown_options)
+        self.entries["State"].combobox.current(0)                
+    
     # Menubar that will be modified
     def create_menubar(self, parent):
         menubar = tk.Menu(parent, bd=3, relief=tk.RAISED, activebackground="#80B9DC")
