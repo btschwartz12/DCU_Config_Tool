@@ -9,6 +9,8 @@
     "default_freqs_directory": "IMPORT_DATA",
     "runtime_log_rpath": "DEBUG_DATA/runtime_calcs.txt",
 
+    "sheet_name": "Customer Freqs",
+
     "frequency_keys": {
         "name": "Customer Name",
         "id": "Customer ID",

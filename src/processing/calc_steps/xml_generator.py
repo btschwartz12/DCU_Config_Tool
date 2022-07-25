@@ -11,16 +11,8 @@ import json
 
 import xmlschema
 from config.config import Config
-from src.processing.calc_steps.entry_generator import UserEntries
-from src.processing.calc_steps.step11_calculation import Step11Data
-from src.processing.calc_steps.step7_calculation import Step7Data
-from src.processing.calc_steps.step8_calculation import Step8Data
-from src.processing.calc_steps.step9_calculation import Step9Data
 from src.processing.wkst_calculator import ExportData
 from src.utils.utils import toStr
-
-
-EXPORT_FN_FORMAT = "DCU2+XLS_%Y%d%m-%H%M%S.xml"
 
 
 def getXMLstr(data: ExportData, config: Config) -> str:

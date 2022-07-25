@@ -1,13 +1,10 @@
-import json
-import xmlschema
-
-schema = xmlschema.XMLSchema('data/export_data/DCU+2XLS.xsd')
+import os
+from tkinter import filedialog
 
 
+def process_files():
+    name = filedialog.asksaveasfile(mode='w', initialfile='piper').name
+    os.makedirs(name)
 
-with open('new.json', 'r') as f:
-    data = json.load(f)
 
-
-with open("new.xml", "w+") as f:
-    f.write(xmlschema.etree_tostring(schema.to_etree(data)))
+process_files()

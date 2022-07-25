@@ -185,6 +185,7 @@ class DcuWorksheetPage(tk.Frame):
 
         if data["Tool Version"] != self.config.VERSION:
             messagebox.showerror("Incompatible tool version", "Tool version found in import file: "+data["Tool Version"]+"\n\nCurrent tool version: "+self.config.VERSION)
+            
             self.updateView()
             return
 
@@ -251,7 +252,7 @@ class DcuWorksheetPage(tk.Frame):
     def __displayFrequencies(self):
         """This will show a popup window detailing the imported frequencies that are going 
         to be used for calculation"""
-        # HERE5 try importing entry then changing id and name then loading freqs it should not go in this if
+
         if self.FREQUENCIES_FN == '':
             self.status.set("Please load frequencies")
             return
@@ -354,7 +355,7 @@ class DcuWorksheetPage(tk.Frame):
                 window = CalculationWindow(self.config, entry_data, freq_data)
                 window.mainloop()
             except EntryException as e:
-                messagebox.showerror("Failed to fetch entry data", "'"+e.entry_name+"'\n\n"+e.error_msg)
+                messagebox.showerror("Invalid entries", e.error_msg+"'\n\n'"+e.entry_name+"'")
     
     def __getDropdownOptions(self, name) -> list:
         """This is called whenever the dropdown options are defined in the config file.

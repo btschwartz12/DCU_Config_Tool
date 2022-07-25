@@ -22,7 +22,7 @@ from src.processing.calc_steps.status_generator import Status, StatusEntryName
 from src.processing.calc_steps.xml_generator import ExportData, getXMLstr
 from src.processing.wkst_calculator import StatusData, WorksheetCalculator
 
-DIMENSIONS = "700x400"
+DIMENSIONS = "800x315"
 
 class CalculationWindow(tk.Toplevel):
     """This is the window that is shown every time the user has successfully loaded their
@@ -158,7 +158,7 @@ class CalculationWindow(tk.Toplevel):
             data["@generated"] = time_str
             json.dump(data, f, indent=2)
 
-        xml_fn = os.path.join(dir, "DCU2+XLS_"+time_fn_str)
+        xml_fn = os.path.join(dir, "DCU2+XLS_"+time_fn_str+".xml")
         with open(xml_fn, 'w+') as f:
             f.write(xml_str)
 
@@ -186,9 +186,18 @@ class CalculationWindow(tk.Toplevel):
         datetime_str = now.strftime('%Y/%m/%d-%H:%M:%S')
 
         if user_wants_archive:
-            archive_dir = filedialog.askdirectory(title='Select archive folder destination', initialdir="DCU2+XLS_Archive_"+datetime_fn_str, mustexist=False)
-            if archive_dir is not None:
-                # os.makedirs(archive_dir)
+            
+            
+
+            # messagebox.showinfo("Archive Created", "An archive folder has been created in:\n\n"+os.path.dirname(initial_dir_path)+"\n\nWith the name:\n\n"+os.path.basename(initial_dir_path)+"\n\n"+"Click OK, and select a destination for the archive folder.")
+
+            archive_parent_dir = filedialog.askdirectory(title='Select Archive Destination', initialdir=self.config.SRC_DIR)
+
+            if archive_parent_dir is not None:
+                
+                archive_dir = os.path.join(archive_parent_dir, "DCU2+XLS_Archive_"+datetime_fn_str)
+                os.mkdir(archive_dir)
+
                 self.__archive(archive_dir, datetime_str, datetime_fn_str, xml_str)
                 messagebox.showinfo("Successfully archived and exported", "Successfully written archive and export files to:\n\n"+archive_dir)
                 self.destroy()
