@@ -1,22 +1,16 @@
-
-
-
 make private vars and funcs
-
 
 error message for bad formed frequency data just like entry data
 ask user for sheet name
 
 
 1. what to do when tool verion does not match up
-2. should user ever be allowed to override frequency name or id
-3. warning/fail messages
-
 
 Message for incompatible tool versions:
 devices configured with different tools can be incompatible in the field, do you wish to proceed anyway?
 please contact informatio nand engineering. Do you wish to override
 
+3. warning/fail messages
 
 if all green, immediately ask to archive,
 if yellow, show warning then do you wish to proceed,
