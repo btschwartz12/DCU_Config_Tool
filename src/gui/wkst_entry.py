@@ -12,9 +12,13 @@ from tkinter import messagebox
 
 from config.config import Config
 from src.utils.filepicker import AutoSelectEntry
-from src.utils.utils import EntryType, isInt
+from src.utils.utils import isInt
 
-
+class EntryType(Enum):
+    STRING = "string"
+    BOOLEAN = "boolean"
+    DROPDOWN = "dropdown"
+    NUMBER = "number"
 
 COLORS = ('#00137C', 'black')
 
