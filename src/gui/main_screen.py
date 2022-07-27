@@ -15,10 +15,10 @@ from typing import OrderedDict
 
 from config.config import Config
 
-from src.gui.calculation_window import CalculationWindow
 
 from src.gui.wkst_entry import EntryType, WorksheetEntry
 from src.processing.calc_steps.freqs_generator import FrequencyData, getFrequencyData
+from src.processing.wkst_calculator import WorksheetCalculator
 from src.utils.filepicker import FilePicker
 from src.utils.scrollframe import VerticalScrolledFrame
 from src.utils.utils import EntryException
@@ -51,6 +51,7 @@ class DcuWorksheetPage(tk.Frame):
 
         self.entries = {}
         self.status = tk.StringVar()
+
 
         self.__buildGUI()
 
@@ -184,10 +185,13 @@ class DcuWorksheetPage(tk.Frame):
                 return
 
         if data["Tool Version"] != self.config.VERSION:
-            messagebox.showerror("Incompatible tool version", "Tool version found in import file: "+data["Tool Version"]+"\n\nCurrent tool version: "+self.config.VERSION)
-            
-            self.updateView()
-            return
+
+            error_msg = "Tool version found in import file: "+data["Tool Version"]+"\n\nCurrent tool version: "+self.config.VERSION
+            error_msg += "\n\nDevices configured with different tools can be incompatible in the field. Please contact engineering for more information. Do you wish to override?"
+            will_override = messagebox.askyesno("Incompatible tool version", error_msg)
+            if not will_override:
+                self.updateView()
+                return
 
         self.WKST_ENTRIES_FN = fn
 
@@ -351,12 +355,14 @@ class DcuWorksheetPage(tk.Frame):
             try:
                 entry_data = self.getEntryData()
                 self.config.ENTRIES_RUNTIME_JSON_STR = json.dumps(self.getEntryData(ordered=True), indent=2)
-                freq_data = self.__FREQUENCY_DATA
-                window = CalculationWindow(self.config, entry_data, freq_data)
-                window.mainloop()
             except EntryException as e:
                 messagebox.showerror("Invalid entries", e.error_msg+"'\n\n'"+e.entry_name+"'")
     
+            freq_data = self.__FREQUENCY_DATA
+            calculator = WorksheetCalculator(self.config, entry_data, freq_data)
+            calculator.calculate()
+
+
     def __getDropdownOptions(self, name) -> list:
         """This is called whenever the dropdown options are defined in the config file.
         This will look at the relevent data, and return a list of all possible options

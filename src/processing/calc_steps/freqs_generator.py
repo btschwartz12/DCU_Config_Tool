@@ -8,9 +8,8 @@ from config.config import Config
 
 from src.utils.utils import StepData
 
-SHEET_NAME = "CustomerFreqs"
 
-REQUIRED_KEYS = ["Customer ID", "Customer Name", "Frequency", "Frequency Use"]
+
 
 class UnassignedFrequencyException(Exception):
     def __init__(self, freqs):
@@ -70,6 +69,7 @@ class _FrequencyGenerator:
         self.config = config
         self.frequency_objs = []
         self.unassigned_freqs = []
+        self.REQUIRED_KEYS = list(self.config.FREQUENCY_KEYS.values())
 
     def loadFreqsFromJson(self, JSON_FN):
         data = []
@@ -78,8 +78,8 @@ class _FrequencyGenerator:
             if not isinstance(data, list):
                 raise Exception("Incompatible data format found: "+str(type(data))+"\nShould be: list")
         for freq_obj in data:
-            if not (set(REQUIRED_KEYS) <= set(list(freq_obj.keys()))):
-                raise Exception("error 660: imported frequency data entry is missing required keys\n\nrequired keys: "+pformat(REQUIRED_KEYS, indent=2))
+            if not (set(self.REQUIRED_KEYS) <= set(list(freq_obj.keys()))):
+                raise Exception("error 660: imported frequency data entry is missing required keys\n\nrequired keys: "+pformat(self.REQUIRED_KEYS, indent=2))
         self.frequency_objs = data
 
     def loadFreqsFromExcel(self, WB_FN, SHEET_NAME):
@@ -112,6 +112,10 @@ class _FrequencyGenerator:
                 freq_entry[key] = val
             
             freq_entries.append(freq_entry)
+        
+        for freq_obj in freq_entries:
+            if not (set(self.REQUIRED_KEYS) <= set(list(freq_obj.keys()))):
+                raise Exception("error 660: imported frequency data entry is missing required key\n\nrequired keys: "+pformat(self.REQUIRED_KEYS, indent=2))
 
         self.frequency_objs = freq_entries    
 
@@ -208,7 +212,10 @@ def getFrequencyData(config: Config, FREQUENCIES_FN) -> FrequencyData:
             freq_generator.loadFreqsFromJson(FREQUENCIES_FN)
 
         elif FREQUENCIES_FN.endswith('xlsx'):
-            freq_generator.loadFreqsFromExcel(FREQUENCIES_FN, SHEET_NAME)
+            try:
+                freq_generator.loadFreqsFromExcel(FREQUENCIES_FN, config.SHEET_NAME)
+            except Exception as e:
+                raise Exception("error 449: failed to parse Excel file.\n\n"+str(e)+"\n\nPlease check sheet name in config files")
 
         else:
             print("error 303")

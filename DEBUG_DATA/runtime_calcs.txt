@@ -1,11 +1,11 @@
-CALCULATION LOG FOR RUN: 2022/07/25-08:35:49
+CALCULATION LOG FOR RUN: 2022/07/27-06:57:38
 
 
 			***USER ENTRIES***
 
 {
   "Customer_Name_r2": "Dothan, City of (AL)",
-  "Contact_Name_r3": "k",
+  "Contact_Name_r3": "Dan Danford",
   "Country_r4": "United States",
   "State_r5": "Alabama",
   "City_r6": "Dothan",

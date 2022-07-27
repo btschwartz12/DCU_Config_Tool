@@ -16,9 +16,9 @@ from src.utils.utils import toStr
 
 
 class Status(Enum):
-    PASS = ('green', 'white')
-    WARNING = ('yellow', 'black')
-    FAIL = ('red', 'white')
+    PASS = 0
+    WARNING = 1
+    FAIL = 2
 
 class StatusEntryName(Enum):
     HE_CERT_UTILITY = "Headend Certificate Information Supplied by Utility"
@@ -42,7 +42,7 @@ class StatusData:
         return {
             str(StatusEntryName.HE_CERT_UTILITY.value): self.Headend_Certificate_Information_Supplied_by_Utility,
             str(StatusEntryName.DTLS_CERT.value): self.DTLS_Certificate_Information,
-            str(StatusEntryName.DTLS_BYPASS): self.DTLS_Bypass_Allowed,
+            str(StatusEntryName.DTLS_BYPASS.value): self.DTLS_Bypass_Allowed,
             str(StatusEntryName.DCU_CONFIG.value): self.DCU_Configuration
         }
     
@@ -59,10 +59,9 @@ def getStatusData(USER_ENTRIES: UserEntries, DTLS_DATA: DtlsData, DATA_4: Step4D
             result = "Trusting Aclara PKI"
             status = Status.PASS
         else:
-            result = """Contact Aclara.Manufacturer must provide RootCA support: (DER X.509v3 security certificate chain (SHA-256 ECC P-256). 
+            result = """Contact Aclara. Manufacturer must provide RootCA support: (DER X.509v3 security certificate chain (SHA-256 ECC P-256). 
              Security certificate chain must include a common root certificate authority and can optionally include one 
              subordinate certificate authority. Each certificate must be 450 bytes or less in size)"""
-            # Contact Aclara
             status = Status.FAIL
 
         STATUS_DATA.Headend_Certificate_Information_Supplied_by_Utility = result
@@ -95,12 +94,7 @@ def getStatusData(USER_ENTRIES: UserEntries, DTLS_DATA: DtlsData, DATA_4: Step4D
             result = "Firmware Build Switch Allowed"
             status = Status.PASS
         else:
-            result = """You have indicated that the firmware build switch is not allowed.
-
-            Utility Communications will not be protected in field.
-
-            Proceed with caution.
-            """
+            result = "You have indicated that the firmware build switch is not allowed.\n\nUtility Communications will not be protected in field.\n\nProceed with caution."
             status = Status.WARNING
 
         STATUS_DATA.DTLS_Bypass_Allowed = result

@@ -13,6 +13,8 @@ class EntryType(Enum):
     DROPDOWN = "dropdown"
     NUMBER = "number"
 
+    
+
 def isInt(s):
     try: 
         int(s)

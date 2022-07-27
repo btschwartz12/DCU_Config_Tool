@@ -26,14 +26,12 @@ class Config:
         self.VERSION = options.get("version") # Current app version
         self.SRC_DIR = options.get("SOURCE_DIRECTORY") # Directory where all files will be pulled from
 
-        self.RUNTIME_LOG_RPATH = wkst_config.get("runtime_log_rpath")
+        self.LOG_MODE = options.get("log_mode")
+        self.RUNTIME_LOG_RPATH = options.get("runtime_log_rpath")
         
         self.DEFAULT_COUNTRY = wkst_config.get("default_country")
         self.DEFAULT_ENTRY_DIRECTORY = wkst_config.get("default_entry_directory")
         self.DEFAULT_FREQS_DIRECTORY = wkst_config.get("default_freqs_directory")
-        
-        self.DEBUG_SAMPLE_FREQS_JSON_RPATH = options.get("sample_freqs_json_fn")
-        self.DEBUG_SAMPLE_ENTRIES_JSON_RPATH = options.get("sample_entries_json_fn")
 
         self.EXPORT_SCHEMA_RPATH = wkst_config.get("export_schema_rpath")
         self.EXPORT_TEMPLATE_JSON_RPATH = wkst_config.get("export_template_json_rpath")
@@ -46,9 +44,12 @@ class Config:
 
         self.FREQUENCY_KEYS = wkst_config.get("frequency_keys")
 
+        self.SHEET_NAME = wkst_config.get("sheet_name")
+
 
         self.FREQUENCY_RUNTIME_JSON_STR = ""
         self.ENTRIES_RUNTIME_JSON_STR = ""
+        
 
         for var, val in vars(self).items():
             if val == None:

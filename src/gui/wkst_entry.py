@@ -126,8 +126,9 @@ class WorksheetEntry(tk.Frame):
         if val == "":
             return
         if not isInt(val):
-            messagebox.showerror("Invalid entry", self.name+" must have an integer input")
             self.entry.set("")
+            messagebox.showerror("Invalid entry", self.name+" must have an integer input")
+            
         
     def getValue(self):
         """This is called every time the user finishes putting in their entries,
@@ -140,8 +141,8 @@ class WorksheetEntry(tk.Frame):
         elif self.type == EntryType.DROPDOWN:
             return self.entry.get()
         elif self.type == EntryType.NUMBER:
-            self.__checkEntryIsInt()
-            if self.entry.get() == '':
+            # self.__checkEntryIsInt()
+            if not isInt(self.entry.get()):
                 return ''
             return int(self.entry.get())
 

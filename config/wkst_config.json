@@ -7,9 +7,9 @@
     "default_country": "United States",
     "default_entry_directory": "IMPORT_DATA",
     "default_freqs_directory": "IMPORT_DATA",
-    "runtime_log_rpath": "DEBUG_DATA/runtime_calcs.txt",
+    
 
-    "sheet_name": "Customer Freqs",
+    "sheet_name": "CustomerFreqs",
 
     "frequency_keys": {
         "name": "Customer Name",
