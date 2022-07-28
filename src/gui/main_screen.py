@@ -44,9 +44,9 @@ class DcuWorksheetPage(tk.Frame):
 
         self.LOCATION_DATA = {}
         self.TIME_ZONE_DATA = {}
-        with open(os.path.join(config.SRC_DIR, config.LOCATION_DATA_RPATH), 'r') as f:
+        with open(config.LOCATION_DATA_PATH, 'r') as f:
             self.LOCATION_DATA.update(json.load(f))
-        with open(os.path.join(config.SRC_DIR, config.TIMEZONE_DATA_RPATH), 'r') as f:
+        with open(config.TIMEZONE_DATA_PATH, 'r') as f:
             self.TIME_ZONE_DATA.update(json.load(f))
 
         self.entries = {}
@@ -78,11 +78,11 @@ class DcuWorksheetPage(tk.Frame):
 
         self.worksheet_fp = FilePicker(worksheet_frame, self.config, title="Worksheet Import (.json)", extension='.json', command=self.__loadEntries, bg=NOT_READY_COLOR)
         self.worksheet_fp.pack(fill=tk.BOTH, expand=True)
-        self.worksheet_fp.loadDir(os.path.join(self.config.SRC_DIR, self.config.DEFAULT_ENTRY_DIRECTORY))
+        self.worksheet_fp.loadDir(self.config.DEFAULT_ENTRY_DIRECTORY)
 
         self.frequency_fp = FilePicker(frequency_frame, self.config, title="Frequency Import (.xlsx or .json)", extension=('.json', '.xlsx'), command=self.__loadFrequencies, bg=NOT_READY_COLOR)
         self.frequency_fp.pack(fill=tk.BOTH, expand=True)
-        self.frequency_fp.loadDir(os.path.join(self.config.SRC_DIR, self.config.DEFAULT_FREQS_DIRECTORY))
+        self.frequency_fp.loadDir(self.config.DEFAULT_FREQS_DIRECTORY)
 
         self.worksheet_color_box = tk.Label(worksheet_frame, text="", fg='white', bg=NOT_READY_COLOR)
         self.worksheet_color_box.pack(fill=tk.X, expand=True, anchor=tk.S)
@@ -210,7 +210,7 @@ class DcuWorksheetPage(tk.Frame):
         try:
             FREQUENCY_DATA: FrequencyData = getFrequencyData(self.config, fn)
         except Exception as e:
-            messagebox.showerror("Error parsing frequency data", "Cannot procss frequency data from "+str(fn)+"\n\n"+str(e))
+            messagebox.showerror("Bad frequency data", "Cannot procss frequency data from "+str(fn)+"\n\n"+str(e))
             self.updateView()
             return
 

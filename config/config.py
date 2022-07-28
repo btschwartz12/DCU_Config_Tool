@@ -24,27 +24,27 @@ class Config:
         self.MAX_DIMENSIONS = options.get("max_dimensions")
 
         self.VERSION = options.get("version") # Current app version
-        self.SRC_DIR = options.get("SOURCE_DIRECTORY") # Directory where all files will be pulled from
+        self.SRC_DIR = options.get("source_directory") # Directory where all files will be pulled from
 
         self.LOG_MODE = options.get("log_mode")
-        self.RUNTIME_LOG_RPATH = options.get("runtime_log_rpath")
+        self.RUNTIME_LOG_PATH = options.get("runtime_log_path")
         
         self.DEFAULT_COUNTRY = wkst_config.get("default_country")
-        self.DEFAULT_ENTRY_DIRECTORY = wkst_config.get("default_entry_directory")
-        self.DEFAULT_FREQS_DIRECTORY = wkst_config.get("default_freqs_directory")
+        self.DEFAULT_ENTRY_DIRECTORY = options.get("default_entry_directory")
+        self.DEFAULT_FREQS_DIRECTORY = options.get("default_freqs_directory")
 
-        self.EXPORT_SCHEMA_RPATH = wkst_config.get("export_schema_rpath")
-        self.EXPORT_TEMPLATE_JSON_RPATH = wkst_config.get("export_template_json_rpath")
+        self.EXPORT_SCHEMA_PATH = options.get("export_schema_path")
+        self.EXPORT_TEMPLATE_PATH = options.get("export_template_path")
 
         self.ENTRIES = wkst_config.get("entries")
         self.DROPDOWN_OPTIONS = wkst_config.get("dropdown_options")
 
-        self.LOCATION_DATA_RPATH = wkst_config.get("location_data_json_rpath")
-        self.TIMEZONE_DATA_RPATH = wkst_config.get("timezone_data_json_rpath")
+        self.LOCATION_DATA_PATH = options.get("location_data_path")
+        self.TIMEZONE_DATA_PATH = options.get("timezone_data_path")
 
         self.FREQUENCY_KEYS = wkst_config.get("frequency_keys")
 
-        self.SHEET_NAME = wkst_config.get("sheet_name")
+        self.SHEET_NAME = options.get("sheet_name")
 
 
         self.FREQUENCY_RUNTIME_JSON_STR = ""

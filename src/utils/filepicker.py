@@ -89,15 +89,13 @@ class FilePicker(tk.Frame):
     # is selected from the dropdown menu, for now, it is just load_file() from NicConfigPage class
     # A command is not necessarily needed, just helpful if needed in the future
     def runCommand(self, filename):
-        try:
 
-            # if self.command: # If there is a command, run it
-            #     self.command(os.path.join(self.folder_entry.get(), filename))
-            self.fn.set(filename) # Update view to show filename
 
-        except Exception as e:
-            showerror("File Load Error", "%s is not a valid file.\n%s"%(filename, e))
+        # if self.command: # If there is a command, run it
+        #     self.command(os.path.join(self.folder_entry.get(), filename))
+        self.fn.set(filename) # Update view to show filename
 
+        
     # This is the command binded to the '...' button, asks the user to 
     # select a directory, then will call loadDir() for that directory
     def browse(self, dir=None):

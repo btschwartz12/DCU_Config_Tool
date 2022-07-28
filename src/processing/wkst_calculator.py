@@ -50,9 +50,9 @@ class WorksheetCalculator:
         self.LOCATION_DATA = {}
         self.TIME_ZONE_DATA = {}
 
-        with open(self.config.LOCATION_DATA_RPATH, 'r') as f:
+        with open(self.config.LOCATION_DATA_PATH, 'r') as f:
             self.LOCATION_DATA.update(json.load(f))
-        with open(self.config.TIMEZONE_DATA_RPATH, 'r') as f:
+        with open(self.config.TIMEZONE_DATA_PATH, 'r') as f:
             self.TIME_ZONE_DATA.update(json.load(f))
 
     def __processData(self) :
@@ -74,7 +74,7 @@ class WorksheetCalculator:
             STEP_11_DATA: Step11Data = getStep11Data(DTLS_DATA, TIME_ZONE_DATA, USER_ENTRIES, FREQUENCY_DATA, STEP_10_DATA)
 
         else:
-            with open(self.config.RUNTIME_LOG_RPATH, 'w+') as f:
+            with open(self.config.RUNTIME_LOG_PATH, 'w+') as f:
                 f.write("CALCULATION LOG FOR RUN: "+datetime.now().strftime('%Y/%m/%d-%H:%M:%S'))
                 USER_ENTRIES: UserEntries = getUserEntries(self.entry_data_dict)
                 f.write("\n\n\n\t\t\t***USER ENTRIES***\n\n"+json.dumps(USER_ENTRIES.getOrderedDict(), indent=2)); f.flush()
@@ -108,7 +108,7 @@ class WorksheetCalculator:
         except Exception as e:
             error_msg = "Error during calculation\n\n"+str(e)
             if self.config.LOG_MODE:
-                error_msg += "\n\nPlease check the log file located in "+self.config.RUNTIME_LOG_RPATH+" to inspect calculation steps."
+                error_msg += "\n\nPlease check the log file located in "+self.config.RUNTIME_LOG_PATH+" to inspect calculation steps."
             else:
                 error_msg += "\n\nPlease inspect calculations, or turn on log_mode in options.json"
             error_msg += "\n\nContact Engineering."
@@ -152,7 +152,7 @@ class WorksheetCalculator:
     
     def __showFailMessage(self, message):
         fail_msg = "A fatal error occurred during configuration:\n\n*****\n"+message+"\n*****\n\nPlease fix the problem, and try again."
-        messagebox.showerror("Fatal error", fail_msg)
+        messagebox.showerror("Config error", fail_msg)
     def __showWarningMessage(self, message):
         warning_msg = "During configuration, a warning was detected:\n\n*****\n"+message+"\n*****\n\nDo you wish to proceed?"
         will_proceed = messagebox.askyesno("Warning", warning_msg)
@@ -256,8 +256,12 @@ class WorksheetCalculator:
 
         data: ExportData = self.__EXPORT_DATA
 
-        with open(self.config.EXPORT_TEMPLATE_JSON_RPATH, 'r') as f:
-            XML_DICT.update(json.load(f))
+        try:
+            schema = xmlschema.XMLSchema(self.config.EXPORT_SCHEMA_PATH)
+            template_data = schema.to_dict(self.config.EXPORT_TEMPLATE_PATH)
+            XML_DICT.update(template_data)
+        except Exception as e:
+            raise Exception("error 550: error parsing export template\n\n"+str(e)+"\n\nPlease check export schema and template.")
 
         XML_DICT["metadata"]["CustomerID"] = toStr(data.USER_ENTRIES.Aclara_Customer_ID_r28)
         XML_DICT["metadata"]["CustomerName"] = toStr(data.USER_ENTRIES.Customer_Name_r2)
@@ -317,7 +321,7 @@ class WorksheetCalculator:
         XML_DICT["STARI-METER"]["EPRxFrequenciesSTAR2400Legacy"] = toStr(data.DATA_9.EP_Rx_STAR2400Legacy_r147)
         XML_DICT["STARI-METER"]["EPTxFrequenciesSTAR2400Legacy"] = toStr(data.DATA_9.EP_Tx_STAR2400Legacy_r142)
 
-        schema = xmlschema.XMLSchema(self.config.EXPORT_SCHEMA_RPATH)
+        schema = xmlschema.XMLSchema(self.config.EXPORT_SCHEMA_PATH)
         xml_str = xmlschema.etree_tostring(schema.to_etree(XML_DICT))
         return xml_str
         

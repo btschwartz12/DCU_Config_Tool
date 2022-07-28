@@ -133,6 +133,8 @@ class _FrequencyGenerator:
 
         CUSTOMER_NAME = self.frequency_objs[0][self.config.FREQUENCY_KEYS["name"]]
         CUSTOMER_ID = self.frequency_objs[0][self.config.FREQUENCY_KEYS["id"]]
+
+        
         
         for frequency_obj in self.frequency_objs:
             use = frequency_obj[self.config.FREQUENCY_KEYS["type"]]
