@@ -4,7 +4,7 @@ This simple application will allow a user to input certain fields and import fre
 
 ## **Installation**
 
-- Install [python](https://www.python.org/downloads/)
+- Install [Python (3+)](https://www.python.org/downloads/)
 - Install pip using the link below or these commands:
 ```bash
 python -m pip install --upgrade pip
