@@ -4,7 +4,13 @@ This simple application will allow a user to input certain fields and import fre
 
 ## **Installation**
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install the following modules:
+- Install [python](https://www.python.org/downloads/)
+- Install pip using the link below or these commands:
+```bash
+python -m pip install --upgrade pip
+pip install get-pip.py
+```
+- Use the package manager [pip](https://pip.pypa.io/en/stable/) to install the following modules:
 
 ```console
 pip install openpyxl
