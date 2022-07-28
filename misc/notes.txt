@@ -1,5 +1,0 @@
-make private vars and funcs
-
-
-
-https://stackoverflow.com/questions/31815007/change-icon-for-tkinter-messagebox

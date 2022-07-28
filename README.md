@@ -2,37 +2,37 @@
 
 This simple application will allow a user to input certain fields and import frequencies to generate the .xml file used to configure the DCU.
 
-## Installation
+## **Installation**
 
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install the following modules:
 
-'''bash
+```console
 pip install openpyxl
 pip install xmlschema
-'''
+```
 
-## Setup
+## **Setup**
 
 Locate the options.json file, and ensure these fields are set correctly:
 
-'''python
-source_directory # Where the project lives on your machine
-version # The current version of the tool
+```python
+'source_directory' # Where the project lives on your machine
+'version' # The current version of the tool
 
-sheet_name # The name of the sheet that holds frequency data, if the user opts to load frequencies from an Excel workbook
+'sheet_name' # The name of the sheet that holds frequency data, if the user opts to load frequencies from an Excel workbook
 
-For the following fields, you may include just the relative path if they are relative to the indicated source directory
+'''For the following fields, you may include just the relative path if they are relative to the indicated source directory'''
 
-export_schema_path # The path to the .xsd that corresponds to the exported DCU .xml
-export_template_path # The path to the .xml that is a blank version of the exported DCU .xml
-location_data_path # The path to the .json that holds relevent data for locations (city, state, country)
-timezone_data_path # The path to the .json that holds relevent data for each time zone
-default_entry_directory # The path to the directory that will initially be used by the user to find and load entry files
-default_freqs_directory # The path to the directory that will initially be used by the user to find and load frequency files
+'export_schema_path' # The path to the .xsd that corresponds to the exported DCU .xml
+'export_template_path' # The path to the .xml that is a blank version of the exported DCU .xml
+'location_data_path' # The path to the .json that holds relevent data for locations (city, state, country)
+'timezone_data_path' # The path to the .json that holds relevent data for each time zone
+'default_entry_directory' # The path to the directory that will initially be used by the user to find and load entry files
+'default_freqs_directory' # The path to the directory that will initially be used by the user to find and load frequency files
 
-'''
+```
 
-#### Additional Setup 
+### **Additional Setup** 
 
 The following does not need to be modified to properly run the program, but must be changed if:
 
@@ -43,30 +43,29 @@ The following does not need to be modified to properly run the program, but must
 
 If one of these is true, locate the wkst_config.json file, and ensure these fields are set correctly:
 
-'''python
+```python
 
-default_country # The country displayed in the entry field at startup
-frequency_keys # The names of the keys corresponding to the customer name & id, frequency, and frequency use. If these are different in the frequency file that will be imported, change them here
-entries # A list of entry fields that will be shown on the screen. Each entry field has the following properties:
-    - name # Name of the entry shown on the screen
-    - type # Weather it's a string/number entry, a checkbox, or a dropdown
-    - editable # Weather or not the user may edit the field
-    - required # Weather or not the field is required to perform calculations
-    - comment # An optional field that will indicate the message displayed if the user clicks on the entry's info button
-dropdown_options # A map where the keys correspond to entry fields that have dropdown options, and values indicating what the dropdown options are. If the options are defined in another file, it is set to null.
-'''
+'default_country' # The country displayed in the entry field at startup
+'frequency_keys' # The names of the keys corresponding to the customer name & id, frequency, and frequency use. If these are different in the frequency file that will be imported, change them here
+'entries' # A list of entry fields that will be shown on the screen. Each entry field has the following properties:
+    - 'name' # Name of the entry shown on the screen
+    - 'type' # Weather it's a string/number entry, a checkbox, or a dropdown
+    - 'editable' # Weather or not the user may edit the field
+    - 'required' # Weather or not the field is required to perform calculations
+    - 'comment' # An optional field that will indicate the message displayed if the user clicks on the entry's info button
+'dropdown_options' # A map where the keys correspond to entry fields that have dropdown options, and values indicating what the dropdown options are. If the options are defined in another file, it is set to null.
+```
 
+## **Usage**
 
-## Usage
+After ensuring that the setup step has been completed correctly, run these commands:
 
-After ensuring that the setup step has been completed correctly, run this command:
+```bash
+$ cd <Directory that contains src/ + app.py>
+$ python.exe app.py
+```
 
-'''bash
-cd # Directory that contains /src/ + app.py
-python.exe app.py
-'''
-
-## Handling Errors
+## **Handling Errors**
 
 During the execution of the program, there are several instances where an error can occur. Here is a list of potential errors, and steps to take to possibly fix them.
 
@@ -86,14 +85,14 @@ During the execution of the program, there are several instances where an error 
 
 - **Config error** - When the calculated status of the configuration is not good enough to safely export the DCU .xml file. Check the status message provided for further instruction.
 
-## Contributing
+## **Contributing**
 
-TBD, a git repository must still be created
+TBD, a git repository still needs to be created
 
-## Contact
+## **Contact**
 
 If you want to contact me, you can reach me at BSchwartz@hubbell.com
 
-## Licence 
+## **Licence**
 
 This project uses the MIT License.

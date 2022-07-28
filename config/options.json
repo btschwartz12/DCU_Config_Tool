@@ -14,8 +14,8 @@
     "location_data_path": "data/location_data.json",
     "timezone_data_path": "data/time_zone_data.json",
 
-    "default_entry_directory": "IMPORT_DATA",
-    "default_freqs_directory": "IMPORT_DATA",
+    "default_entry_directory": "SAMPLE_IMPORT_DATA",
+    "default_freqs_directory": "SAMPLE_IMPORT_DATA",
     
     "sheet_name": "CustomerFreqs"
 }
