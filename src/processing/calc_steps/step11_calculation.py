@@ -17,6 +17,14 @@ from src.processing.calc_steps.step10_calculation import Step10Data
 from src.utils.utils import StepData
 
 
+DST_START_KEY = "dstStartRule2"
+DST_END_KEY = "dstEndRule2"
+TZ_OFFSET_KEY = "timeZoneOffset"
+DST_ENABLED_KEY = "dstEnabled"
+DST_OFFSET_KEY = "dstOffset"
+DST_HASH_KEY = "timeZoneDSTHash Decimal"
+
+
 
 @dataclass
 class Step11Data(StepData):
@@ -110,120 +118,64 @@ def getStep11Data(DTLS_DATA: DtlsData, TIME_ZONE_DATA: dict, USER_ENTRIES: UserE
         result.append("INVALID")
 
     STEP_11_DATA.macChannelSets_r156 = result
+    
     # Row 157
-    result = None
-
-    result = 1
+    STEP_11_DATA.Flash_Security_Enabled_r157 = 1
     
-    STEP_11_DATA.Flash_Security_Enabled_r157 = result
     # Row 158
-    result = None
-
-    result = 0
+    STEP_11_DATA.debugPortEnabled_r158 = 0
     
-    STEP_11_DATA.debugPortEnabled_r158 = result
     # Row 159
-    result = None
-
-    result = 2
+    STEP_11_DATA.appSecurityAuthMode_r159 = 2
     
-    STEP_11_DATA.appSecurityAuthMode_r159 = result
     # Row 160
-    result = None
-
-    result = DTLS_DATA.dtlsNetworkHESubject
+    STEP_11_DATA.dtlsNetworkHESubject_r160 = DTLS_DATA.dtlsNetworkHESubject
     
-    STEP_11_DATA.dtlsNetworkHESubject_r160 = result
     # Row 161
-    result = None
-
-    result = DTLS_DATA.dtlsNetworkMSSubject
+    STEP_11_DATA.dtlsNetworkMSSubject_r161 = DTLS_DATA.dtlsNetworkMSSubject
     
-    STEP_11_DATA.dtlsNetworkMSSubject_r161 = result
     # Row 162
-    result = None
-
-    result = DTLS_DATA.dtlsNetworkRootCA
+    STEP_11_DATA.dtlsNetworkRootCA_r162 = DTLS_DATA.dtlsNetworkRootCA
     
-    STEP_11_DATA.dtlsNetworkRootCA_r162 = result
     # Row 163
-    result = None
-
-    result = 0
+    STEP_11_DATA.ipHEContext_r163 = 0
     
-    STEP_11_DATA.ipHEContext_r163 = result
     # Row 164
-    result = None
-
-    result = 0
+    STEP_11_DATA.macNetworkId_r164 = 0
     
-    STEP_11_DATA.macNetworkId_r164 = result
     # Row 165
-    result = None
-
-    result = 85
+    STEP_11_DATA.opportunisticThreshold_r165 = 85
     
-    STEP_11_DATA.opportunisticThreshold_r165 = result
     # Row 166
-    result = None
+    STEP_11_DATA.realtimeThreshold_r166 = 170
 
-    result = 170
-    
-    STEP_11_DATA.realtimeThreshold_r166 = result
     # Row 167
-    result = None
-
-    result = 85
+    STEP_11_DATA.realtimeThreshold_DCU_r167 = 85
     
-    STEP_11_DATA.realtimeThreshold_DCU_r167 = result
     # Row 168
-    result = None
+    STEP_11_DATA.shipMode_r168 = 1
 
-    result = 1
-    
-    STEP_11_DATA.shipMode_r168 = result
     # Row 169
-    result = None
-
-    result = 60
+    STEP_11_DATA.timeAcceptanceDelay_r169 = 60
     
-    STEP_11_DATA.timeAcceptanceDelay_r169 = result
     # Row 170
-    result = None
-
-    result = int(TIME_ZONE_DATA["dstStartRule2"])
+    STEP_11_DATA.dstStartRule_r170 = int(TIME_ZONE_DATA[DST_START_KEY])
     
-    STEP_11_DATA.dstStartRule_r170 = result
     # Row 171
-    result = None
-
-    result = int(TIME_ZONE_DATA["dstEndRule2"])
+    STEP_11_DATA.dstEndRule_r171 = int(TIME_ZONE_DATA[DST_END_KEY])
     
-    STEP_11_DATA.dstEndRule_r171 = result
     # Row 172
-    result = None
-
-    result = int(TIME_ZONE_DATA["timeZoneOffset"])
+    STEP_11_DATA.timeZoneOffset_r172 = int(TIME_ZONE_DATA[TZ_OFFSET_KEY])
     
-    STEP_11_DATA.timeZoneOffset_r172 = result
     # Row 173
-    result = None
-
-    result = int(TIME_ZONE_DATA["dstEnabled"])
+    STEP_11_DATA.dstEnabled_r173 = int(TIME_ZONE_DATA[DST_ENABLED_KEY])
     
-    STEP_11_DATA.dstEnabled_r173 = result
     # Row 174
-    result = None
-
-    result = int(TIME_ZONE_DATA["dstOffset"])
-    
-    STEP_11_DATA.dstOffset_r174 = result
+    STEP_11_DATA.dstOffset_r174 = int(TIME_ZONE_DATA[DST_OFFSET_KEY])
+   
     # Row 175
-    result = None
-
-    result = int(TIME_ZONE_DATA["timeZoneDSTHash Decimal"])
+    STEP_11_DATA.timeZoneDSTHash_r175 = int(TIME_ZONE_DATA[DST_HASH_KEY])
     
-    STEP_11_DATA.timeZoneDSTHash_r175 = result
     # Row 176
     result = None
 

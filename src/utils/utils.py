@@ -32,10 +32,11 @@ def toStr(data) -> str:
 class StepData:
 
     def validate(self):
+        print()
         for field in fields(self):
             val = getattr(self, field.name)
             if val is None: ############ 
-                raise Exception("error 509: "+field.name+" is not initialized")
+                raise Exception(type(self).__name__+": "+field.name+" is not initialized")
 
     def getOrderedDict(self) -> OrderedDict:
         data = OrderedDict()

@@ -110,56 +110,56 @@ def getStep9Data(FREQ_DATA: FrequencyData, DATA_5: Step5Data, DATA_6: Step6Data)
     # Row 138
     result = []
 
-    for channel, data in SLOT_2_CHANNEL_DATA.items():
-        if data["name"] == "SRFN" or data["name"] == "SRFN*":
-            result.append(data["freq"])
-    for channel, data in SLOT_3_CHANNEL_DATA.items():
-        if data["name"] == "SRFN" or data["name"] == "SRFN*":
-            result.append(data["freq"])
+    for channel_idx, channel in SLOT_2_CHANNEL_DATA.items():
+        if channel["name"] == "SRFN" or channel["name"] == "SRFN*":
+            result.append(channel["freq"])
+    for channel_idx, channel in SLOT_3_CHANNEL_DATA.items():
+        if channel["name"] == "SRFN" or channel["name"] == "SRFN*":
+            result.append(channel["freq"])
 
     STEP_9_DATA.EP_Tx_SRFN_Except_DA_r138 = result
     # Row 139
     result = []
 
-    for channel, data in SLOT_2_CHANNEL_DATA.items():
-        if data["name"] == "DA":
-            result.append(data["freq"])
-    for channel, data in SLOT_3_CHANNEL_DATA.items():
-        if data["name"] == "DA":
-            result.append(data["freq"])
+    for channel_idx, channel in SLOT_2_CHANNEL_DATA.items():
+        if channel["name"] == "DA":
+            result.append(channel["freq"])
+    for channel_idx, channel in SLOT_3_CHANNEL_DATA.items():
+        if channel["name"] == "DA":
+            result.append(channel["freq"])
 
     STEP_9_DATA.EP_Tx_SRFN_DA_Except_DA_r139 = result
     # Row 140
     result = []
 
-    for channel, data in SLOT_2_CHANNEL_DATA.items():
-        if data["name"] == "STAR 7200" or data["name"] == "STAR 7200*":
-            result.append(data["freq"])
-    for channel, data in SLOT_3_CHANNEL_DATA.items():
-        if data["name"] == "STAR 7200" or data["name"] == "STAR 7200*":
-            result.append(data["freq"])
+    for channel_idx, channel in SLOT_2_CHANNEL_DATA.items():
+        if channel["name"] == "STAR 7200" or channel["name"] == "STAR 7200*":
+            result.append(channel["freq"])
+    for channel_idx, channel in SLOT_3_CHANNEL_DATA.items():
+        if channel["name"] == "STAR 7200" or channel["name"] == "STAR 7200*":
+            result.append(channel["freq"])
 
     STEP_9_DATA.EP_Tx_STAR7200_r140 = result
     # Row 141
     result = []
 
-    for channel, data in SLOT_2_CHANNEL_DATA.items():
-        if data["name"] == "STAR 2400": # or data["name"] == "STAR 2400*":
-            result.append(data["freq"])
-    for channel, data in SLOT_3_CHANNEL_DATA.items():
-        if data["name"] == "STAR 2400": # or data["name"] == "STAR 2400*":
-            result.append(data["freq"])
+    for channel_idx, channel in SLOT_2_CHANNEL_DATA.items():
+        if channel["name"] == "STAR 2400": # or channel["name"] == "STAR 2400*":
+            result.append(channel["freq"])
+    for channel_idx, channel in SLOT_3_CHANNEL_DATA.items():
+        if channel["name"] == "STAR 2400": # or channel["name"] == "STAR 2400*":
+            result.append(channel["freq"])
 
     STEP_9_DATA.EP_Tx_STAR2400_r141 = result
     # Row 142
     result = []
 
-    for channel, data in SLOT_2_CHANNEL_DATA.items():
-        if data["name"] == "STAR 2400 Legacy": 
-            result.append(data["freq"])
-    for channel, data in SLOT_3_CHANNEL_DATA.items():
-        if data["name"] == "STAR 2400 Legacy":
-            result.append(data["freq"])
+    for channel_idx, channel in SLOT_2_CHANNEL_DATA.items():
+        if channel["name"] == "STAR 2400 Legacy": 
+            result.append(channel["freq"])
+    for channel_idx, channel in SLOT_3_CHANNEL_DATA.items():
+        if channel["name"] == "STAR 2400 Legacy":
+            result.append(channel["freq"])
 
     STEP_9_DATA.EP_Tx_STAR2400Legacy_r142 = result
     # Row 143

@@ -46,10 +46,10 @@ class StatusData:
             str(StatusEntryName.DCU_CONFIG.value): self.DCU_Configuration
         }
     
-
-
 def getStatusData(USER_ENTRIES: UserEntries, DTLS_DATA: DtlsData, DATA_4: Step4Data) -> StatusData:
-        
+        """This will take all data needed to generate the status messages for each component shown 
+        above. This will also determine if the calculated status can still allow for a export to occur.
+        Exports may occur for a PASS or WARNING message, but not on FAIL statuses"""
         STATUS_DATA = StatusData()
         # Row 32
         result = None
@@ -59,9 +59,10 @@ def getStatusData(USER_ENTRIES: UserEntries, DTLS_DATA: DtlsData, DATA_4: Step4D
             result = "Trusting Aclara PKI"
             status = Status.PASS
         else:
-            result = """Contact Aclara. Manufacturer must provide RootCA support: (DER X.509v3 security certificate chain (SHA-256 ECC P-256). 
-             Security certificate chain must include a common root certificate authority and can optionally include one 
-             subordinate certificate authority. Each certificate must be 450 bytes or less in size)"""
+            result = "Manufacturer must provide RootCA support: (DER X.509v3 security certificate chain (SHA-256 ECC P-256)."
+            result += "\n\nSecurity certificate chain must include a common root certificate authority and can optionally include one subordinate certificate authority."
+            result += "\n\nEach certificate must be 450 bytes or less in size."
+            result += "\n\nContact Aclara."
             status = Status.FAIL
 
         STATUS_DATA.Headend_Certificate_Information_Supplied_by_Utility = result
@@ -83,6 +84,9 @@ def getStatusData(USER_ENTRIES: UserEntries, DTLS_DATA: DtlsData, DATA_4: Step4D
         else:
             print("error 559: unexcepcted DTLS response")
             status = Status.FAIL
+        
+        if result != "Data Looks Ok":
+            result = "Error occured during DTLS calculation:\n\n" + result + "\n\nPlease try again or contact Engineering."
 
         STATUS_DATA.DTLS_Certificate_Information = result
         STATUS_DATA.DTLS_Certificate_Information_STATUS = status
@@ -104,15 +108,14 @@ def getStatusData(USER_ENTRIES: UserEntries, DTLS_DATA: DtlsData, DATA_4: Step4D
         status = None
 
         if (DATA_4.SRFN_Receiver_Channels_r68 + DATA_4.STAR_Receiver_Channels_Minimum_r67 + DATA_4.DCU_Transmitter_Count_r66) > DATA_4.DCU_Receive_Channels_Available_r65:
-            result = """Some field devices will not be able to communicate with any DCUs. More radio assets are needed.
             
-            SRFN Channels: {SRFN}
-            STAR Channels: {STAR}
-            DCU Transmitters: {DCU}
-            
-            The sum of these is greater than the number of DCU Recieve Channels Available ({DCU_TOTAL})
-            """.format(SRFN=DATA_4.SRFN_Receiver_Channels_r68, STAR=DATA_4.STAR_Receiver_Channels_Minimum_r67, DCU=DATA_4.DCU_Transmitter_Count_r66, DCU_TOTAL=DATA_4.DCU_Receive_Channels_Available_r65)
+            result = "Some field devices will not be able to communicate with any DCUs. More radio assets are needed."
+            result += "\n\nSRFN Channels: "+str(DATA_4.SRFN_Receiver_Channels_r68)
+            result += "\n\nSTAR Channels: "+str(DATA_4.STAR_Receiver_Channels_Minimum_r67)
+            result += "\n\nDCU Transmitters: "+str(DATA_4.DCU_Transmitter_Count_r66)
+            result = "\n\nThe sum of these is greater than the number of DCU Recieve Channels Available ("+DATA_4.DCU_Receive_Channels_Available_r65+")."
             status = Status.FAIL
+
         else:
             result = toStr(DATA_4.DCU_Configuration_Description_r81)
             status = Status.PASS

@@ -1,4 +1,4 @@
-CALCULATION LOG FOR RUN: 2022/07/27-06:57:38
+CALCULATION LOG FOR RUN: 2022/07/28-07:26:51
 
 
 			***USER ENTRIES***
@@ -21,11 +21,11 @@ CALCULATION LOG FOR RUN: 2022/07/27-06:57:38
   "Automatic_Demand_Reset_r16": "Default",
   "Outage_Last_Gasp_Delay_r17": 30,
   "Restoration_Delay_r18": 15,
-  "System_Includes_STAR_2400_Legacy_devices_r19": true,
-  "System_Includes_STAR_2400_devices_r20": true,
-  "System_Includes_STAR_7200_devices_r21": true,
-  "System_Includes_SRFN_Devices_r22": true,
-  "System_Includes_SRFN_Dedicated_DA_Recv_Channel_r23": true,
+  "System_Includes_STAR_2400_Legacy_devices_r19": false,
+  "System_Includes_STAR_2400_devices_r20": false,
+  "System_Includes_STAR_7200_devices_r21": false,
+  "System_Includes_SRFN_Devices_r22": false,
+  "System_Includes_SRFN_Dedicated_DA_Recv_Channel_r23": false,
   "DCU_T_Boards_r24": "2",
   "DCU_Single_Transmit_T_Board_Firmware_r25": false,
   "Aclara_Customer_ID_r28": 169811,
@@ -70,32 +70,28 @@ CALCULATION LOG FOR RUN: 2022/07/27-06:57:38
 
 {
   "DCU_Receive_Channels_Available_r65": 16,
-  "DCU_Transmitter_Count_r66": 2,
-  "STAR_Receiver_Channels_Minimum_r67": 3,
-  "SRFN_Receiver_Channels_r68": 7,
-  "Channels_Available_for_Diversity_r69": 4,
-  "STAR_2400_Diverity_Channels_r70": 1,
-  "STAR_2400_Legacy_Diverity_Channels_r71": 1,
-  "STAR_7200_Diverity_Channels_r72": 2,
-  "STAR_Transmit_Frequency_Reserved_Receiver_r73": 1,
+  "DCU_Transmitter_Count_r66": 1,
+  "STAR_Receiver_Channels_Minimum_r67": 0,
+  "SRFN_Receiver_Channels_r68": 0,
+  "Channels_Available_for_Diversity_r69": 15,
+  "STAR_2400_Diverity_Channels_r70": 0,
+  "STAR_2400_Legacy_Diverity_Channels_r71": 0,
+  "STAR_7200_Diverity_Channels_r72": 0,
+  "STAR_Transmit_Frequency_Reserved_Receiver_r73": 0,
   "SRFN_Transmit_Frequency_Reserved_Receiver_r74": 1,
-  "STAR_2400_Legacy_Channels_r75": 2,
-  "STAR_2400_Channels_Non_Legacy_r76": 2,
-  "STAR_7200_Channels_r77": 4,
-  "STAR_Receiver_Channels_r78": 8,
-  "SRFN_Non_DA_Receive_Channels_r79": 7,
-  "SRFN_DA_Receive_Channels_r80": 1,
+  "STAR_2400_Legacy_Channels_r75": 0,
+  "STAR_2400_Channels_Non_Legacy_r76": 0,
+  "STAR_7200_Channels_r77": 0,
+  "STAR_Receiver_Channels_r78": -1,
+  "SRFN_Non_DA_Receive_Channels_r79": 1,
+  "SRFN_DA_Receive_Channels_r80": 0,
   "DCU_Configuration_Description_r81": [
-    "STAR 2400 Legacy",
-    "STAR 2400",
-    "STAR 7200",
-    "SRFN",
-    "DA"
+    "SRFN"
   ],
-  "SRFN_Non_DA_Receivers_on_Slot3_r82": 6,
+  "SRFN_Non_DA_Receivers_on_Slot3_r82": 0,
   "SRFN_Non_DA_Receivers_on_Slot2_r83": 0,
-  "Slot3Count_r84": 1023,
-  "Slot2Count_r85": 14116,
+  "Slot3Count_r84": 512,
+  "Slot2Count_r85": 304,
   "DCU_Configuration_r86": "Full Complement"
 }
 
@@ -104,310 +100,19 @@ CALCULATION LOG FOR RUN: 2022/07/27-06:57:38
 
 {
   "Slot_3_Channel_1_r88": "SRFN*",
-  "Slot_3_Channel_2_r89": "DA",
-  "Slot_3_Channel_3_r90": "SRFN",
-  "Slot_3_Channel_4_r91": "SRFN",
-  "Slot_3_Channel_5_r92": "SRFN",
-  "Slot_3_Channel_6_r93": "SRFN",
-  "Slot_3_Channel_7_r94": "SRFN",
-  "Slot_3_Channel_8_r95": "SRFN",
-  "Slot_2_Channel_1_r96": "STAR 7200*",
-  "Slot_2_Channel_2_r97": "STAR 7200",
-  "Slot_2_Channel_3_r98": "STAR 2400",
-  "Slot_2_Channel_4_r99": "STAR 2400 Legacy",
-  "Slot_2_Channel_5_r100": "STAR 7200*",
-  "Slot_2_Channel_6_r101": "STAR 7200",
-  "Slot_2_Channel_7_r102": "STAR 2400",
-  "Slot_2_Channel_8_r103": "STAR 2400 Legacy"
-}
-
-
-			***STEP 6***
-
-{
-  "Slot_3_Channel_1_r105": 462412500,
-  "Slot_3_Channel_2_r106": 456287500,
-  "Slot_3_Channel_3_r107": 456312500,
-  "Slot_3_Channel_4_r108": 456337500,
-  "Slot_3_Channel_5_r109": 456487500,
-  "Slot_3_Channel_6_r110": 456687500,
-  "Slot_3_Channel_7_r111": 456737500,
-  "Slot_3_Channel_8_r112": 457162500,
-  "Slot_2_Channel_1_r113": 467512500,
-  "Slot_2_Channel_2_r114": 457662500,
-  "Slot_2_Channel_3_r115": 457662500,
-  "Slot_2_Channel_4_r116": 457662500,
-  "Slot_2_Channel_5_r117": 467512500,
-  "Slot_2_Channel_6_r118": 457662500,
-  "Slot_2_Channel_7_r119": 457662500,
-  "Slot_2_Channel_8_r120": 457662500
-}
-
-
-			***STEP 7***
-
-{
-  "comDeviceGatewayConfig_r122": "SRFN",
-  "phyRxFrequencies_r123": [
-    "",
-    "462412500",
-    "456287500",
-    "456312500",
-    "456337500",
-    "456487500",
-    "456687500",
-    "456737500",
-    "457162500"
-  ],
-  "phyTxFrequencies_r124": [
-    462412500,
-    467512500
-  ],
-  "phyRxDetection_r125": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
-  ],
-  "phyRxFraming_r126": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
-  ],
-  "phyRxMode_r127": [
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
-  ],
-  "phyRxDA_r128": [
-    0,
-    0,
-    1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
-  ]
-}
-
-
-			***STEP 8***
-
-{
-  "comDeviceGatewayConfig_r130": "STAR",
-  "phyRxFrequencies_r131": [
-    "",
-    "467512500",
-    "457662500",
-    "457662500",
-    "457662500",
-    "467512500",
-    "457662500",
-    "457662500",
-    "457662500"
-  ],
-  "phyTxFrequencies_r132": [
-    462412500,
-    467512500
-  ],
-  "phyRxDetection_r133": [
-    0,
-    1,
-    1,
-    2,
-    4,
-    1,
-    1,
-    2,
-    4
-  ],
-  "phyRxFraming_r134": [
-    0,
-    2,
-    2,
-    1,
-    1,
-    2,
-    2,
-    1,
-    1
-  ],
-  "phyRxMode_r135": [
-    1,
-    2,
-    2,
-    3,
-    3,
-    2,
-    2,
-    3,
-    3
-  ],
-  "phyRxDA_r136": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
-  ]
-}
-
-
-			***STEP 9***
-
-{
-  "EP_Tx_SRFN_Except_DA_r138": [
-    462412500,
-    456312500,
-    456337500,
-    456487500,
-    456687500,
-    456737500,
-    457162500
-  ],
-  "EP_Tx_SRFN_DA_Except_DA_r139": [
-    456287500
-  ],
-  "EP_Tx_STAR7200_r140": [
-    467512500,
-    457662500,
-    467512500,
-    457662500
-  ],
-  "EP_Tx_STAR2400_r141": [
-    457662500,
-    457662500
-  ],
-  "EP_Tx_STAR2400Legacy_r142": [
-    457662500,
-    457662500
-  ],
-  "EP_Rx_SRFN_Except_DA_r143": 457662500,
-  "EP_Rx_SRFN_DA_Except_DA_r144": 457662500,
-  "EP_Rx_STAR7200_r145": 467512500,
-  "EP_Rx_STAR2400_r146": 467512500,
-  "EP_Rx_STAR2400Legacy_r147": 467512500
-}
-
-
-			***STEP 10***
-
-{
-  "All_STAR_and_SRFN_Frequencies_r149": [
-    456287500,
-    456312500,
-    456337500,
-    456487500,
-    456687500,
-    456737500,
-    457162500,
-    457662500,
-    462412500,
-    467512500
-  ],
-  "SRFN_Endpoint_Inbound_Transmit_Frequencies_r150": [
-    462412500,
-    456287500,
-    456312500,
-    456337500,
-    456487500,
-    456687500,
-    456737500,
-    457162500
-  ]
-}
-
-
-			***STEP 11***
-
-{
-  "phyAvailableFrequencies_r152": [
-    "456287500",
-    "456312500",
-    "456337500",
-    "456487500",
-    "456687500",
-    "456737500",
-    "457162500",
-    "457662500",
-    "462412500",
-    "467512500",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    ""
-  ],
-  "phyRxFrequencies_r153": 462412500,
-  "phyTxFrequencies_r154": [
-    462412500,
-    456287500,
-    456312500,
-    456337500,
-    456487500,
-    456687500,
-    456737500,
-    457162500
-  ],
-  "macChannelSetsSTAR_r155": [
-    467512500,
-    467512500,
-    457662500,
-    457662500
-  ],
-  "macChannelSets_r156": [
-    462412500,
-    462412500,
-    456000000,
-    458000000
-  ],
-  "Flash_Security_Enabled_r157": 1,
-  "debugPortEnabled_r158": 0,
-  "appSecurityAuthMode_r159": 2,
-  "dtlsNetworkHESubject_r160": "305e305c310B30090603550406130255533110300E06035504080C07416C6162616D61310F300D06035504070C06446F7468616E311D301B060355040A0C14446F7468616E2C2043697479206F662028414C29310B300906035504030C024845",
-  "dtlsNetworkMSSubject_r161": "305e305c310B30090603550406130255533110300E06035504080C07416C6162616D61310F300D06035504070C06446F7468616E311D301B060355040A0C14446F7468616E2C2043697479206F662028414C29310B300906035504030C024D53",
-  "dtlsNetworkRootCA_r162": "308201A43082014AA003020102020100300A06082A8648CE3D040302302B310F300D060355040A0C0641636C6172613118301606035504030C0F5574696C69747920526F6F742043413020170D3135303631303134303030305A180F39393939313233313233353935395A302B310F300D060355040A0C0641636C6172613118301606035504030C0F5574696C69747920526F6F742043413059301306072A8648CE3D020106082A8648CE3D030107034200046D6AB634B5E43A877DAFD4A366A39D0649C2E12343C78AF3E9B8E709D8D964F90FA95DC67041DBF1CC76D4E33A18C2978DEEAD8ACF65A331F3FADD3D4A86F555A353D05B300C0603551D13040530030101FF300B0603551D0F040403020106301D0603551D0E041604141BC0464EFCFBE686CF552DBF57C874D22AB71CE9301F0603551D230418301680141BC0464EFCFBE686CF552DBF57C874D22AB71CE9300A06082A8648CE3D040302034800304502204DA370417281033DB1139AAF2D7859F9B291E4DE2C2D8F7D955DC7B41EA88980022100D8C622BD34548441D4CC9472226B2CC541C3A46D4EB6A5035DFA4E9A6529FD8C",
-  "ipHEContext_r163": 0,
-  "macNetworkId_r164": 0,
-  "opportunisticThreshold_r165": 85,
-  "realtimeThreshold_r166": 170,
-  "realtimeThreshold_DCU_r167": 85,
-  "shipMode_r168": 1,
-  "timeAcceptanceDelay_r169": 60,
-  "dstStartRule_r170": 12901810688,
-  "dstEndRule_r171": 47261483520,
-  "timeZoneOffset_r172": -21600,
-  "dstEnabled_r173": 1,
-  "dstOffset_r174": 3600,
-  "timeZoneDSTHash_r175": 3657572331,
-  "dailySelfReadTime_r176": 0,
-  "scheduledDemandResetDay_r177": 1,
-  "outageDeclarationDelay_r178": 30,
-  "restorationDeclarationDelay_r179": 15
+  "Slot_3_Channel_2_r89": "",
+  "Slot_3_Channel_3_r90": "",
+  "Slot_3_Channel_4_r91": "",
+  "Slot_3_Channel_5_r92": "",
+  "Slot_3_Channel_6_r93": "",
+  "Slot_3_Channel_7_r94": "",
+  "Slot_3_Channel_8_r95": "",
+  "Slot_2_Channel_1_r96": "",
+  "Slot_2_Channel_2_r97": "",
+  "Slot_2_Channel_3_r98": "",
+  "Slot_2_Channel_4_r99": "",
+  "Slot_2_Channel_5_r100": "",
+  "Slot_2_Channel_6_r101": "",
+  "Slot_2_Channel_7_r102": "",
+  "Slot_2_Channel_8_r103": ""
 }

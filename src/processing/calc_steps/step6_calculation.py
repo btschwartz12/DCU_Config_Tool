@@ -55,7 +55,7 @@ def func1(bVal: str, cVal, DATA_FREQ: FrequencyData, DATA_4: Step4Data):
 def func2(val, addend=None):
     """Used by C105-C120"""
     result = None
-    if val == "SRFN" or val == "DA":
+    if val == "SRFN" or val == "DA": # TODO should this be SRFN* too?
         result = 1
     else:
         result = 0

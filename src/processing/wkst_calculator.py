@@ -15,11 +15,10 @@ from tkinter import filedialog, messagebox
 import xmlschema
 
 from config.config import Config
-from src.gui.wkst_status_entry import Status
 from src.processing.calc_steps.DTLS_generator import DtlsData, getDtlsData
 from src.processing.calc_steps.entry_generator import UserEntries, getUserEntries
 from src.processing.calc_steps.freqs_generator import FrequencyData
-from src.processing.calc_steps.status_generator import StatusData, getStatusData
+from src.processing.calc_steps.status_generator import Status, StatusData, getStatusData
 from src.processing.calc_steps.step10_calculation import Step10Data, getStep10Data
 from src.processing.calc_steps.step11_calculation import Step11Data, getStep11Data
 from src.processing.calc_steps.step4_calculation import Step4Data, getStep4Data
@@ -107,7 +106,13 @@ class WorksheetCalculator:
         try:
             self.__processData()
         except Exception as e:
-            messagebox.showerror("Error during calculation", "\n\n"+str(e))
+            error_msg = "Error during calculation\n\n"+str(e)
+            if self.config.LOG_MODE:
+                error_msg += "\n\nPlease check the log file located in "+self.config.RUNTIME_LOG_RPATH+" to inspect calculation steps."
+            else:
+                error_msg += "\n\nPlease inspect calculations, or turn on log_mode in options.json"
+            error_msg += "\n\nContact Engineering."
+            messagebox.showerror("Calculation Error", error_msg)
             return
 
         # Showing status messages if there is a fail or warning
