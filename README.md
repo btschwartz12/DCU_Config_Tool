@@ -97,7 +97,7 @@ After ensuring that the setup step has been completed correctly, run these comma
 
 ```bash
 $ pwd
-.../DCU_Config_Tool # If your current directory is not this, cd into that directory.
+.../DCU_Config_Tool # If your current directory does not end with this, cd into that directory.
 $ py app.py
 ```
 
