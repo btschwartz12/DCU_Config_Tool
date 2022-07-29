@@ -12,22 +12,26 @@ Python 3.10.5 (tags/v3.10.5:f377153, Jun  6 2022, 16:14:13) [MSC v.1929 64 bit (
 Type "help", "copyright", "credits" or "license" for more information.
 >>> 
 ```
-- Install pip using the link below or these commands:
+- Install [pip](https://pip.pypa.io/en/stable/) using the link or these commands:
 ```bash
+
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 py get-pip.py
 py -m pip install --upgrade pip
 ```
-- Use the package manager [pip](https://pip.pypa.io/en/stable/) to install the following modules:
+- Use the pip to install the following modules:
 
-```console
+```bash
 pip install openpyxl
 pip install xmlschema
 ```
 
 ## **Downloading The Code**
 
+HERE have them check version of pip and git and if not install them
 
+To download the code onto your machine, ensure that git is installed using these commands
+https://git-scm.com/download/win
 
 ## **Setup**
 
@@ -82,7 +86,7 @@ After ensuring that the setup step has been completed correctly, run these comma
 
 ```bash
 $ cd <Directory that contains src/ + app.py>
-$ python.exe app.py
+$ py app.py
 ```
 
 ## **Handling Errors**
