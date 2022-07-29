@@ -19,7 +19,7 @@ from src.utils.utils import StepData
 @dataclass
 class Step9Data(StepData):
     EP_Tx_SRFN_Except_DA_r138: list[int] = None
-    EP_Tx_SRFN_DA_Except_DA_r139: int = None
+    EP_Tx_SRFN_DA_Except_DA_r139: list[int] = None
     EP_Tx_STAR7200_r140: list[int] = None
     EP_Tx_STAR2400_r141: list[int] = None
     EP_Tx_STAR2400Legacy_r142: list[int] = None
@@ -168,47 +168,47 @@ def getStep9Data(FREQ_DATA: FrequencyData, DATA_5: Step5Data, DATA_6: Step6Data)
     if len(STEP_9_DATA.EP_Tx_SRFN_Except_DA_r138) > 0:
         result = int(FREQ_DATA.STAR_F1_Uplink_Frequency_r48 * 1000000)
     else:
-        result = []
+        result = None
 
     STEP_9_DATA.EP_Rx_SRFN_Except_DA_r143 = result
     # Row 144
-    result = []
+    result = None
 
     if len(STEP_9_DATA.EP_Tx_SRFN_DA_Except_DA_r139) > 0:
         result = int(FREQ_DATA.STAR_F1_Uplink_Frequency_r48 * 1000000)
     else:
-        result = []
+        result = None
 
     STEP_9_DATA.EP_Rx_SRFN_DA_Except_DA_r144 = result
     # Row 145
-    result = []
+    result = None
 
     if len(STEP_9_DATA.EP_Tx_STAR7200_r140) > 0:
         result = int(FREQ_DATA.STAR_F2_Downlink_Frequency_r46 * 1000000)
     else:
-        result = []
+        result = None
 
     STEP_9_DATA.EP_Rx_STAR7200_r145 = result
     # Row 146
-    result = []
+    result = None
 
     if len(STEP_9_DATA.EP_Tx_STAR2400_r141) > 0:
         result = int(FREQ_DATA.STAR_F2_Downlink_Frequency_r46 * 1000000)
     else:
-        result = []
+        result = None
 
     STEP_9_DATA.EP_Rx_STAR2400_r146 = result
     # Row 138
-    result = []
+    result = None
 
     if len(STEP_9_DATA.EP_Tx_STAR2400Legacy_r142) > 0:
         result = int(FREQ_DATA.STAR_F2_Downlink_Frequency_r46 * 1000000)
     else:
-        result = []
+        result = None
 
     STEP_9_DATA.EP_Rx_STAR2400Legacy_r147 = result
     
 
-    STEP_9_DATA.validate()
+    # STEP_9_DATA.validate()
 
     return STEP_9_DATA

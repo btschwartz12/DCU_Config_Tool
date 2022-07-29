@@ -70,7 +70,7 @@ class WorksheetCalculator:
             STEP_7_DATA: Step7Data = getStep7Data(FREQUENCY_DATA, STEP_5_DATA, STEP_6_DATA)
             STEP_8_DATA: Step8Data = getStep8Data(FREQUENCY_DATA, STEP_4_DATA, STEP_5_DATA, STEP_6_DATA, STEP_7_DATA)
             STEP_9_DATA: Step9Data = getStep9Data(FREQUENCY_DATA, STEP_5_DATA, STEP_6_DATA)
-            STEP_10_DATA: Step10Data = getStep10Data(FREQUENCY_DATA)
+            STEP_10_DATA: Step10Data = getStep10Data(USER_ENTRIES, FREQUENCY_DATA)
             STEP_11_DATA: Step11Data = getStep11Data(DTLS_DATA, TIME_ZONE_DATA, USER_ENTRIES, FREQUENCY_DATA, STEP_10_DATA)
 
         else:
@@ -80,6 +80,10 @@ class WorksheetCalculator:
                 f.write("\n\n\n\t\t\t***USER ENTRIES***\n\n"+json.dumps(USER_ENTRIES.getOrderedDict(), indent=2)); f.flush()
                 FREQUENCY_DATA: FrequencyData = self.FREQUENCY_DATA
                 f.write("\n\n\n\t\t\t***FREQUENCY DATA***\n\n"+json.dumps(FREQUENCY_DATA.getOrderedDict(), indent=2)); f.flush()
+                DTLS_DATA: DtlsData = getDtlsData(USER_ENTRIES, self.LOCATION_DATA)
+                f.write("\n\n\n\t\t\t***DTLS DATA***\n\n"+json.dumps(DTLS_DATA.getOrderedDict(), indent=2)); f.flush()
+                TIME_ZONE_DATA: dict = self.TIME_ZONE_DATA[USER_ENTRIES.Time_Zone_r14]
+                f.write("\n\n\n\t\t\t***TIME ZONE DATA***\n\n"+json.dumps(TIME_ZONE_DATA, indent=2)); f.flush()
                 STEP_4_DATA: Step4Data = getStep4Data(USER_ENTRIES, FREQUENCY_DATA)
                 f.write("\n\n\n\t\t\t***STEP 4***\n\n"+json.dumps(STEP_4_DATA.getOrderedDict(), indent=2)); f.flush()
                 STEP_5_DATA: Step5Data = getStep5Data(STEP_4_DATA)
@@ -92,7 +96,7 @@ class WorksheetCalculator:
                 f.write("\n\n\n\t\t\t***STEP 8***\n\n"+json.dumps(STEP_8_DATA.getOrderedDict(), indent=2)); f.flush()
                 STEP_9_DATA: Step9Data = getStep9Data(FREQUENCY_DATA, STEP_5_DATA, STEP_6_DATA)
                 f.write("\n\n\n\t\t\t***STEP 9***\n\n"+json.dumps(STEP_9_DATA.getOrderedDict(), indent=2)); f.flush()
-                STEP_10_DATA: Step10Data = getStep10Data(FREQUENCY_DATA)
+                STEP_10_DATA: Step10Data = getStep10Data(USER_ENTRIES, FREQUENCY_DATA)
                 f.write("\n\n\n\t\t\t***STEP 10***\n\n"+json.dumps(STEP_10_DATA.getOrderedDict(), indent=2)); f.flush()
                 STEP_11_DATA: Step11Data = getStep11Data(DTLS_DATA, TIME_ZONE_DATA, USER_ENTRIES, FREQUENCY_DATA, STEP_10_DATA)
                 f.write("\n\n\n\t\t\t***STEP 11***\n\n"+json.dumps(STEP_11_DATA.getOrderedDict(), indent=2)); f.flush()
@@ -155,7 +159,7 @@ class WorksheetCalculator:
         messagebox.showerror("Config error", fail_msg)
     def __showWarningMessage(self, message):
         warning_msg = "During configuration, a warning was detected:\n\n*****\n"+message+"\n*****\n\nDo you wish to proceed?"
-        will_proceed = messagebox.askyesno("Warning", warning_msg)
+        will_proceed = messagebox.askyesno("Warning", warning_msg, icon='warning')
         if will_proceed:
             self.__showExportMessage()
         else:
@@ -166,8 +170,10 @@ class WorksheetCalculator:
         message += "\n\n(Select 'No' to just export the .xml)"
         message += "\n(Select 'Cancel' to go back to worksheet)"
 
-        will_archive = messagebox.askyesnocancel("Success", message)
+        will_archive = messagebox.askyesnocancel("Success", message, icon='info')
 
+        
+        
         if will_archive:
             self.__export(user_wants_archive=True)
         elif will_archive is None:
@@ -221,7 +227,11 @@ class WorksheetCalculator:
         calculator's ExportData. The ExportData will then be converted to a string, and written
         to a specified file"""
 
-        xml_str = self.getXMLstr()
+        try:
+            xml_str = self.__getXMLstr()
+        except Exception as e:
+            messagebox.showerror("Export error", str(e))
+            return
 
         now = datetime.now()
         datetime_fn_str = now.strftime('%Y%m%d-%H%M%S')
@@ -239,16 +249,18 @@ class WorksheetCalculator:
                 self.__archive(archive_dir, datetime_str, datetime_fn_str, xml_str)
                 messagebox.showinfo("Successfully archived and exported", "Successfully written archive and export files to:\n\n"+archive_dir)
                 return
+        else:
             fn = "DCU2+XLS_"+datetime_fn_str
-            name = filedialog.asksaveasfile(mode='w', defaultextension='.xml', initialfile=fn, initialdir=self.config.SRC_DIR).name
+            name = filedialog.asksaveasfile(mode='w', defaultextension='.xml', initialfile=fn, initialdir=self.config.SRC_DIR)
             if name is not None:
+                name = name.name # So tk is happy
                 with open (name, 'w+') as f:
                     f.write(xml_str)
                 messagebox.showinfo("Successfully exported", "Successfully written export file to:\n\n"+str(os.path.abspath(fn)))
                 return
             
 
-    def getXMLstr(self) -> str:
+    def __getXMLstr(self) -> str:
         """This will take the data generated from all of the calculations, and create 
         an XML for export. It will first take an example output to get the correct keys, 
         populate with correct values, and convert back into XML using the xmlschema module."""
@@ -263,67 +275,73 @@ class WorksheetCalculator:
         except Exception as e:
             raise Exception("error 550: error parsing export template\n\n"+str(e)+"\n\nPlease check export schema and template.")
 
-        XML_DICT["metadata"]["CustomerID"] = toStr(data.USER_ENTRIES.Aclara_Customer_ID_r28)
-        XML_DICT["metadata"]["CustomerName"] = toStr(data.USER_ENTRIES.Customer_Name_r2)
-        XML_DICT["metadata"]["Drawing"] = toStr(data.USER_ENTRIES.DCU_Drawing_Number_r26)
-        XML_DICT["metadata"]["Product"] = toStr(data.USER_ENTRIES.DCU_Product_Number_r27)
+        try:
+            XML_DICT["metadata"]["CustomerID"] = toStr(data.USER_ENTRIES.Aclara_Customer_ID_r28)
+            XML_DICT["metadata"]["CustomerName"] = toStr(data.USER_ENTRIES.Customer_Name_r2)
+            XML_DICT["metadata"]["Drawing"] = toStr(data.USER_ENTRIES.DCU_Drawing_Number_r26)
+            XML_DICT["metadata"]["Product"] = toStr(data.USER_ENTRIES.DCU_Product_Number_r27)
 
-        XML_DICT["common"]["appSecurityAuthMode"] = toStr(data.DATA_11.appSecurityAuthMode_r159)
-        XML_DICT["common"]["dtlsNetworkHESubject"] = toStr(data.DATA_11.dtlsNetworkHESubject_r160)
-        XML_DICT["common"]["dtlsNetworkMSSubject"] = toStr(data.DATA_11.dtlsNetworkMSSubject_r161)
-        XML_DICT["common"]["dtlsNetworkRootCA"] = toStr(data.DATA_11.dtlsNetworkRootCA_r162)
-        XML_DICT["common"]["flashSecurityEnabled"] = toStr(data.DATA_11.Flash_Security_Enabled_r157)
-        XML_DICT["common"]["ipHEContext"] = toStr(data.DATA_11.ipHEContext_r163)
-        XML_DICT["common"]["macChannelSets"] = toStr(data.DATA_11.macChannelSets_r156) 
-        XML_DICT["common"]["macChannelSetsSTAR"] = toStr(data.DATA_11.macChannelSetsSTAR_r155)
-        XML_DICT["common"]["macNetworkId"] = toStr(data.DATA_11.macNetworkId_r164)
-        XML_DICT["common"]["phyAvailableFrequencies"] = toStr(data.DATA_11.phyAvailableFrequencies_r152)
-        XML_DICT["common"]["realtimeThreshold"] = toStr(data.DATA_11.realtimeThreshold_r166)
-        XML_DICT["common"]["shipMode"] = toStr(data.DATA_11.shipMode_r168)
+            XML_DICT["common"]["appSecurityAuthMode"] = toStr(data.DATA_11.appSecurityAuthMode_r159)
+            XML_DICT["common"]["dtlsNetworkHESubject"] = toStr(data.DATA_11.dtlsNetworkHESubject_r160)
+            XML_DICT["common"]["dtlsNetworkMSSubject"] = toStr(data.DATA_11.dtlsNetworkMSSubject_r161)
+            XML_DICT["common"]["dtlsNetworkRootCA"] = toStr(data.DATA_11.dtlsNetworkRootCA_r162)
+            XML_DICT["common"]["flashSecurityEnabled"] = toStr(data.DATA_11.Flash_Security_Enabled_r157)
+            XML_DICT["common"]["ipHEContext"] = toStr(data.DATA_11.ipHEContext_r163)
+            XML_DICT["common"]["macChannelSets"] = toStr(data.DATA_11.macChannelSets_r156) 
+            XML_DICT["common"]["macChannelSetsSTAR"] = toStr(data.DATA_11.macChannelSetsSTAR_r155)
+            XML_DICT["common"]["macNetworkId"] = toStr(data.DATA_11.macNetworkId_r164)
+            XML_DICT["common"]["phyAvailableFrequencies"] = toStr(data.DATA_11.phyAvailableFrequencies_r152)
+            XML_DICT["common"]["realtimeThreshold"] = toStr(data.DATA_11.realtimeThreshold_r166)
+            XML_DICT["common"]["shipMode"] = toStr(data.DATA_11.shipMode_r168)
 
-        SLOT_2_DICT = {
-            "@slot": "2",
-            "comDeviceGatewayConfig": toStr(data.DATA_8.comDeviceGatewayConfig_r130),
-            "phyRxFrequencies": toStr(data.DATA_8.phyRxFrequencies_r131), 
-            "phyTxFrequencies": toStr(data.DATA_8.phyTxFrequencies_r132),
-            "phyRxDetection": toStr(data.DATA_8.phyRxDetection_r133),
-            "phyRxFraming": toStr(data.DATA_8.phyRxFraming_r134),
-            "phyRxMode": toStr(data.DATA_8.phyRxMode_r135)
-        }
+            SLOT_2_DICT = {
+                "@slot": "2",
+                "comDeviceGatewayConfig": toStr(data.DATA_8.comDeviceGatewayConfig_r130),
+                "phyRxFrequencies": toStr(data.DATA_8.phyRxFrequencies_r131), 
+                "phyTxFrequencies": toStr(data.DATA_8.phyTxFrequencies_r132),
+                "phyRxDetection": toStr(data.DATA_8.phyRxDetection_r133),
+                "phyRxFraming": toStr(data.DATA_8.phyRxFraming_r134),
+                "phyRxMode": toStr(data.DATA_8.phyRxMode_r135)
+            }
 
-        SLOT_3_DICT = {
-            "@slot": "3",
-            "comDeviceGatewayConfig": toStr(data.DATA_7.comDeviceGatewayConfig_r122),
-            "phyRxFrequencies": toStr(data.DATA_7.phyRxFrequencies_r123),
-            "phyTxFrequencies": toStr(data.DATA_7.phyTxFrequencies_r124),
-            "phyRxDetection": toStr(data.DATA_7.phyRxDetection_r125),
-            "phyRxFraming": toStr(data.DATA_7.phyRxFraming_r126),
-            "phyRxMode": toStr(data.DATA_7.phyRxMode_r127)
-        }
+            SLOT_3_DICT = {
+                "@slot": "3",
+                "comDeviceGatewayConfig": toStr(data.DATA_7.comDeviceGatewayConfig_r122),
+                "phyRxFrequencies": toStr(data.DATA_7.phyRxFrequencies_r123),
+                "phyTxFrequencies": toStr(data.DATA_7.phyTxFrequencies_r124),
+                "phyRxDetection": toStr(data.DATA_7.phyRxDetection_r125),
+                "phyRxFraming": toStr(data.DATA_7.phyRxFraming_r126),
+                "phyRxMode": toStr(data.DATA_7.phyRxMode_r127)
+            }
 
-        XML_DICT["SRFNI-XCVR"] = [SLOT_2_DICT, SLOT_3_DICT]
+            XML_DICT["SRFNI-XCVR"] = [SLOT_2_DICT, SLOT_3_DICT]
 
-        XML_DICT["EXPORT-FORMAT"] = toStr(data.USER_ENTRIES.Tool_Version_r29)
+            XML_DICT["EXPORT-FORMAT"] = toStr(data.USER_ENTRIES.Tool_Version_r29)
 
-        XML_DICT["SRFNI-METER"]["comDeviceGatewayConfig"] = toStr("EP")
-        XML_DICT["SRFNI-METER"]["EPRxFrequencies"] = toStr(data.DATA_9.EP_Rx_SRFN_Except_DA_r143)
-        XML_DICT["SRFNI-METER"]["EPTxFrequencies"] = toStr(data.DATA_9.EP_Tx_SRFN_Except_DA_r138)
+            XML_DICT["SRFNI-METER"]["comDeviceGatewayConfig"] = toStr("EP")
+            XML_DICT["SRFNI-METER"]["EPRxFrequencies"] = toStr(data.DATA_9.EP_Rx_SRFN_Except_DA_r143)
+            XML_DICT["SRFNI-METER"]["EPTxFrequencies"] = toStr(data.DATA_9.EP_Tx_SRFN_Except_DA_r138)
 
-        XML_DICT["SRFNI-DA"]["comDeviceGatewayConfig"] = toStr("EP")
-        XML_DICT["SRFNI-DA"]["EPRxFrequencies"] = toStr(data.DATA_9.EP_Rx_SRFN_DA_Except_DA_r144)
-        XML_DICT["SRFNI-DA"]["EPTxFrequencies"] = toStr(data.DATA_9.EP_Tx_SRFN_DA_Except_DA_r139)
+            XML_DICT["SRFNI-DA"]["comDeviceGatewayConfig"] = toStr("EP")
+            XML_DICT["SRFNI-DA"]["EPRxFrequencies"] = toStr(data.DATA_9.EP_Rx_SRFN_DA_Except_DA_r144)
+            XML_DICT["SRFNI-DA"]["EPTxFrequencies"] = toStr(data.DATA_9.EP_Tx_SRFN_DA_Except_DA_r139)
 
-        XML_DICT["STARI-METER"]["comDeviceGatewayConfig"] = toStr("EP")
-        XML_DICT["STARI-METER"]["EPRxFrequenciesSTAR7200"] = toStr(data.DATA_9.EP_Rx_STAR7200_r145)
-        XML_DICT["STARI-METER"]["EPTxFrequenciesSTAR7200"] = toStr(data.DATA_9.EP_Tx_STAR7200_r140)
-        XML_DICT["STARI-METER"]["EPRxFrequenciesSTAR2400"] = toStr(data.DATA_9.EP_Rx_STAR2400_r146)
-        XML_DICT["STARI-METER"]["EPTxFrequenciesSTAR2400"] = toStr(data.DATA_9.EP_Tx_STAR2400_r141)
-        XML_DICT["STARI-METER"]["EPRxFrequenciesSTAR2400Legacy"] = toStr(data.DATA_9.EP_Rx_STAR2400Legacy_r147)
-        XML_DICT["STARI-METER"]["EPTxFrequenciesSTAR2400Legacy"] = toStr(data.DATA_9.EP_Tx_STAR2400Legacy_r142)
+            XML_DICT["STARI-METER"]["comDeviceGatewayConfig"] = toStr("EP")
+            XML_DICT["STARI-METER"]["EPRxFrequenciesSTAR7200"] = toStr(data.DATA_9.EP_Rx_STAR7200_r145)
+            XML_DICT["STARI-METER"]["EPTxFrequenciesSTAR7200"] = toStr(data.DATA_9.EP_Tx_STAR7200_r140)
+            XML_DICT["STARI-METER"]["EPRxFrequenciesSTAR2400"] = toStr(data.DATA_9.EP_Rx_STAR2400_r146)
+            XML_DICT["STARI-METER"]["EPTxFrequenciesSTAR2400"] = toStr(data.DATA_9.EP_Tx_STAR2400_r141)
+            XML_DICT["STARI-METER"]["EPRxFrequenciesSTAR2400Legacy"] = toStr(data.DATA_9.EP_Rx_STAR2400Legacy_r147)
+            XML_DICT["STARI-METER"]["EPTxFrequenciesSTAR2400Legacy"] = toStr(data.DATA_9.EP_Tx_STAR2400Legacy_r142)
+        except Exception as e:
+            raise Exception("error 553: error writing to export xml\n\n"+str(e)+"\n\nPlease check that keys match in calculator.py and .xml")
 
-        schema = xmlschema.XMLSchema(self.config.EXPORT_SCHEMA_PATH)
-        xml_str = xmlschema.etree_tostring(schema.to_etree(XML_DICT))
-        return xml_str
+        try:
+            xml_str = xmlschema.etree_tostring(schema.to_etree(XML_DICT))
+            return xml_str
+        except Exception as e:
+            raise Exception("error 554: error converting dict to xml\n\n"+str(e)+"\n\nPlease check that keys match in calculator.py and .xml")
+
         
 
         

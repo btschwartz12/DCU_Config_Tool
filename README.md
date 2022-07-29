@@ -91,9 +91,11 @@ During the execution of the program, there are several instances where an error 
 
 - **Config error** - When the calculated status of the configuration is not good enough to safely export the DCU .xml file. Check the status message provided for further instruction.
 
+- **Export error** - When there is an error during the conversion of the template to a data structure so that the calculations can be loaded into it and transferred back to an .xml. Chack the message, ensure that the schema and template have been correctly specified in the options.json file, and that the key names in the template xml match those found in the getXMLstr() function of calculator.py.
+
 ## **Contributing**
 
-TBD, a git repository still needs to be created
+TBD, a correct git repository still needs to be decided
 
 ## **Contact**
 

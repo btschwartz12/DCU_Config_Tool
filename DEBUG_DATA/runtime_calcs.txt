@@ -1,4 +1,4 @@
-CALCULATION LOG FOR RUN: 2022/07/28-07:26:51
+CALCULATION LOG FOR RUN: 2022/07/29-09:26:12
 
 
 			***USER ENTRIES***
@@ -27,7 +27,7 @@ CALCULATION LOG FOR RUN: 2022/07/28-07:26:51
   "System_Includes_SRFN_Devices_r22": false,
   "System_Includes_SRFN_Dedicated_DA_Recv_Channel_r23": false,
   "DCU_T_Boards_r24": "2",
-  "DCU_Single_Transmit_T_Board_Firmware_r25": false,
+  "DCU_Single_Transmit_T_Board_Firmware_r25": true,
   "Aclara_Customer_ID_r28": 169811,
   "Tool_Version_r29": "EF00001",
   "Customer_Configuration_Id_r30": "169811EF00001",
@@ -63,6 +63,35 @@ CALCULATION LOG FOR RUN: 2022/07/28-07:26:51
   "unassigned_frequencies": [
     457.1875
   ]
+}
+
+
+			***DTLS DATA***
+
+{
+  "status": "Data Looks Ok",
+  "dtlsNetworkHESubject": "305e305c310B30090603550406130255533110300E06035504080C07416C6162616D61310F300D06035504070C06446F7468616E311D301B060355040A0C14446F7468616E2C2043697479206F662028414C29310B300906035504030C024845",
+  "dtlsNetworkMSSubject": "305e305c310B30090603550406130255533110300E06035504080C07416C6162616D61310F300D06035504070C06446F7468616E311D301B060355040A0C14446F7468616E2C2043697479206F662028414C29310B300906035504030C024D53",
+  "dtlsNetworkRootCA": "308201A43082014AA003020102020100300A06082A8648CE3D040302302B310F300D060355040A0C0641636C6172613118301606035504030C0F5574696C69747920526F6F742043413020170D3135303631303134303030305A180F39393939313233313233353935395A302B310F300D060355040A0C0641636C6172613118301606035504030C0F5574696C69747920526F6F742043413059301306072A8648CE3D020106082A8648CE3D030107034200046D6AB634B5E43A877DAFD4A366A39D0649C2E12343C78AF3E9B8E709D8D964F90FA95DC67041DBF1CC76D4E33A18C2978DEEAD8ACF65A331F3FADD3D4A86F555A353D05B300C0603551D13040530030101FF300B0603551D0F040403020106301D0603551D0E041604141BC0464EFCFBE686CF552DBF57C874D22AB71CE9301F0603551D230418301680141BC0464EFCFBE686CF552DBF57C874D22AB71CE9300A06082A8648CE3D040302034800304502204DA370417281033DB1139AAF2D7859F9B291E4DE2C2D8F7D955DC7B41EA88980022100D8C622BD34548441D4CC9472226B2CC541C3A46D4EB6A5035DFA4E9A6529FD8C"
+}
+
+
+			***TIME ZONE DATA***
+
+{
+  "UTC Offset Standard Time (hours)": -6,
+  "DST": "Yes",
+  "DST Rule": "US",
+  "DST Rule Text": "2:00 Second Sun of Mar until 2:00 First Sun of Nov",
+  "dstStartRule": "3, 1, 2, 2, 0",
+  "dstEndRule": "11, 1, 1, 2, 0",
+  "timeZoneOffset": -21600,
+  "dstEnabled": 1,
+  "dstOffset": 3600,
+  "dstStartRule2": 12901810688,
+  "dstEndRule2": 47261483520,
+  "timeZoneDSTHash": "da021feb",
+  "timeZoneDSTHash Decimal": 3657572331
 }
 
 
@@ -115,4 +144,275 @@ CALCULATION LOG FOR RUN: 2022/07/28-07:26:51
   "Slot_2_Channel_6_r101": "",
   "Slot_2_Channel_7_r102": "",
   "Slot_2_Channel_8_r103": ""
+}
+
+
+			***STEP 6***
+
+{
+  "Slot_3_Channel_1_r105": 462412500,
+  "Slot_3_Channel_2_r106": null,
+  "Slot_3_Channel_3_r107": null,
+  "Slot_3_Channel_4_r108": null,
+  "Slot_3_Channel_5_r109": null,
+  "Slot_3_Channel_6_r110": null,
+  "Slot_3_Channel_7_r111": null,
+  "Slot_3_Channel_8_r112": null,
+  "Slot_2_Channel_1_r113": null,
+  "Slot_2_Channel_2_r114": null,
+  "Slot_2_Channel_3_r115": null,
+  "Slot_2_Channel_4_r116": null,
+  "Slot_2_Channel_5_r117": null,
+  "Slot_2_Channel_6_r118": null,
+  "Slot_2_Channel_7_r119": null,
+  "Slot_2_Channel_8_r120": null
+}
+
+
+			***STEP 7***
+
+{
+  "comDeviceGatewayConfig_r122": "SRFN",
+  "phyRxFrequencies_r123": [
+    "",
+    "462412500",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ""
+  ],
+  "phyTxFrequencies_r124": [
+    462412500,
+    467512500
+  ],
+  "phyRxDetection_r125": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "phyRxFraming_r126": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "phyRxMode_r127": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+  ],
+  "phyRxDA_r128": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ]
+}
+
+
+			***STEP 8***
+
+{
+  "comDeviceGatewayConfig_r130": "NONE",
+  "phyRxFrequencies_r131": [
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ""
+  ],
+  "phyTxFrequencies_r132": [
+    462412500,
+    467512500
+  ],
+  "phyRxDetection_r133": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "phyRxFraming_r134": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "phyRxMode_r135": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+  ],
+  "phyRxDA_r136": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ]
+}
+
+
+			***STEP 9***
+
+{
+  "EP_Tx_SRFN_Except_DA_r138": [
+    462412500
+  ],
+  "EP_Tx_SRFN_DA_Except_DA_r139": [],
+  "EP_Tx_STAR7200_r140": [],
+  "EP_Tx_STAR2400_r141": [],
+  "EP_Tx_STAR2400Legacy_r142": [],
+  "EP_Rx_SRFN_Except_DA_r143": 457662500,
+  "EP_Rx_SRFN_DA_Except_DA_r144": null,
+  "EP_Rx_STAR7200_r145": null,
+  "EP_Rx_STAR2400_r146": null,
+  "EP_Rx_STAR2400Legacy_r147": null
+}
+
+
+			***STEP 10***
+
+{
+  "All_STAR_and_SRFN_Frequencies_r149": [
+    456287500,
+    456312500,
+    456337500,
+    456487500,
+    456687500,
+    456737500,
+    457162500,
+    462412500,
+    467512500
+  ],
+  "SRFN_Endpoint_Inbound_Transmit_Frequencies_r150": [
+    462412500,
+    456287500,
+    456312500,
+    456337500,
+    456487500,
+    456687500,
+    456737500,
+    457162500
+  ]
+}
+
+
+			***STEP 11***
+
+{
+  "phyAvailableFrequencies_r152": [
+    "456287500",
+    "456312500",
+    "456337500",
+    "456487500",
+    "456687500",
+    "456737500",
+    "457162500",
+    "462412500",
+    "467512500",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ""
+  ],
+  "phyRxFrequencies_r153": 462412500,
+  "phyTxFrequencies_r154": [
+    462412500,
+    456287500,
+    456312500,
+    456337500,
+    456487500,
+    456687500,
+    456737500,
+    457162500
+  ],
+  "macChannelSetsSTAR_r155": [
+    466600000,
+    468000000,
+    456000000,
+    458000000
+  ],
+  "macChannelSets_r156": [
+    462412500,
+    462412500,
+    456000000,
+    458000000
+  ],
+  "Flash_Security_Enabled_r157": 1,
+  "debugPortEnabled_r158": 0,
+  "appSecurityAuthMode_r159": 2,
+  "dtlsNetworkHESubject_r160": "305e305c310B30090603550406130255533110300E06035504080C07416C6162616D61310F300D06035504070C06446F7468616E311D301B060355040A0C14446F7468616E2C2043697479206F662028414C29310B300906035504030C024845",
+  "dtlsNetworkMSSubject_r161": "305e305c310B30090603550406130255533110300E06035504080C07416C6162616D61310F300D06035504070C06446F7468616E311D301B060355040A0C14446F7468616E2C2043697479206F662028414C29310B300906035504030C024D53",
+  "dtlsNetworkRootCA_r162": "308201A43082014AA003020102020100300A06082A8648CE3D040302302B310F300D060355040A0C0641636C6172613118301606035504030C0F5574696C69747920526F6F742043413020170D3135303631303134303030305A180F39393939313233313233353935395A302B310F300D060355040A0C0641636C6172613118301606035504030C0F5574696C69747920526F6F742043413059301306072A8648CE3D020106082A8648CE3D030107034200046D6AB634B5E43A877DAFD4A366A39D0649C2E12343C78AF3E9B8E709D8D964F90FA95DC67041DBF1CC76D4E33A18C2978DEEAD8ACF65A331F3FADD3D4A86F555A353D05B300C0603551D13040530030101FF300B0603551D0F040403020106301D0603551D0E041604141BC0464EFCFBE686CF552DBF57C874D22AB71CE9301F0603551D230418301680141BC0464EFCFBE686CF552DBF57C874D22AB71CE9300A06082A8648CE3D040302034800304502204DA370417281033DB1139AAF2D7859F9B291E4DE2C2D8F7D955DC7B41EA88980022100D8C622BD34548441D4CC9472226B2CC541C3A46D4EB6A5035DFA4E9A6529FD8C",
+  "ipHEContext_r163": 0,
+  "macNetworkId_r164": 0,
+  "opportunisticThreshold_r165": 85,
+  "realtimeThreshold_r166": 170,
+  "realtimeThreshold_DCU_r167": 85,
+  "shipMode_r168": 1,
+  "timeAcceptanceDelay_r169": 60,
+  "dstStartRule_r170": 12901810688,
+  "dstEndRule_r171": 47261483520,
+  "timeZoneOffset_r172": -21600,
+  "dstEnabled_r173": 1,
+  "dstOffset_r174": 3600,
+  "timeZoneDSTHash_r175": 3657572331,
+  "dailySelfReadTime_r176": 0,
+  "scheduledDemandResetDay_r177": 1,
+  "outageDeclarationDelay_r178": 30,
+  "restorationDeclarationDelay_r179": 15
 }

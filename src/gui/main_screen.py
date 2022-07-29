@@ -18,7 +18,7 @@ from config.config import Config
 
 from src.gui.wkst_entry import EntryType, WorksheetEntry
 from src.processing.calc_steps.freqs_generator import FrequencyData, getFrequencyData
-from src.processing.wkst_calculator import WorksheetCalculator
+from src.processing.calculator import WorksheetCalculator
 from src.utils.filepicker import FilePicker
 from src.utils.scrollframe import VerticalScrolledFrame
 from src.utils.utils import EntryException
@@ -286,15 +286,6 @@ class DcuWorksheetPage(tk.Frame):
             else:
                 self.frequency_fp.reset()
 
-        # Making sure the color box for the worksheet file picker is correct
-        try:
-            self.getEntryData()
-            self.worksheet_color_box.config(bg=READY_COLOR)
-        except EntryException as e:
-            self.worksheet_color_box.config(bg=NOT_READY_COLOR)
-        except Exception as e:
-            raise e
-
         status_str = ""
 
         # Making sure that if the frequency data is loaded, then only 
@@ -319,6 +310,16 @@ class DcuWorksheetPage(tk.Frame):
                 config_id_entry.entry.config(state=tk.NORMAL)
                 config_id_entry.entry.set(str(cust_id)+self.config.VERSION)
                 config_id_entry.entry.config(state=tk.DISABLED)
+
+
+        # Making sure the color box for the worksheet file picker is correct
+        try:
+            self.getEntryData()
+            self.worksheet_color_box.config(bg=READY_COLOR)
+        except EntryException as e:
+            self.worksheet_color_box.config(bg=NOT_READY_COLOR)
+        except Exception as e:
+            raise e
 
         self.status.set(status_str)
 

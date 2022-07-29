@@ -6,9 +6,10 @@
 
 from dataclasses import dataclass
 from src.processing.calc_steps.entry_generator import UserEntries
+from src.utils.utils import StepData
 
 @dataclass
-class DtlsData:
+class DtlsData(StepData):
     status: str
     dtlsNetworkHESubject: str
     dtlsNetworkMSSubject: str

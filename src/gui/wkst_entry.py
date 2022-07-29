@@ -132,6 +132,13 @@ class WorksheetEntry(tk.Frame):
         if not isInt(val):
             self.entry.set("")
             messagebox.showerror("Invalid entry", self.name+" must have an integer input")
+        else:
+            if not self.is_editable:
+                self.entry.config(state=tk.NORMAL)
+            if self.entry.get() != "":
+                self.entry.set(int(val))
+            if not self.is_editable:
+                self.entry.config(state=tk.DISABLED) 
             
         
     def getValue(self):
@@ -145,8 +152,8 @@ class WorksheetEntry(tk.Frame):
         elif self.type == EntryType.DROPDOWN:
             return self.entry.get()
         elif self.type == EntryType.NUMBER:
-            # self.__checkEntryIsInt()
             if not isInt(self.entry.get()):
+                self.entry.set('')
                 return ''
             return int(self.entry.get())
 
@@ -174,12 +181,6 @@ class WorksheetEntry(tk.Frame):
 
         elif self.type == EntryType.NUMBER:
             self.__checkEntryIsInt()
-            if not self.is_editable:
-                self.entry.config(state=tk.NORMAL)
-            if self.entry.get() != "":
-                self.entry.set(int(value))
-            if not self.is_editable:
-                self.entry.config(state=tk.DISABLED) 
 
         self.DCU_PAGE.updateView(update_fps=False)
 

@@ -9,6 +9,7 @@
 # Corresponding Excel worksheet rows: 149-150
 
 from dataclasses import dataclass, fields
+from src.processing.calc_steps.entry_generator import UserEntries
 from src.processing.calc_steps.freqs_generator import FrequencyData
 
 from src.processing.calc_steps.step5_calculation import Step5Data
@@ -22,7 +23,7 @@ class Step10Data(StepData):
     SRFN_Endpoint_Inbound_Transmit_Frequencies_r150: list[int] = None
 
 
-def getStep10Data(FREQ_DATA: FrequencyData) -> Step10Data:
+def getStep10Data(USER_ENTRIES: UserEntries, FREQ_DATA: FrequencyData) -> Step10Data:
     """This will look at all frequencies, and generate lists of 
     frequencies.
     """   
@@ -39,12 +40,10 @@ def getStep10Data(FREQ_DATA: FrequencyData) -> Step10Data:
         if freq is not None:
             result.append(int(freq * 1000000))
 
-    if FREQ_DATA.STAR_F1_Uplink_Frequency_r48 is not None:
+    if USER_ENTRIES.System_Includes_STAR_7200_devices_r21:
         result.append(int(FREQ_DATA.STAR_F1_Uplink_Frequency_r48 * 1000000))
-    if FREQ_DATA.SRFN_Outbound_Downlink_Frequency_r47 is not None:
-        result.append(int(FREQ_DATA.SRFN_Outbound_Downlink_Frequency_r47 * 1000000))
-    if FREQ_DATA.STAR_F2_Downlink_Frequency_r46 is not None:
-        result.append(int(FREQ_DATA.STAR_F2_Downlink_Frequency_r46 * 1000000))
+    result.append(int(FREQ_DATA.SRFN_Outbound_Downlink_Frequency_r47 * 1000000))
+    result.append(int(FREQ_DATA.STAR_F2_Downlink_Frequency_r46 * 1000000))
     
     STEP_10_DATA.All_STAR_and_SRFN_Frequencies_r149 = result
     # Row 150

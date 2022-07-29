@@ -49,7 +49,7 @@ def func1(bVal: str, cVal, DATA_FREQ: FrequencyData, DATA_4: Step4Data):
     elif bVal == "STAR 7200" or bVal == "STAR 2400" or bVal == "STAR 2400 Legacy":
         result = int(DATA_FREQ.STAR_F1_Uplink_Frequency_r48 * 1000000)
     else:
-        print("error 882")
+        result = None
     return result
 
 def func2(val, addend=None):
@@ -184,6 +184,6 @@ def getStep6Data(DATA_FREQ: FrequencyData, DATA_4: Step4Data, DATA_5: Step5Data)
 
     STEP_6_DATA.Slot_2_Channel_8_r120 = result
 
-    STEP_6_DATA.validate()
+    # STEP_6_DATA.validate()
 
     return STEP_6_DATA

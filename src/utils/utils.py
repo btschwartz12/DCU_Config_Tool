@@ -32,7 +32,6 @@ def toStr(data) -> str:
 class StepData:
 
     def validate(self):
-        print()
         for field in fields(self):
             val = getattr(self, field.name)
             if val is None: ############ 

@@ -85,7 +85,10 @@ def getStep7Data(FREQ_DATA: FrequencyData, DATA_5: Step5Data, DATA_6: Step6Data)
 
     result.append("")
     for channel, data in SLOT_3_CHANNEL_DATA.items():
-        result.append(str(data["freq"]))
+        if data["freq"] is None:
+            result.append("")
+        else:
+            result.append(str(data["freq"]))
 
 
     STEP_7_DATA.phyRxFrequencies_r123 = result

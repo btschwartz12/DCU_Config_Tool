@@ -10,7 +10,8 @@ class App(tk.Tk):
     def __init__(self):
         super().__init__()
 
-
+        photo = tk.PhotoImage(file = "data/misc/aclara.png")
+        self.iconphoto(True, photo)
         # Runtime data
 
 
