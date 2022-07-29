@@ -4,11 +4,19 @@ This simple application will allow a user to input certain fields and import fre
 
 ## **Installation**
 
-- Install [Python (3+)](https://www.python.org/downloads/)
+- Install [Python (3+)](https://www.python.org/downloads/) and ensure you can open a python interpreter
+```bash
+$ py
+# Make sure that the below interpreter is opened. If not, do not proceed and contact owner.
+Python 3.10.5 (tags/v3.10.5:f377153, Jun  6 2022, 16:14:13) [MSC v.1929 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>> 
+```
 - Install pip using the link below or these commands:
 ```bash
-python -m pip install --upgrade pip
-pip install get-pip.py
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+py get-pip.py
+py -m pip install --upgrade pip
 ```
 - Use the package manager [pip](https://pip.pypa.io/en/stable/) to install the following modules:
 
@@ -17,7 +25,13 @@ pip install openpyxl
 pip install xmlschema
 ```
 
+## **Downloading The Code**
+
+
+
 ## **Setup**
+
+Please ensure that everything has been installed and the code is located in a directory on your machine.
 
 Locate the options.json file, and ensure these fields are set correctly:
 
