@@ -14,30 +14,41 @@ Type "help", "copyright", "credits" or "license" for more information.
 ```
 - Install [pip](https://pip.pypa.io/en/stable/) using the link or these commands:
 ```bash
-
-curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-py get-pip.py
-py -m pip install --upgrade pip
+$ pip --version
+# If the above statement prints a version of pip, ignore the rest of the commands
+$ curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+$ py get-pip.py
+$ py -m pip install --upgrade pip
 ```
 - Use the pip to install the following modules:
 
 ```bash
-pip install openpyxl
-pip install xmlschema
+$ pip install openpyxl
+$ pip install xmlschema
 ```
 
 ## **Downloading The Code**
 
-HERE have them check version of pip and git and if not install them
+To download the code, you must have [git](https://git-scm.com/download/win) installed on your machine. Try the following command:
 
-To download the code onto your machine, ensure that git is installed using these commands
-https://git-scm.com/download/win
+```bash
+git --version
+# If this does not print out a version number, download git from the link above, then proceed
+```
+
+Once git is installed, run these commands:
+
+```bash
+cd __ # Directory where you want the code
+git clone https://github.com/btschwartz12/DCU_Config_Tool
+cd DCU_Config_Tool
+```
 
 ## **Setup**
 
-Please ensure that everything has been installed and the code is located in a directory on your machine.
+Please ensure that everything has been installed, the code is located in a directory on your machine, and your current working directory in the command line is `DCU_Config_Tool`.
 
-Locate the options.json file, and ensure these fields are set correctly:
+Locate the `options.json` file in the  `config/` directory, and ensure these fields are set correctly:
 
 ```python
 'source_directory' # Where the project lives on your machine
@@ -65,7 +76,7 @@ The following does not need to be modified to properly run the program, but must
 - There is a change to the displayed entry fields
 - There is a change to the entry fields that have dropdown options
 
-If one of these is true, locate the wkst_config.json file, and ensure these fields are set correctly:
+If one of these is true, locate the `wkst_config.json` file in the  `config/` directory, and ensure these fields are set correctly:
 
 ```python
 
@@ -85,7 +96,8 @@ If one of these is true, locate the wkst_config.json file, and ensure these fiel
 After ensuring that the setup step has been completed correctly, run these commands:
 
 ```bash
-$ cd <Directory that contains src/ + app.py>
+$ pwd
+.../DCU_Config_Tool # If your current directory is not this, cd into that directory.
 $ py app.py
 ```
 
@@ -105,7 +117,7 @@ During the execution of the program, there are several instances where an error 
 
 - **Invalid entry** - When the data entered for a specific entry is invalid, usually when a number-only entry has non-numbers entered into it. Ensure that the data being entered matches the type specified in the wkst_config.json file, and try again.
 
-- **Calculation Error** - When there is an error during calculations, usually when a non-sensible set of user entries is used during calculation. This is the most difficult error to fix. Try turing on the log_mode option in the options.json file, and specify the .txt file that the log will be written to. In the log file, it will contain all of the step calculations up to the point where the error occurred. If the bug is still not apparent, inspect the code for that specific step to ensure that the calculations match up with the Excel tool. 
+- **Calculation error** - When there is an error during calculations, usually when a non-sensible set of user entries is used during calculation. This is the most difficult error to fix. Try turing on the log_mode option in the options.json file, and specify the .txt file that the log will be written to. In the log file, it will contain all of the step calculations up to the point where the error occurred. If the bug is still not apparent, inspect the code for that specific step to ensure that the calculations match up with the Excel tool. 
 
 - **Config error** - When the calculated status of the configuration is not good enough to safely export the DCU .xml file. Check the status message provided for further instruction.
 
