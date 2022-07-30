@@ -51,7 +51,7 @@ Please ensure that everything has been installed, the code is located in a direc
 Locate the `options.json` file in the  `config/` directory, and ensure these fields are set correctly:
 
 ```python
-'source_directory' # Where the project lives on your machine
+'source_directory' # Where the project lives on your machine. Run pwd and place the output here
 'version' # The current version of the tool
 
 'sheet_name' # The name of the sheet that holds frequency data, if the user opts to load frequencies from an Excel workbook
