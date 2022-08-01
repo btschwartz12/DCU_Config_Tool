@@ -40,7 +40,7 @@
 ::
     set "XMLSCHEMA_pkg=%PackageSource%/xmlschema;xmlschema/"
     set "OPENPYXL_pkg=%PackageSource%/openpyxl;openpyxl/"
-    set "icon=%Source%/data/misc/aclara.png"
+    set "icon=data/misc;aclara.png"
 ::      - This will imported using pyinstaller --add-data
 ::
 :: For future packages that need to be included, follow the same 
@@ -50,7 +50,7 @@
 ::=============================================================================
 
 :: pyinstaller converts python source to an executable
-pyinstaller --noconfirm --onefile --console --add-data "%XMLSCHEMA_pkg%" --add-data "%OPENPYXL_pkg%" "%Source%%ScriptName%"
+pyinstaller --noconfirm --onefile --console --add-data "%XMLSCHEMA_pkg%" --add-data "%OPENPYXL_pkg%" --add-data "%icon%" "%Source%%ScriptName%"
 
 ::=============================================================================
 :: Step 4: Initialize executable's directory
@@ -62,6 +62,6 @@ pyinstaller --noconfirm --onefile --console --add-data "%XMLSCHEMA_pkg%" --add-d
 ::              - wkst_config.json
 ::      - For now....
             mkdir dist\config
-            Xcopy config/options.json dist/config
-            Xcopy config/wkst_config.json dist/config
+            echo f | xcopy /i /y /f config\options.json dist\config\options.json
+            echo f | xcopy /i /y /f config\wkst_config.json dist\config\wkst_config.json
 ::=============================================================================

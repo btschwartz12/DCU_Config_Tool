@@ -21,7 +21,8 @@ class App(tk.Tk):
         except Exception as e:
             raise e
 
-        fn = os.path.join(self.config.SRC_DIR, 'data/misc/aclara.png')
+        # fn = os.path.join(self.config.SRC_DIR, 'data/misc/aclara.png')
+        fn = 'aclara.png'
         photo = tk.PhotoImage(file = fn)
         self.iconphoto(True, photo)
 

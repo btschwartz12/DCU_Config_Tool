@@ -50,9 +50,9 @@ class WorksheetCalculator:
         self.LOCATION_DATA = {}
         self.TIME_ZONE_DATA = {}
 
-        with open(self.config.LOCATION_DATA_PATH, 'r') as f:
+        with open(os.path.join(config.SRC_DIR, self.config.LOCATION_DATA_PATH), 'r') as f:
             self.LOCATION_DATA.update(json.load(f))
-        with open(self.config.TIMEZONE_DATA_PATH, 'r') as f:
+        with open(os.path.join(config.SRC_DIR, self.config.TIMEZONE_DATA_PATH), 'r') as f:
             self.TIME_ZONE_DATA.update(json.load(f))
 
     def __processData(self) :
@@ -74,7 +74,7 @@ class WorksheetCalculator:
             STEP_11_DATA: Step11Data = getStep11Data(DTLS_DATA, TIME_ZONE_DATA, USER_ENTRIES, FREQUENCY_DATA, STEP_10_DATA)
 
         else:
-            with open(self.config.RUNTIME_LOG_PATH, 'w+') as f:
+            with open(os.path.join(self.config.SRC_DIR, self.config.RUNTIME_LOG_PATH), 'w+') as f:
                 f.write("CALCULATION LOG FOR RUN: "+datetime.now().strftime('%Y/%m/%d-%H:%M:%S'))
                 USER_ENTRIES: UserEntries = getUserEntries(self.entry_data_dict)
                 f.write("\n\n\n\t\t\t***USER ENTRIES***\n\n"+json.dumps(USER_ENTRIES.getOrderedDict(), indent=2)); f.flush()
@@ -269,8 +269,8 @@ class WorksheetCalculator:
         data: ExportData = self.__EXPORT_DATA
 
         try:
-            schema = xmlschema.XMLSchema(self.config.EXPORT_SCHEMA_PATH)
-            template_data = schema.to_dict(self.config.EXPORT_TEMPLATE_PATH)
+            schema = xmlschema.XMLSchema(os.path.join(self.config.SRC_DIR, self.config.EXPORT_SCHEMA_PATH))
+            template_data = schema.to_dict(os.path.join(self.config.SRC_DIR, self.config.EXPORT_TEMPLATE_PATH))
             XML_DICT.update(template_data)
         except Exception as e:
             raise Exception("error 550: error parsing export template\n\n"+str(e)+"\n\nPlease check export schema and template.")
