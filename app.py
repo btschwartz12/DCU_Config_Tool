@@ -1,3 +1,4 @@
+import os
 import tkinter
 from tkinter import ttk
 import tkinter as tk
@@ -10,8 +11,8 @@ class App(tk.Tk):
     def __init__(self):
         super().__init__()
 
-        photo = tk.PhotoImage(file = "data/misc/aclara.png")
-        self.iconphoto(True, photo)
+
+        
         # Runtime data
 
 
@@ -19,6 +20,10 @@ class App(tk.Tk):
             self.config = Config()
         except Exception as e:
             raise e
+
+        fn = os.path.join(self.config.SRC_DIR, 'data/misc/aclara.png')
+        photo = tk.PhotoImage(file = fn)
+        self.iconphoto(True, photo)
 
         self.__buildGUI()
 
