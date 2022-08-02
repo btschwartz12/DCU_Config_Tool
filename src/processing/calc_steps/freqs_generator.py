@@ -2,6 +2,7 @@ from __future__ import generator_stop
 from dataclasses import dataclass, fields
 import json
 from pprint import pformat
+from tkinter import messagebox
 from openpyxl import load_workbook
 from config.config import Config
 
@@ -220,7 +221,8 @@ def getFrequencyData(config: Config, FREQUENCIES_FN) -> FrequencyData:
                 raise Exception("error 449: failed to parse Excel file.\n\n"+str(e)+"\n\nPlease check sheet name in config files")
 
         else:
-            print("error 303")
+            messagebox.showerror("Error", "Frequency file must be .json or .xlsx")
+            return
 
         if freq_generator.frequency_objs == []:
             raise Exception("error 391: failed to load frequency objects. Please check import files")

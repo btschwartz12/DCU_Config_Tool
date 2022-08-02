@@ -82,7 +82,6 @@ def getStatusData(USER_ENTRIES: UserEntries, DTLS_DATA: DtlsData, DATA_4: Step4D
         elif result == 'Text String is too large':
             status = Status.FAIL
         else:
-            print("error 559: unexcepcted DTLS response")
             status = Status.FAIL
         
         if result != "Data Looks Ok":

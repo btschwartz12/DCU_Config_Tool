@@ -161,7 +161,7 @@ class WorksheetCalculator:
     
     def __showFailMessage(self, message):
         fail_msg = "A fatal error occurred during configuration:\n\n*****\n"+message+"\n*****\n\nPlease fix the problem, and try again."
-        messagebox.showerror("Config error", fail_msg)
+        messagebox.showerror("Config Status error", fail_msg)
     def __showWarningMessage(self, message):
         warning_msg = "During configuration, a warning was detected:\n\n*****\n"+message+"\n*****\n\nDo you wish to proceed?"
         will_proceed = messagebox.askyesno("Warning", warning_msg, icon='warning')

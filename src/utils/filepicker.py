@@ -72,15 +72,12 @@ class FilePicker(tk.Frame):
         return cur_fn != blank_fn
 
     def disable(self):
-        print("disabled")
 
         self.filemenu['state'] = 'disabled'
         self.folder_entry['state'] = 'disabled'
         self.validate_btn['state'] = 'disabled'
         
     def enable(self):
-        print("enabled")
-
         self.filemenu['state'] = 'normal'
         self.folder_entry['state'] = 'normal'
         self.validate_btn['state'] = 'normal'

@@ -5,8 +5,8 @@
     "log_mode": false,
     "runtime_log_path": "DEBUG_DATA/runtime_calcs.txt",
 
+    "sheet_name": "CustomerFreqs",
+
     "default_entry_directory": "SAMPLE_IMPORT_DATA",
-    "default_freqs_directory": "SAMPLE_IMPORT_DATA",
-    
-    "sheet_name": "CustomerFreqs"
+    "default_freqs_directory": "SAMPLE_IMPORT_DATA"
 }

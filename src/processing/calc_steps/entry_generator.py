@@ -65,10 +65,3 @@ def getUserEntries(user_entry_dict: dict) -> UserEntries:
             entry_data.DCU_Product_Number= data["DCU Product Number (the Y number)"]
 
         return entry_data
-
-
-# def verifyEntry(user_entry_dict):
-#     if all(key in user_entry_dict for key in ('Country', 'State')):
-#         print("keys are present")
-#     else:
-#         print("keys are not present")

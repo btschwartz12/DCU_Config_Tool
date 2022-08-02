@@ -86,7 +86,8 @@ class DcuWorksheetPage(tk.Frame):
             self.worksheet_fp.loadDir(self.config.DEFAULT_ENTRY_DIRECTORY)
             self.frequency_fp.loadDir(self.config.DEFAULT_FREQS_DIRECTORY)
         except FileNotFoundError:
-            messagebox.showerror("Error", "Cannot find default a default data directory. Please check config file.")
+            messagebox.showwarning("Config directory error", "Cannot find default a default data directory. Please check config file. \n\nPlease provide a valid directory for the data files.")
+
         
         self.worksheet_color_box = tk.Label(worksheet_frame, text="", fg='white', bg=NOT_READY_COLOR)
         self.worksheet_color_box.pack(fill=tk.X, expand=True, anchor=tk.S)

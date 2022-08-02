@@ -21,10 +21,8 @@ def toStr(data) -> str:
         _str = str(data)
     elif isinstance(data, str):
         _str = data
-    elif data is None:
-        _str = ""
     else:
-        print("error 429")
+        _str = ""
     return _str
 
 

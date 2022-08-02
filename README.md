@@ -4,30 +4,21 @@ This simple application will allow a user to input certain fields and import fre
 
 ## **Installation**
 
-- Install [Python (3+)](https://www.python.org/downloads/) and ensure you can open a python interpreter
-```bash
-$ py
-# Make sure that the below interpreter is opened. If not, do not proceed and contact owner.
-Python 3.10.5 (tags/v3.10.5:f377153, Jun  6 2022, 16:14:13) [MSC v.1929 64 bit (AMD64)] on win32
-Type "help", "copyright", "credits" or "license" for more information.
->>> 
-```
-- Install [pip](https://pip.pypa.io/en/stable/) using the link or these commands:
-```bash
-$ pip --version
-# If the above statement prints a version of pip, ignore the rest of the commands
-$ curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-$ py get-pip.py
-$ py -m pip install --upgrade pip
-```
-- Use the pip to install the following modules:
+For the application to run properly, you must have the executable downloaded on your machine (currently called `DCU Config Tool.exe`), and that there is a `config/` folder in the same directory as the executable, with two files: `options.json` and `wkst_config.json`. 
 
-```bash
-$ pip install openpyxl
-$ pip install xmlschema
-```
+Verify that the fields of the config files are tailored to your machine and to your liking (see the [Setup](#setup) section).
 
-## **Downloading The Code**
+To run the application, see the [Usage](#usage) section.
+
+If you want to see the source code, see the [Downloading the Code](#downloading-the-code) section. 
+
+If you want to re-build the executable on your machine, see the [Creating the Executable](#creating-the-executable) section.
+
+## **Downloading the Code**
+
+This is optional and not required for proper use of the application.
+
+However, if you want to see the source code or build your own executable, this step is required.
 
 To download the code, you must have [git](https://git-scm.com/download/win) installed on your machine. Try the following command:
 
@@ -46,24 +37,23 @@ cd DCU_Config_Tool
 
 ## **Setup**
 
-Please ensure that everything has been installed, the code is located in a directory on your machine, and your current working directory in the command line is `DCU_Config_Tool`.
+Please ensure that the executable and `config/` directory are located in the same folder on your machine. If you chose to download the code, make sure your current working directory in the command line is `DCU_Config_Tool`.
 
 Locate the `options.json` file in the  `config/` directory, and ensure these fields are set correctly:
 
 ```python
-'source_directory' # Where the project lives on your machine. Run pwd and place the output here
+'source_directory' # Where the project lives on your machine. Only neccesary if you downloaded the code
 'version' # The current version of the tool
+
+'log_mode' # If you want to save the log of calculations
+'runtime_log_path' # Where the log calculations will be written to
 
 'sheet_name' # The name of the sheet that holds frequency data, if the user opts to load frequencies from an Excel workbook
 
 '''For the following fields, you may include just the relative path if they are relative to the indicated source directory'''
 
-'export_schema_path' # The path to the .xsd that corresponds to the exported DCU .xml
-'export_template_path' # The path to the .xml that is a blank version of the exported DCU .xml
-'location_data_path' # The path to the .json that holds relevent data for locations (city, state, country)
-'timezone_data_path' # The path to the .json that holds relevent data for each time zone
-'default_entry_directory' # The path to the directory that will initially be used by the user to find and load entry files
-'default_freqs_directory' # The path to the directory that will initially be used by the user to find and load frequency files
+'default_entry_directory' # The path to the directory that will initially be used by the user to find and load entry files. Can be left empty
+'default_freqs_directory' # The path to the directory that will initially be used by the user to find and load frequency files. Can be left empty
 
 ```
 
@@ -93,17 +83,23 @@ If one of these is true, locate the `wkst_config.json` file in the  `config/` di
 
 ## **Usage**
 
-After ensuring that the setup step has been completed correctly, run these commands:
+Before using the tool, all of these must be true:
 
-```bash
-$ pwd
-.../DCU_Config_Tool # If your current directory does not end with this, cd into that directory.
-$ py app.py
-```
+1. The executable and `config/` directory are located in the same folder on your machine.
+2. The `config/` directory contains `options.json` and `wkst_config.json`, and are well formed, if they were modified (see [Setup](#setup) and [Additional Setup](#additional-setup))
+3. If you chose to create your own entry and frequency data files, they are in a directory and that directory is recorded in the appropriate `options.json` field.
+
+If these are true, click on the executable to run the application. 
+
+For any errors experienced during runtime, see the [Handling Errors](#handling-errors) section. 
 
 ## **Handling Errors**
 
 During the execution of the program, there are several instances where an error can occur. Here is a list of potential errors, and steps to take to possibly fix them.
+
+- **Config error** - The application cannot find the config files. Please ensure that the `config/` directory is in the same directory as the executable and contains `options.json` and `wkst_config.json`, and are well formed, if they were modified (see [Setup](#setup) and [Additional Setup](#additional-setup)).
+
+- **Config error** - The application cannot find the source directory or the default entry/frequency directorys. This is not a fatal error, but will prevent the application from using the present working directory and it's own entry/frequency default data.
 
 - **Invalid data format** - One of the imported files (entries or frequencies) is not formatted correctly. The entry file should be a dictionary, and the frequency file should be a list of frequency dictionary objects.
 
@@ -119,9 +115,86 @@ During the execution of the program, there are several instances where an error 
 
 - **Calculation error** - When there is an error during calculations, usually when a non-sensible set of user entries is used during calculation. This is the most difficult error to fix. Try turing on the log_mode option in the options.json file, and specify the .txt file that the log will be written to. In the log file, it will contain all of the step calculations up to the point where the error occurred. If the bug is still not apparent, inspect the code for that specific step to ensure that the calculations match up with the Excel tool. 
 
-- **Config error** - When the calculated status of the configuration is not good enough to safely export the DCU .xml file. Check the status message provided for further instruction.
+- **Config Status error** - When the calculated status of the configuration is not good enough to safely export the DCU .xml file. Check the status message provided for further instruction.
 
 - **Export error** - When there is an error during the conversion of the template to a data structure so that the calculations can be loaded into it and transferred back to an .xml. Chack the message, ensure that the schema and template have been correctly specified in the options.json file, and that the key names in the template xml match those found in the getXMLstr() function of calculator.py.
+
+## **Creating the Executable**
+
+This is optional and not required for proper use of the application.
+
+To create the executable, the source code must be downloaded to your machine, and your present working directory in the command line must be `DCU_Config_Tool/`. 
+
+1. Install [Python (3+)](https://www.python.org/downloads/) and ensure you can open a python interpreter:
+```bash
+$ py
+# Make sure that the below interpreter is opened. If not, download Python using the link above.
+Python 3.10.5 (tags/v3.10.5:f377153, Jun  6 2022, 16:14:13) [MSC v.1929 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>> 
+```
+2. Install [pip](https://pip.pypa.io/en/stable/) using the link or these commands:
+```bash
+$ pip --version
+# If the above statement prints a version of pip, ignore the rest of the commands
+$ curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+$ py get-pip.py
+$ py -m pip install --upgrade pip
+```
+3.  Use the pip to install the following modules:
+
+```bash
+$ pip install pyinstaller
+$ pip install openpyxl
+$ pip install xmlschema
+```
+
+4. Once you have installed these modules, run this command and ensure that all three of the above modules are installed and make note of their file location:
+
+```bash
+$ pip list -v
+...
+pyinstaller   5.3     ...\python\python310\lib\site-packages ...
+xmlschema     2.0.1   ...\python\python310\lib\site-packages ...
+openpyxl      3.0.10  ...\python\python310\lib\site-packages ...
+...
+```
+5. Locate the `app.spec` file. This is the file that `pyinstaller` uses to create an executable. We are going to first fix the paths in this file, then modify the build script. Locate the datas attribute:
+
+```python
+a = Analysis(
+    ['<YOUR_SOURCE_PATH>/DCU_Config_Tool/app.py'],
+    ...
+    datas=[('<YOUR_PYTHON_LIBRARY_PATH>/xmlschema', 'xmlschema/'), 
+            ('<YOUR_PYTHON_LIBRARY_PATH>/openpyxl', 'openpyxl/'), 
+            ('data/aclara.png', 'data/'),
+            ('data/location_data.json', 'data/'),
+            ('data/time_zone_data.json', 'data/'),
+            ('data/DCU+2XLS.xsd', 'data/'),
+            ('data/DCU2+XLS_TEMPLATE.xml', 'data/'),
+            ('SAMPLE_IMPORT_DATA/sample_freqs.json', 'SAMPLE_IMPORT_DATA/'),
+            ('SAMPLE_IMPORT_DATA/sample_wkst_entries.json', 'SAMPLE_IMPORT_DATA/'),
+            ],
+    ...
+```
+Find `<YOUR_SOURCE_PATH>`, and replace it the absolute path of where your source directory is located. (If you need help, try running the command `$ pwd`).
+
+Find `<YOUR_PYTHON_LIBRARY_PATH>`, and replace it with the corresponding path from step 4. DO NOT MODIFY ANYTHING ELSE.
+
+6. Locate the `buildScript.bat` batch file in the `scripts/` directory. Find step 1, and initialize the names of your directory from step5, and the name of the spec file. Step 2 will build the executable, step 3 will place the config files in the executable's directory.
+
+7. Run the batch file on your machine:
+
+```bash
+$ ./scripts/buildScript.bat # This should take ~20 seconds
+```
+If an error occurs, contact the owner. 
+
+8. After the executable has been tested or moved somewhere else, to clean all files generated by the process, run the clean script:
+
+```bash
+$ ./scripts/cleanScript.bat # Will remove all pyinstaller generated files and __pycache__ files
+```
 
 ## **Contributing**
 

@@ -52,7 +52,7 @@ class Config:
 
         if not os.path.exists(self.SRC_DIR):
             self.SRC_DIR = os.path.abspath('.')
-            messagebox.showerror("Config error", "Source directory does not exist. Please check config files. Using current directory instead: "+self.SRC_DIR)
+            messagebox.showwarning("Config directory error", "Source directory does not exist. Please check config files. Using current directory instead: "+self.SRC_DIR, icon='warning')
         
         self.LOCATION_DATA_PATH =   getResourcePath("data/location_data.json")
         self.TIMEZONE_DATA_PATH =   getResourcePath("data/time_zone_data.json")
@@ -60,10 +60,14 @@ class Config:
         self.EXPORT_TEMPLATE_PATH = getResourcePath("data/DCU2+XLS_TEMPLATE.xml")
         self.LOGO_PATH =            getResourcePath("data/aclara.png")
         
-        if not os.path.exists(self.DEFAULT_ENTRY_DIRECTORY):
+        if not os.path.exists(self.DEFAULT_ENTRY_DIRECTORY) or not os.path.exists(self.DEFAULT_FREQS_DIRECTORY):
             self.DEFAULT_ENTRY_DIRECTORY = os.path.join(self.SRC_DIR, self.DEFAULT_ENTRY_DIRECTORY)
-        if not os.path.exists(self.DEFAULT_FREQS_DIRECTORY):
             self.DEFAULT_FREQS_DIRECTORY = os.path.join(self.SRC_DIR, self.DEFAULT_FREQS_DIRECTORY)
+            if not os.path.exists(self.DEFAULT_ENTRY_DIRECTORY) or not os.path.exists(self.DEFAULT_FREQS_DIRECTORY):
+                self.DEFAULT_ENTRY_DIRECTORY = getResourcePath("SAMPLE_IMPORT_DATA")
+                self.DEFAULT_FREQS_DIRECTORY = getResourcePath("SAMPLE_IMPORT_DATA")
+                messagebox.showwarning("Config directory error", "Default entry directory or default frequency directory does not exist. Please check config files. Using hard-coded default data instead: "+self.DEFAULT_ENTRY_DIRECTORY, icon='warning')
+        
 
         self.FREQUENCY_RUNTIME_JSON_STR = ""
         self.ENTRIES_RUNTIME_JSON_STR = ""
