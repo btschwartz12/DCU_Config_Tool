@@ -23,8 +23,18 @@ class App(tk.Tk):
 
         # fn = os.path.join(self.config.SRC_DIR, 'data/misc/aclara.png')
         fn = 'aclara.png'
-        photo = tk.PhotoImage(file = fn)
-        self.iconphoto(True, photo)
+        try:
+            photo = tk.PhotoImage(file = fn)
+            self.iconphoto(True, photo)
+        except Exception as e:
+            print("2")
+        fn = 'data/misc/aclara.png'
+        try:
+            photo = tk.PhotoImage(file = fn)
+            self.iconphoto(True, photo)
+        except Exception as e:
+            print("3")
+        
 
         self.__buildGUI()
 

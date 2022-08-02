@@ -50,12 +50,13 @@
 ::=============================================================================
 
 :: pyinstaller converts python source to an executable
-pyinstaller --noconfirm --onefile --console --add-data "%XMLSCHEMA_pkg%" --add-data "%OPENPYXL_pkg%" --add-data "%icon%" "%Source%%ScriptName%"
+::pyinstaller --noconfirm --onefile --console --add-data "%XMLSCHEMA_pkg%" --add-data "%OPENPYXL_pkg%" --add-data "%icon%" "%Source%%ScriptName%"
+pyinstaller app.spec
 
 ::=============================================================================
 :: Step 4: Initialize executable's directory
 ::
-::      - For the app to function, there must exist a directory 'config/' in
+::      - For the app to work properly, there must exist a directory 'config/' in
 ::          the same directory as the executable, and this 'config/' 
 ::          directory MUST have:
 ::              - options.json 

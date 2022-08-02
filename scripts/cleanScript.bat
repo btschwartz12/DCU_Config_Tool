@@ -4,4 +4,4 @@ rmdir /S /Q build 2>nul
 python -Bc "import pathlib; [p.unlink() for p in pathlib.Path('.').rglob('*.py[co]')]"
 python -Bc "import pathlib; [p.rmdir() for p in pathlib.Path('.').rglob('__pycache__')]"
 
-del *.spec 2>nul
+:: del *.spec 2>nul
