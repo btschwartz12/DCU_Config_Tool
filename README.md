@@ -6,13 +6,13 @@ This simple application will allow a user to input certain fields and import fre
 
 For the application to run properly, you must have the executable downloaded on your machine (currently called `DCU Config Tool.exe`), and that there is a `config/` folder in the same directory as the executable, with two files: `options.json` and `wkst_config.json`. 
 
-Verify that the fields of the config files are tailored to your machine and to your liking (see the [Setup](#setup) section).
+Verify that the fields of the config files are tailored to your machine and to your liking (see [Setup](#setup)).
 
-To run the application, see the [Usage](#usage) section.
+To run the application, see [Usage](#usage).
 
-If you want to see the source code, see the [Downloading the Code](#downloading-the-code) section. 
+If you want to see the source code, see [Downloading the Code](#downloading-the-code). 
 
-If you want to re-build the executable on your machine, see the [Creating the Executable](#creating-the-executable) section.
+If you want to re-build the executable on your machine, see [Creating the Executable](#creating-the-executable).
 
 ## **Downloading the Code**
 
@@ -87,11 +87,11 @@ Before using the tool, all of these must be true:
 
 1. The executable and `config/` directory are located in the same folder on your machine.
 2. The `config/` directory contains `options.json` and `wkst_config.json`, and are well formed, if they were modified (see [Setup](#setup) and [Additional Setup](#additional-setup))
-3. If you chose to create your own entry and frequency data files, they are in a directory and that directory is recorded in the appropriate `options.json` field.
+3. If you chose to use your own entry and frequency data files, they are in a directory and that directory is recorded in the appropriate `options.json` field.
 
 If these are true, click on the executable to run the application. 
 
-For any errors experienced during runtime, see the [Handling Errors](#handling-errors) section. 
+For any errors experienced during runtime, see [Handling Errors](#handling-errors). 
 
 ## **Handling Errors**
 
@@ -105,7 +105,7 @@ During the execution of the program, there are several instances where an error 
 
 - **Invalid key name** - In the entry or frequency file, there is an unrecognized key name. Ensure that the imported file key's correspond to the keys indicated in the wkst_config.json file.
 
-- **Incompatible data** - In the entry file, a specified value has an unexpected type. Ensure that the value types in the entry file match those indicated in the wkst_config.json file
+- **Incompatible data** - In the entry file, a specified value has an unexpected type. Ensure that the value types in the entry file match those indicated in the wkst_config.json file.
 
 - **Bad frequency data** - During the proccessing of the frequency file, either the data is formatted incorrectly, a required key was not found, or an unexpected value type was parsed. Check the format of the imported frequency file, and the required keys in the wkst_config.json file. If a spreadsheet is being used, make sure that the headers are in row A, and each row below is a frequency object that has all required keys set.
 
@@ -159,7 +159,7 @@ xmlschema     2.0.1   ...\python\python310\lib\site-packages ...
 openpyxl      3.0.10  ...\python\python310\lib\site-packages ...
 ...
 ```
-5. Locate the `app.spec` file. This is the file that `pyinstaller` uses to create an executable. We are going to first fix the paths in this file, then modify the build script. Locate the datas attribute:
+5. Locate the `app.spec` file. This is the file that `pyinstaller` uses to create an executable. We are going to first fix the paths in this file, then modify the build script. Locate the `Analysis` attribute:
 
 ```python
 a = Analysis(
@@ -179,9 +179,11 @@ a = Analysis(
 ```
 Find `<YOUR_SOURCE_PATH>`, and replace it the absolute path of where your source directory is located. (If you need help, try running the command `$ pwd`).
 
-Find `<YOUR_PYTHON_LIBRARY_PATH>`, and replace it with the corresponding path from step 4. DO NOT MODIFY ANYTHING ELSE.
+Find `<YOUR_PYTHON_LIBRARY_PATH>`, and replace it with the corresponding path from step 4. 
 
-6. Locate the `buildScript.bat` batch file in the `scripts/` directory. Find step 1, and initialize the names of your directory from step5, and the name of the spec file. Step 2 will build the executable, step 3 will place the config files in the executable's directory.
+DO NOT MODIFY ANYTHING ELSE.
+
+6. Locate the `buildScript.bat` batch file in the `scripts/` directory. Find step 1, and initialize the name of your directory from step 5, and the name of the spec file. Step 2 will build the executable, step 3 will place the config files in the executable's directory.
 
 7. Run the batch file on your machine:
 
