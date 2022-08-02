@@ -1,4 +1,4 @@
-CALCULATION LOG FOR RUN: 2022/07/29-09:26:12
+CALCULATION LOG FOR RUN: 2022/08/02-09:10:49
 
 
 			***USER ENTRIES***
@@ -21,13 +21,13 @@ CALCULATION LOG FOR RUN: 2022/07/29-09:26:12
   "Automatic_Demand_Reset_r16": "Default",
   "Outage_Last_Gasp_Delay_r17": 30,
   "Restoration_Delay_r18": 15,
-  "System_Includes_STAR_2400_Legacy_devices_r19": false,
-  "System_Includes_STAR_2400_devices_r20": false,
-  "System_Includes_STAR_7200_devices_r21": false,
-  "System_Includes_SRFN_Devices_r22": false,
-  "System_Includes_SRFN_Dedicated_DA_Recv_Channel_r23": false,
+  "System_Includes_STAR_2400_Legacy_devices_r19": true,
+  "System_Includes_STAR_2400_devices_r20": true,
+  "System_Includes_STAR_7200_devices_r21": true,
+  "System_Includes_SRFN_Devices_r22": true,
+  "System_Includes_SRFN_Dedicated_DA_Recv_Channel_r23": true,
   "DCU_T_Boards_r24": "2",
-  "DCU_Single_Transmit_T_Board_Firmware_r25": true,
+  "DCU_Single_Transmit_T_Board_Firmware_r25": false,
   "Aclara_Customer_ID_r28": 169811,
   "Tool_Version_r29": "EF00001",
   "Customer_Configuration_Id_r30": "169811EF00001",
@@ -99,28 +99,32 @@ CALCULATION LOG FOR RUN: 2022/07/29-09:26:12
 
 {
   "DCU_Receive_Channels_Available_r65": 16,
-  "DCU_Transmitter_Count_r66": 1,
-  "STAR_Receiver_Channels_Minimum_r67": 0,
-  "SRFN_Receiver_Channels_r68": 0,
-  "Channels_Available_for_Diversity_r69": 15,
-  "STAR_2400_Diverity_Channels_r70": 0,
-  "STAR_2400_Legacy_Diverity_Channels_r71": 0,
-  "STAR_7200_Diverity_Channels_r72": 0,
-  "STAR_Transmit_Frequency_Reserved_Receiver_r73": 0,
+  "DCU_Transmitter_Count_r66": 2,
+  "STAR_Receiver_Channels_Minimum_r67": 3,
+  "SRFN_Receiver_Channels_r68": 7,
+  "Channels_Available_for_Diversity_r69": 4,
+  "STAR_2400_Diverity_Channels_r70": 1,
+  "STAR_2400_Legacy_Diverity_Channels_r71": 1,
+  "STAR_7200_Diverity_Channels_r72": 2,
+  "STAR_Transmit_Frequency_Reserved_Receiver_r73": 1,
   "SRFN_Transmit_Frequency_Reserved_Receiver_r74": 1,
-  "STAR_2400_Legacy_Channels_r75": 0,
-  "STAR_2400_Channels_Non_Legacy_r76": 0,
-  "STAR_7200_Channels_r77": 0,
-  "STAR_Receiver_Channels_r78": -1,
-  "SRFN_Non_DA_Receive_Channels_r79": 1,
-  "SRFN_DA_Receive_Channels_r80": 0,
+  "STAR_2400_Legacy_Channels_r75": 2,
+  "STAR_2400_Channels_Non_Legacy_r76": 2,
+  "STAR_7200_Channels_r77": 4,
+  "STAR_Receiver_Channels_r78": 8,
+  "SRFN_Non_DA_Receive_Channels_r79": 7,
+  "SRFN_DA_Receive_Channels_r80": 1,
   "DCU_Configuration_Description_r81": [
-    "SRFN"
+    "STAR 2400 Legacy",
+    "STAR 2400",
+    "STAR 7200",
+    "SRFN",
+    "DA"
   ],
-  "SRFN_Non_DA_Receivers_on_Slot3_r82": 0,
+  "SRFN_Non_DA_Receivers_on_Slot3_r82": 6,
   "SRFN_Non_DA_Receivers_on_Slot2_r83": 0,
-  "Slot3Count_r84": 512,
-  "Slot2Count_r85": 304,
+  "Slot3Count_r84": 1023,
+  "Slot2Count_r85": 14116,
   "DCU_Configuration_r86": "Full Complement"
 }
 
@@ -129,21 +133,21 @@ CALCULATION LOG FOR RUN: 2022/07/29-09:26:12
 
 {
   "Slot_3_Channel_1_r88": "SRFN*",
-  "Slot_3_Channel_2_r89": "",
-  "Slot_3_Channel_3_r90": "",
-  "Slot_3_Channel_4_r91": "",
-  "Slot_3_Channel_5_r92": "",
-  "Slot_3_Channel_6_r93": "",
-  "Slot_3_Channel_7_r94": "",
-  "Slot_3_Channel_8_r95": "",
-  "Slot_2_Channel_1_r96": "",
-  "Slot_2_Channel_2_r97": "",
-  "Slot_2_Channel_3_r98": "",
-  "Slot_2_Channel_4_r99": "",
-  "Slot_2_Channel_5_r100": "",
-  "Slot_2_Channel_6_r101": "",
-  "Slot_2_Channel_7_r102": "",
-  "Slot_2_Channel_8_r103": ""
+  "Slot_3_Channel_2_r89": "DA",
+  "Slot_3_Channel_3_r90": "SRFN",
+  "Slot_3_Channel_4_r91": "SRFN",
+  "Slot_3_Channel_5_r92": "SRFN",
+  "Slot_3_Channel_6_r93": "SRFN",
+  "Slot_3_Channel_7_r94": "SRFN",
+  "Slot_3_Channel_8_r95": "SRFN",
+  "Slot_2_Channel_1_r96": "STAR 7200*",
+  "Slot_2_Channel_2_r97": "STAR 7200",
+  "Slot_2_Channel_3_r98": "STAR 2400",
+  "Slot_2_Channel_4_r99": "STAR 2400 Legacy",
+  "Slot_2_Channel_5_r100": "STAR 7200*",
+  "Slot_2_Channel_6_r101": "STAR 7200",
+  "Slot_2_Channel_7_r102": "STAR 2400",
+  "Slot_2_Channel_8_r103": "STAR 2400 Legacy"
 }
 
 
@@ -151,21 +155,21 @@ CALCULATION LOG FOR RUN: 2022/07/29-09:26:12
 
 {
   "Slot_3_Channel_1_r105": 462412500,
-  "Slot_3_Channel_2_r106": null,
-  "Slot_3_Channel_3_r107": null,
-  "Slot_3_Channel_4_r108": null,
-  "Slot_3_Channel_5_r109": null,
-  "Slot_3_Channel_6_r110": null,
-  "Slot_3_Channel_7_r111": null,
-  "Slot_3_Channel_8_r112": null,
-  "Slot_2_Channel_1_r113": null,
-  "Slot_2_Channel_2_r114": null,
-  "Slot_2_Channel_3_r115": null,
-  "Slot_2_Channel_4_r116": null,
-  "Slot_2_Channel_5_r117": null,
-  "Slot_2_Channel_6_r118": null,
-  "Slot_2_Channel_7_r119": null,
-  "Slot_2_Channel_8_r120": null
+  "Slot_3_Channel_2_r106": 456287500,
+  "Slot_3_Channel_3_r107": 456312500,
+  "Slot_3_Channel_4_r108": 456337500,
+  "Slot_3_Channel_5_r109": 456487500,
+  "Slot_3_Channel_6_r110": 456687500,
+  "Slot_3_Channel_7_r111": 456737500,
+  "Slot_3_Channel_8_r112": 457162500,
+  "Slot_2_Channel_1_r113": 467512500,
+  "Slot_2_Channel_2_r114": 457662500,
+  "Slot_2_Channel_3_r115": 457662500,
+  "Slot_2_Channel_4_r116": 457662500,
+  "Slot_2_Channel_5_r117": 467512500,
+  "Slot_2_Channel_6_r118": 457662500,
+  "Slot_2_Channel_7_r119": 457662500,
+  "Slot_2_Channel_8_r120": 457662500
 }
 
 
@@ -176,13 +180,13 @@ CALCULATION LOG FOR RUN: 2022/07/29-09:26:12
   "phyRxFrequencies_r123": [
     "",
     "462412500",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    ""
+    "456287500",
+    "456312500",
+    "456337500",
+    "456487500",
+    "456687500",
+    "456737500",
+    "457162500"
   ],
   "phyTxFrequencies_r124": [
     462412500,
@@ -224,7 +228,7 @@ CALCULATION LOG FOR RUN: 2022/07/29-09:26:12
   "phyRxDA_r128": [
     0,
     0,
-    0,
+    1,
     0,
     0,
     0,
@@ -238,17 +242,17 @@ CALCULATION LOG FOR RUN: 2022/07/29-09:26:12
 			***STEP 8***
 
 {
-  "comDeviceGatewayConfig_r130": "NONE",
+  "comDeviceGatewayConfig_r130": "STAR",
   "phyRxFrequencies_r131": [
     "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    ""
+    "467512500",
+    "457662500",
+    "457662500",
+    "457662500",
+    "467512500",
+    "457662500",
+    "457662500",
+    "457662500"
   ],
   "phyTxFrequencies_r132": [
     462412500,
@@ -256,36 +260,36 @@ CALCULATION LOG FOR RUN: 2022/07/29-09:26:12
   ],
   "phyRxDetection_r133": [
     0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
+    1,
+    1,
+    2,
+    4,
+    1,
+    1,
+    2,
+    4
   ],
   "phyRxFraming_r134": [
     0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
+    2,
+    2,
+    1,
+    1,
+    2,
+    2,
+    1,
+    1
   ],
   "phyRxMode_r135": [
     1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
+    2,
+    2,
+    3,
+    3,
+    2,
+    2,
+    3,
+    3
   ],
   "phyRxDA_r136": [
     0,
@@ -305,17 +309,36 @@ CALCULATION LOG FOR RUN: 2022/07/29-09:26:12
 
 {
   "EP_Tx_SRFN_Except_DA_r138": [
-    462412500
+    462412500,
+    456312500,
+    456337500,
+    456487500,
+    456687500,
+    456737500,
+    457162500
   ],
-  "EP_Tx_SRFN_DA_Except_DA_r139": [],
-  "EP_Tx_STAR7200_r140": [],
-  "EP_Tx_STAR2400_r141": [],
-  "EP_Tx_STAR2400Legacy_r142": [],
+  "EP_Tx_SRFN_DA_Except_DA_r139": [
+    456287500
+  ],
+  "EP_Tx_STAR7200_r140": [
+    467512500,
+    457662500,
+    467512500,
+    457662500
+  ],
+  "EP_Tx_STAR2400_r141": [
+    457662500,
+    457662500
+  ],
+  "EP_Tx_STAR2400Legacy_r142": [
+    457662500,
+    457662500
+  ],
   "EP_Rx_SRFN_Except_DA_r143": 457662500,
-  "EP_Rx_SRFN_DA_Except_DA_r144": null,
-  "EP_Rx_STAR7200_r145": null,
-  "EP_Rx_STAR2400_r146": null,
-  "EP_Rx_STAR2400Legacy_r147": null
+  "EP_Rx_SRFN_DA_Except_DA_r144": 457662500,
+  "EP_Rx_STAR7200_r145": 467512500,
+  "EP_Rx_STAR2400_r146": 467512500,
+  "EP_Rx_STAR2400Legacy_r147": 467512500
 }
 
 
@@ -330,6 +353,7 @@ CALCULATION LOG FOR RUN: 2022/07/29-09:26:12
     456687500,
     456737500,
     457162500,
+    457662500,
     462412500,
     467512500
   ],
@@ -357,9 +381,9 @@ CALCULATION LOG FOR RUN: 2022/07/29-09:26:12
     "456687500",
     "456737500",
     "457162500",
+    "457662500",
     "462412500",
     "467512500",
-    "",
     "",
     "",
     "",
@@ -381,10 +405,10 @@ CALCULATION LOG FOR RUN: 2022/07/29-09:26:12
     457162500
   ],
   "macChannelSetsSTAR_r155": [
-    466600000,
-    468000000,
-    456000000,
-    458000000
+    467512500,
+    467512500,
+    457662500,
+    457662500
   ],
   "macChannelSets_r156": [
     462412500,

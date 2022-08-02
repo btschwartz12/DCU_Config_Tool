@@ -1,4 +1,5 @@
 import os
+import sys
 import tkinter
 from tkinter import ttk
 import tkinter as tk
@@ -6,45 +7,33 @@ from tkinter.messagebox import showerror
 from config.config import Config
 from src.gui.main_screen import DcuWorksheetPage
 
+TITLE = "DCU Config Tool"
+REG_DIMENSIONS = "800x550"
+MIN_DIMENSIONS = "800x550"
+MAX_DIMENSIONS = "1000x850"
 
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
 
-
-        
         # Runtime data
-
-
         try:
             self.config = Config()
         except Exception as e:
             raise e
 
-        # fn = os.path.join(self.config.SRC_DIR, 'data/misc/aclara.png')
-        fn = 'aclara.png'
-        try:
-            photo = tk.PhotoImage(file = fn)
-            self.iconphoto(True, photo)
-        except Exception as e:
-            print("2")
-        fn = 'data/misc/aclara.png'
-        try:
-            photo = tk.PhotoImage(file = fn)
-            self.iconphoto(True, photo)
-        except Exception as e:
-            print("3")
-        
+        photo = tk.PhotoImage(file = self.config.LOGO_PATH)    
+        self.iconphoto(True, photo)
 
         self.__buildGUI()
 
 
     def __buildGUI(self):
 
-        self.title("DCU Config Tool")
-        self.geometry(self.config.REG_DIMENSIONS)
-        min_dim = self.config.MIN_DIMENSIONS.split('x')
-        max_dim = self.config.MAX_DIMENSIONS.split('x')
+        self.title(TITLE)
+        self.geometry(REG_DIMENSIONS)
+        min_dim = MIN_DIMENSIONS.split('x')
+        max_dim = MAX_DIMENSIONS.split('x')
         self.minsize(min_dim[0], min_dim[1])
         self.maxsize(max_dim[0], max_dim[1])
 

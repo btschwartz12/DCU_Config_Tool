@@ -8,6 +8,7 @@
 
 from dataclasses import dataclass
 from datetime import datetime
+from email import message
 import json
 import os
 from tkinter import filedialog, messagebox
@@ -50,9 +51,9 @@ class WorksheetCalculator:
         self.LOCATION_DATA = {}
         self.TIME_ZONE_DATA = {}
 
-        with open(os.path.join(config.SRC_DIR, self.config.LOCATION_DATA_PATH), 'r') as f:
+        with open(self.config.LOCATION_DATA_PATH, 'r') as f:
             self.LOCATION_DATA.update(json.load(f))
-        with open(os.path.join(config.SRC_DIR, self.config.TIMEZONE_DATA_PATH), 'r') as f:
+        with open(self.config.TIMEZONE_DATA_PATH, 'r') as f:
             self.TIME_ZONE_DATA.update(json.load(f))
 
     def __processData(self) :
@@ -74,7 +75,11 @@ class WorksheetCalculator:
             STEP_11_DATA: Step11Data = getStep11Data(DTLS_DATA, TIME_ZONE_DATA, USER_ENTRIES, FREQUENCY_DATA, STEP_10_DATA)
 
         else:
-            with open(os.path.join(self.config.SRC_DIR, self.config.RUNTIME_LOG_PATH), 'w+') as f:
+            if not os.path.exists(self.config.RUNTIME_LOG_PATH):
+                self.config.RUNTIME_LOG_PATH = os.path.join(os.path.abspath('.'), "runtime_calcs.txt")
+                messagebox.showerror("Log Error", "Log .txt file path not valid. Creating new log file at: "+self.config.RUNTIME_LOG_PATH)
+            
+            with open(self.config.RUNTIME_LOG_PATH, 'w+') as f:
                 f.write("CALCULATION LOG FOR RUN: "+datetime.now().strftime('%Y/%m/%d-%H:%M:%S'))
                 USER_ENTRIES: UserEntries = getUserEntries(self.entry_data_dict)
                 f.write("\n\n\n\t\t\t***USER ENTRIES***\n\n"+json.dumps(USER_ENTRIES.getOrderedDict(), indent=2)); f.flush()
@@ -100,7 +105,7 @@ class WorksheetCalculator:
                 f.write("\n\n\n\t\t\t***STEP 10***\n\n"+json.dumps(STEP_10_DATA.getOrderedDict(), indent=2)); f.flush()
                 STEP_11_DATA: Step11Data = getStep11Data(DTLS_DATA, TIME_ZONE_DATA, USER_ENTRIES, FREQUENCY_DATA, STEP_10_DATA)
                 f.write("\n\n\n\t\t\t***STEP 11***\n\n"+json.dumps(STEP_11_DATA.getOrderedDict(), indent=2)); f.flush()
-        
+
         self.__EXPORT_DATA: ExportData = ExportData(USER_ENTRIES, STEP_7_DATA, STEP_8_DATA, STEP_9_DATA, STEP_11_DATA)
         self.__STATUS_DATA: StatusData = getStatusData(USER_ENTRIES, DTLS_DATA, STEP_4_DATA)
 
@@ -167,7 +172,8 @@ class WorksheetCalculator:
     def __showExportMessage(self):
         message = "Successfully generated DCU2+XLS .xml\n\n"
         message += "Do you wish to create an archive folder containing the .xml, user entries, frequency data, and worksheet status?"
-        message += "\n\n(Select 'No' to just export the .xml)"
+        message += "\n\n(Select 'Yes' to generate archive folder)"
+        message += "\n(Select 'No' to just export the .xml)"
         message += "\n(Select 'Cancel' to go back to worksheet)"
 
         will_archive = messagebox.askyesnocancel("Success", message, icon='info')
@@ -241,7 +247,7 @@ class WorksheetCalculator:
             
             archive_parent_dir = filedialog.askdirectory(title='Select Archive Destination', initialdir=self.config.SRC_DIR)
 
-            if archive_parent_dir is not None:
+            if archive_parent_dir != '':
                 
                 archive_dir = os.path.join(archive_parent_dir, "DCU2+XLS_Archive_"+datetime_fn_str)
                 os.mkdir(archive_dir)
@@ -269,8 +275,8 @@ class WorksheetCalculator:
         data: ExportData = self.__EXPORT_DATA
 
         try:
-            schema = xmlschema.XMLSchema(os.path.join(self.config.SRC_DIR, self.config.EXPORT_SCHEMA_PATH))
-            template_data = schema.to_dict(os.path.join(self.config.SRC_DIR, self.config.EXPORT_TEMPLATE_PATH))
+            schema = xmlschema.XMLSchema(self.config.EXPORT_SCHEMA_PATH)
+            template_data = schema.to_dict(self.config.EXPORT_TEMPLATE_PATH)
             XML_DICT.update(template_data)
         except Exception as e:
             raise Exception("error 550: error parsing export template\n\n"+str(e)+"\n\nPlease check export schema and template.")

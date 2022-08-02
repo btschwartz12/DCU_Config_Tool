@@ -1,18 +1,9 @@
 {
     "source_directory": "C:/Users/70060/Documents/DCU_Config_Tool/", 
     "version": "EF00001",
-    
-    "dimensions": "800x550", 
-    "min_dimensions": "800x550",
-    "max_dimensions": "1000x850",
 
     "log_mode": false,
     "runtime_log_path": "DEBUG_DATA/runtime_calcs.txt",
-
-    "export_schema_path": "data/export_data/DCU+2XLS.xsd",
-    "export_template_path": "data/export_data/DCU2+XLS_TEMPLATE.xml",
-    "location_data_path": "data/location_data.json",
-    "timezone_data_path": "data/time_zone_data.json",
 
     "default_entry_directory": "SAMPLE_IMPORT_DATA",
     "default_freqs_directory": "SAMPLE_IMPORT_DATA",

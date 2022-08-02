@@ -1,5 +1,7 @@
 import json
 import os
+import sys
+from tkinter import messagebox
 
 
 options_fn = os.path.join(os.getcwd(), 'config', 'options.json')
@@ -14,46 +16,54 @@ try:
     with open(excel_tool_fn) as f:
         wkst_config.update(json.load(f))
 except Exception as e:
-    print("default options used due to", e)
+    messagebox.showerror("Config Error", "Cannot find config files.\nPlease ensure options.json and wkst_config.json are in the config directory.\n\nerror msg:\n\n+" + str(e))
+    exit(1)
+
+def getResourcePath(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 class Config:
     def __init__(self):
 
-        self.REG_DIMENSIONS = options.get("dimensions")
-        self.MIN_DIMENSIONS = options.get("min_dimensions")
-        self.MAX_DIMENSIONS = options.get("max_dimensions")
-
         self.VERSION = options.get("version") # Current app version
         self.SRC_DIR = options.get("source_directory") # Directory where all files will be pulled from
 
-        self.LOG_MODE = options.get("log_mode")
+        self.LOG_MODE =         options.get("log_mode")
         self.RUNTIME_LOG_PATH = options.get("runtime_log_path")
-        
-        self.DEFAULT_COUNTRY = wkst_config.get("default_country")
+        self.SHEET_NAME =       options.get("sheet_name")
+
         self.DEFAULT_ENTRY_DIRECTORY = options.get("default_entry_directory")
         self.DEFAULT_FREQS_DIRECTORY = options.get("default_freqs_directory")
 
-        self.EXPORT_SCHEMA_PATH = options.get("export_schema_path")
-        self.EXPORT_TEMPLATE_PATH = options.get("export_template_path")
-
-        self.ENTRIES = wkst_config.get("entries")
+        self.DEFAULT_COUNTRY =  wkst_config.get("default_country")
+        self.ENTRIES =          wkst_config.get("entries")
         self.DROPDOWN_OPTIONS = wkst_config.get("dropdown_options")
-
-        self.LOCATION_DATA_PATH = options.get("location_data_path")
-        self.TIMEZONE_DATA_PATH = options.get("timezone_data_path")
-
-        self.FREQUENCY_KEYS = wkst_config.get("frequency_keys")
-
-        self.SHEET_NAME = options.get("sheet_name")
-
-
-        self.FREQUENCY_RUNTIME_JSON_STR = ""
-        self.ENTRIES_RUNTIME_JSON_STR = ""
-        
+        self.FREQUENCY_KEYS =   wkst_config.get("frequency_keys")
 
         for var, val in vars(self).items():
             if val == None:
                 raise Exception("error 102: cannot find value for config variable '"+var+"'. Please check config files.")
 
-
+        if not os.path.exists(self.SRC_DIR):
+            self.SRC_DIR = os.path.abspath('.')
+            messagebox.showerror("Config error", "Source directory does not exist. Please check config files. Using current directory instead: "+self.SRC_DIR)
         
+        self.LOCATION_DATA_PATH =   getResourcePath("data/location_data.json")
+        self.TIMEZONE_DATA_PATH =   getResourcePath("data/time_zone_data.json")
+        self.EXPORT_SCHEMA_PATH =   getResourcePath("data/DCU+2XLS.xsd")
+        self.EXPORT_TEMPLATE_PATH = getResourcePath("data/DCU2+XLS_TEMPLATE.xml")
+        self.LOGO_PATH =            getResourcePath("data/aclara.png")
+        
+        if not os.path.exists(self.DEFAULT_ENTRY_DIRECTORY):
+            self.DEFAULT_ENTRY_DIRECTORY = os.path.join(self.SRC_DIR, self.DEFAULT_ENTRY_DIRECTORY)
+        if not os.path.exists(self.DEFAULT_FREQS_DIRECTORY):
+            self.DEFAULT_FREQS_DIRECTORY = os.path.join(self.SRC_DIR, self.DEFAULT_FREQS_DIRECTORY)
+
+        self.FREQUENCY_RUNTIME_JSON_STR = ""
+        self.ENTRIES_RUNTIME_JSON_STR = ""
