@@ -27,4 +27,5 @@
             mkdir dist\config
             echo f | xcopy /i /y /f config\options.json dist\config\options.json
             echo f | xcopy /i /y /f config\wkst_config.json dist\config\wkst_config.json
+            echo f | xcopy /i /y /f README.md dist\README.md
 ::=============================================================================
