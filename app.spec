@@ -50,4 +50,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
+    icon='C:\\Users\\70060\\Documents\\DCU_Config_Tool\\data\\aclara.ico',
 )
