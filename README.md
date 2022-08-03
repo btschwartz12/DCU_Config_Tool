@@ -121,7 +121,7 @@ During the execution of the program, there are several instances where an error 
 
 This is optional and not required for proper use of the application.
 
-To create the executable, the source code must be downloaded to your machine, and your present working directory in the command line must be `DCU_Config_Tool/`. 
+To create the executable, the source code must be downloaded to your machine (see [Downloading the Code](#downloading-the-code)), and your present working directory in the command line must be `DCU_Config_Tool/`. 
 
 1. Install [Python (3+)](https://www.python.org/downloads/) and ensure you can open a python interpreter:
 ```bash
