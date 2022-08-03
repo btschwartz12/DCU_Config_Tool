@@ -50,8 +50,6 @@ Locate the `options.json` file in the  `config/` directory, and ensure these fie
 
 'sheet_name' # The name of the sheet that holds frequency data, if the user opts to load frequencies from an Excel workbook
 
-'''For the following fields, you may include just the relative path if they are relative to the indicated source directory'''
-
 'default_entry_directory' # The path to the directory that will initially be used by the user to find and load entry files. Can be left empty
 'default_freqs_directory' # The path to the directory that will initially be used by the user to find and load frequency files. Can be left empty
 
@@ -183,7 +181,7 @@ Find `<YOUR_PYTHON_LIBRARY_PATH>`, and replace it with the corresponding path fr
 
 DO NOT MODIFY ANYTHING ELSE.
 
-6. Locate the `buildScript.bat` batch file in the `scripts/` directory. Find step 1, and initialize the name of your directory from step 5, and the name of the spec file. Step 2 will build the executable, step 3 will place the config files in the executable's directory.
+6. Locate the `buildScript.bat` batch file in the `scripts/` directory. Find Section 1, and initialize the name of your directory from step 5, and the name of the spec file. Section 2 will build the executable, and Section 3 will place the config files in the executable's directory.
 
 7. Run the batch file on your machine:
 

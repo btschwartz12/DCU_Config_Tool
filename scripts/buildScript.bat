@@ -6,17 +6,17 @@
 ::
 ::
 ::=============================================================================
-:: Step 1: Initialize environment variables
+:: Section 1: Initialize environment variables
 ::
     set "Source=C:\Users\70060\Documents\DCU_Config_Tool\"
 ::      - where source code and script is stored
     set "SpecPath=%Source%/app.spec"
 ::      - where packages are located to be loaded into the executable
 ::=============================================================================
-:: Step 2: Create the executable using the .spec file
+:: Section 2: Create the executable using the .spec file
     pyinstaller "%SpecPath%"
 ::=============================================================================
-:: Step 3: Initialize executable's directory
+:: Section 3: Initialize executable's directory
 ::
 ::      - For the app to work properly, there must exist a directory 'config/' in
 ::          the same directory as the executable, and this 'config/' 
