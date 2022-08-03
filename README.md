@@ -1,6 +1,6 @@
 # DCU Configuration - XML Creation Tool
 
-This simple application will allow a user to input certain fields and import frequencies to generate the .xml file used to configure the DCU.
+This simple application will allow a user to input certain fields and import frequencies to generate `DCU2+XLS.xml`.
 
 ## **Installation**
 
