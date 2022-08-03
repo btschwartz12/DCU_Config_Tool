@@ -1,10 +1,10 @@
 # DCU Configuration - XML Creation Tool
 
-This simple application will allow a user to input certain fields and import frequencies to generate `DCU2+XLS.xml`.
+This simple application will allow a user to input certain fields and import frequencies to generate a `DCU2+XLS.xml` file.
 
 ## **Installation**
 
-For the application to run properly, you must have the executable downloaded on your machine (currently called `DCU Config Tool.exe`), and that there is a `config/` folder in the same directory as the executable, with two files: `options.json` and `wkst_config.json`. 
+For the application to run properly, you must have the executable downloaded on your machine (currently called `DCU Config Tool.exe`), and a `config/` folder in the same directory as the executable, with two files: `options.json` and `wkst_config.json`. 
 
 Verify that the fields of the config files are tailored to your machine and to your liking (see [Setup](#setup)).
 
